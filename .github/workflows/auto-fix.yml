@@ -471,18 +471,22 @@ jobs:
           
           # Create comprehensive commit message
           git add -A
-          git commit -m "fix(auto): ${FIX_TYPES} - Resolve ${WORKFLOW_NAME} failures
-
-🤖 Autonomous Fix Summary:
-- Fixed ${FIX_COUNT} issues with ${CONFIDENCE}% confidence
-- All tests validated and passing
-- Auto-applied by self-healing CI/CD system
-
-Triggered by: ${{ github.event.workflow_run.html_url || github.event_name }}
-Run ID: ${{ github.event.workflow_run.id || 'N/A' }}
-
-🤖 Generated with automated debugging system
-Co-Authored-By: GoREAL Auto-Fix Bot <actions[bot]@github.com>"
+          COMMIT_MSG=$(cat <<'EOF'
+          fix(auto): ${FIX_TYPES} - Resolve ${WORKFLOW_NAME} failures
+          
+          Autonomous Fix Summary:
+          - Fixed ${FIX_COUNT} issues with ${CONFIDENCE}% confidence
+          - All tests validated and passing
+          - Auto-applied by self-healing CI/CD system
+          
+          Triggered by: ${{ github.event.workflow_run.html_url || github.event_name }}
+          Run ID: ${{ github.event.workflow_run.id || 'N/A' }}
+          
+          Generated with automated debugging system
+          Co-Authored-By: GoREAL Auto-Fix Bot <actions[bot]@github.com>
+          EOF
+          )
+          git commit -m "$COMMIT_MSG"
 
           # Push the fix
           echo "📤 Pushing autonomous fix to main branch..."
