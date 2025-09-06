@@ -56,7 +56,7 @@ jobs:
     name: Deploy to Firebase
     runs-on: ubuntu-latest
     needs: test-and-build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && github.repository == 'cdbao/goreal_nativewebapp'
     
     permissions:
       contents: 'read'
@@ -64,7 +64,7 @@ jobs:
 
     environment:
       name: production
-      url: https://${{ secrets.GCP_PROJECT_ID }}.web.app
+      url: https://goreal-native.web.app
 
     steps:
       - name: Checkout Repository
