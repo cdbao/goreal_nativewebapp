@@ -1,0 +1,160 @@
+{
+  "name": "streamlit-dashboard",
+  "displayName": "Streamlit Dashboard Project",
+  "description": "A modern Streamlit dashboard template with authentication, data visualization, and deployment configuration",
+  "version": "1.0.0",
+  "author": "GoREAL Team",
+  "tags": ["streamlit", "dashboard", "python", "data-visualization", "analytics"],
+  "requirements": {
+    "python": ">=3.10",
+    "streamlit": ">=1.28.0"
+  },
+  "variables": {
+    "project_name": {
+      "type": "string",
+      "description": "Project name (lowercase, hyphens allowed)",
+      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$",
+      "example": "my-dashboard"
+    },
+    "project_title": {
+      "type": "string",
+      "description": "Dashboard title",
+      "example": "My Analytics Dashboard"
+    },
+    "project_description": {
+      "type": "string",
+      "description": "Brief project description",
+      "example": "A comprehensive analytics dashboard for data insights"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Author name",
+      "example": "Your Name"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Contact email",
+      "pattern": "^[^@]+@[^@]+\\.[^@]+$",
+      "example": "you@example.com"
+    },
+    "data_source": {
+      "type": "choice",
+      "description": "Primary data source",
+      "choices": ["database", "api", "csv_files", "google_sheets"],
+      "default": "database"
+    },
+    "use_authentication": {
+      "type": "boolean",
+      "description": "Include user authentication",
+      "default": true
+    },
+    "use_caching": {
+      "type": "boolean",
+      "description": "Enable data caching for performance",
+      "default": true
+    },
+    "include_charts": {
+      "type": "multiselect",
+      "description": "Chart types to include",
+      "choices": ["plotly", "altair", "matplotlib", "seaborn"],
+      "default": ["plotly", "altair"]
+    },
+    "use_sidebar": {
+      "type": "boolean",
+      "description": "Include sidebar navigation",
+      "default": true
+    },
+    "use_docker": {
+      "type": "boolean",
+      "description": "Include Docker configuration",
+      "default": true
+    },
+    "deployment_platform": {
+      "type": "choice",
+      "description": "Target deployment platform",
+      "choices": ["streamlit_cloud", "heroku", "docker", "local"],
+      "default": "streamlit_cloud"
+    }
+  },
+  "files": {
+    "copy": [
+      "src/",
+      "assets/",
+      "data/",
+      "tests/"
+    ],
+    "template": [
+      "README.md",
+      "requirements.txt",
+      "requirements-dev.txt",
+      "pyproject.toml",
+      ".streamlit/config.toml",
+      ".streamlit/secrets.toml.example",
+      ".gitignore",
+      "app.py"
+    ],
+    "conditional": {
+      "use_docker": [
+        "Dockerfile",
+        "docker-compose.yml"
+      ],
+      "data_source:database": [
+        "src/database.py"
+      ],
+      "data_source:google_sheets": [
+        "src/sheets_client.py"
+      ],
+      "deployment_platform:heroku": [
+        "Procfile",
+        "runtime.txt"
+      ]
+    }
+  },
+  "structure": {
+    "{{project_name}}/": {
+      "src/": {
+        "__init__.py": "template",
+        "config.py": "template",
+        "auth.py": "template",
+        "data_loader.py": "template",
+        "components/": {
+          "__init__.py": "template",
+          "charts.py": "template",
+          "filters.py": "template",
+          "metrics.py": "template"
+        },
+        "pages/": {
+          "__init__.py": "template",
+          "home.py": "template",
+          "analytics.py": "template",
+          "settings.py": "template"
+        },
+        "utils/": {
+          "__init__.py": "template",
+          "helpers.py": "template",
+          "cache.py": "template"
+        }
+      },
+      "assets/": {
+        "images/": {},
+        "css/": {
+          "style.css": "template"
+        }
+      },
+      "data/": {
+        "sample/": {
+          "README.md": "template"
+        }
+      },
+      "tests/": {
+        "__init__.py": "template",
+        "test_components.py": "template",
+        "test_data_loader.py": "template"
+      },
+      ".streamlit/": {
+        "config.toml": "template",
+        "secrets.toml.example": "template"
+      }
+    }
+  }
+}

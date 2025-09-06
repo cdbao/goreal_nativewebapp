@@ -69,7 +69,10 @@ Thumbs.db
 # Project specific
 # Google Service Account credentials
 goreal-470006-ac9c0ea86e0c.json
-*.json
+# Note: Allow package-lock.json files for dependency management
+# Only ignore specific service account JSON files
+*-service-account.json
+*-credentials.json
 
 # Data files  
 data/*.csv

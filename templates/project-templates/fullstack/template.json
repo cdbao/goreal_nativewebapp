@@ -1,0 +1,193 @@
+{
+  "name": "fullstack",
+  "displayName": "Full-Stack Application",
+  "description": "Complete full-stack application template with Flask API backend, Streamlit frontend, and production deployment",
+  "version": "1.0.0",
+  "author": "GoREAL Team",
+  "tags": ["fullstack", "flask", "streamlit", "docker", "production"],
+  "requirements": {
+    "python": ">=3.10",
+    "docker": ">=20.10",
+    "node": ">=16.0"
+  },
+  "variables": {
+    "project_name": {
+      "type": "string",
+      "description": "Project name (lowercase, hyphens allowed)",
+      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$",
+      "example": "my-fullstack-app"
+    },
+    "project_title": {
+      "type": "string",
+      "description": "Project title",
+      "example": "My Full-Stack Application"
+    },
+    "project_description": {
+      "type": "string",
+      "description": "Project description",
+      "example": "A comprehensive full-stack application"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Author name",
+      "example": "Your Name"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Contact email",
+      "pattern": "^[^@]+@[^@]+\\.[^@]+$",
+      "example": "you@example.com"
+    },
+    "github_username": {
+      "type": "string",
+      "description": "GitHub username",
+      "example": "yourusername"
+    },
+    "api_port": {
+      "type": "integer",
+      "description": "API server port",
+      "default": 8000,
+      "min": 1000,
+      "max": 65535
+    },
+    "dashboard_port": {
+      "type": "integer", 
+      "description": "Dashboard port",
+      "default": 8501,
+      "min": 1000,
+      "max": 65535
+    },
+    "database_type": {
+      "type": "choice",
+      "description": "Database type",
+      "choices": ["postgresql", "mysql", "sqlite"],
+      "default": "postgresql"
+    },
+    "use_redis": {
+      "type": "boolean",
+      "description": "Include Redis for caching",
+      "default": true
+    },
+    "use_authentication": {
+      "type": "boolean",
+      "description": "Include authentication system",
+      "default": true
+    },
+    "use_monitoring": {
+      "type": "boolean",
+      "description": "Include monitoring stack",
+      "default": true
+    },
+    "external_integrations": {
+      "type": "multiselect",
+      "description": "External service integrations",
+      "choices": ["google_sheets", "aws_s3", "sendgrid", "stripe", "github_api"],
+      "default": []
+    },
+    "deployment_environment": {
+      "type": "choice",
+      "description": "Target deployment environment",
+      "choices": ["docker", "kubernetes", "heroku", "aws"],
+      "default": "docker"
+    }
+  },
+  "files": {
+    "copy": [
+      "backend/",
+      "frontend/",
+      "shared/",
+      "tests/",
+      "docs/",
+      "scripts/"
+    ],
+    "template": [
+      "README.md",
+      "docker-compose.yml",
+      "docker-compose.prod.yml",
+      ".env.example",
+      ".gitignore",
+      "pyproject.toml",
+      "requirements.txt",
+      "Makefile"
+    ],
+    "conditional": {
+      "use_monitoring": [
+        "deploy/monitoring/"
+      ],
+      "deployment_environment:kubernetes": [
+        "k8s/"
+      ],
+      "deployment_environment:aws": [
+        "aws/",
+        "terraform/"
+      ]
+    }
+  },
+  "structure": {
+    "{{project_name}}/": {
+      "backend/": {
+        "{{project_name}}_api/": {
+          "__init__.py": "template",
+          "api/": {
+            "__init__.py": "template",
+            "app.py": "template",
+            "routes/": {}
+          },
+          "core/": {
+            "__init__.py": "template",
+            "database.py": "template",
+            "config.py": "template"
+          },
+          "models/": {
+            "__init__.py": "template"
+          }
+        }
+      },
+      "frontend/": {
+        "{{project_name}}_dashboard/": {
+          "__init__.py": "template",
+          "app.py": "template",
+          "pages/": {
+            "__init__.py": "template"
+          },
+          "components/": {
+            "__init__.py": "template"
+          }
+        }
+      },
+      "shared/": {
+        "__init__.py": "template",
+        "models/": {
+          "__init__.py": "template"
+        },
+        "utils/": {
+          "__init__.py": "template"
+        }
+      },
+      "tests/": {
+        "__init__.py": "template",
+        "backend/": {},
+        "frontend/": {},
+        "integration/": {}
+      },
+      "deploy/": {
+        "scripts/": {},
+        "configs/": {}
+      },
+      "docs/": {
+        "README.md": "template",
+        "API.md": "template",
+        "DEPLOYMENT.md": "template"
+      }
+    }
+  },
+  "post_create_steps": [
+    "Initialize git repository",
+    "Set up virtual environment",
+    "Install dependencies",
+    "Generate security keys",
+    "Create initial database schema",
+    "Build Docker images",
+    "Run initial tests"
+  ]
+}

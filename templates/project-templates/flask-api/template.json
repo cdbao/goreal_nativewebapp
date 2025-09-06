@@ -1,0 +1,182 @@
+{
+  "name": "flask-api",
+  "displayName": "Flask API Project",
+  "description": "A production-ready Flask API project template with authentication, database integration, and comprehensive tooling",
+  "version": "1.0.0",
+  "author": "GoREAL Team",
+  "tags": ["flask", "api", "python", "production", "docker"],
+  "requirements": {
+    "python": ">=3.10",
+    "docker": ">=20.10",
+    "git": ">=2.30"
+  },
+  "variables": {
+    "project_name": {
+      "type": "string",
+      "description": "Project name (lowercase, hyphens allowed)",
+      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$",
+      "example": "my-api-project"
+    },
+    "project_title": {
+      "type": "string",
+      "description": "Human-readable project title",
+      "example": "My API Project"
+    },
+    "project_description": {
+      "type": "string", 
+      "description": "Brief project description",
+      "example": "A RESTful API for managing resources"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Author/Organization name",
+      "example": "Your Name"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Contact email",
+      "pattern": "^[^@]+@[^@]+\\.[^@]+$",
+      "example": "you@example.com"
+    },
+    "github_username": {
+      "type": "string",
+      "description": "GitHub username/organization",
+      "example": "yourusername"
+    },
+    "database_type": {
+      "type": "choice",
+      "description": "Database type",
+      "choices": ["postgresql", "mysql", "sqlite"],
+      "default": "postgresql"
+    },
+    "use_redis": {
+      "type": "boolean",
+      "description": "Include Redis for caching",
+      "default": true
+    },
+    "use_celery": {
+      "type": "boolean", 
+      "description": "Include Celery for background tasks",
+      "default": false
+    },
+    "use_jwt_auth": {
+      "type": "boolean",
+      "description": "Include JWT authentication",
+      "default": true
+    },
+    "use_docker": {
+      "type": "boolean",
+      "description": "Include Docker configuration",
+      "default": true
+    },
+    "use_monitoring": {
+      "type": "boolean",
+      "description": "Include monitoring stack (Prometheus/Grafana)",
+      "default": true
+    }
+  },
+  "files": {
+    "copy": [
+      "src/",
+      "tests/",
+      "docker/",
+      "scripts/",
+      "docs/"
+    ],
+    "template": [
+      "README.md",
+      "requirements.txt",
+      "requirements-dev.txt",
+      "pyproject.toml",
+      "setup.py",
+      ".env.example",
+      ".gitignore",
+      "docker-compose.yml",
+      "docker-compose.prod.yml",
+      "Dockerfile",
+      "Dockerfile.prod"
+    ],
+    "conditional": {
+      "use_celery": [
+        "src/{{project_name}}/celery_app.py",
+        "src/{{project_name}}/tasks/"
+      ],
+      "use_monitoring": [
+        "deploy/monitoring/"
+      ],
+      "database_type:postgresql": [
+        "docker/postgres/"
+      ],
+      "database_type:mysql": [
+        "docker/mysql/"
+      ]
+    }
+  },
+  "hooks": {
+    "pre_create": [
+      "scripts/validate_inputs.py"
+    ],
+    "post_create": [
+      "scripts/setup_virtualenv.sh",
+      "scripts/install_dependencies.sh",
+      "scripts/generate_secret_key.py"
+    ]
+  },
+  "structure": {
+    "{{project_name}}/": {
+      "{{project_name}}/": {
+        "__init__.py": "template",
+        "api/": {
+          "__init__.py": "template",
+          "app.py": "template",
+          "routes/": {
+            "__init__.py": "template",
+            "auth.py": "template",
+            "health.py": "template"
+          },
+          "middleware/": {
+            "__init__.py": "template",
+            "auth.py": "template",
+            "cors.py": "template"
+          }
+        },
+        "core/": {
+          "__init__.py": "template",
+          "database.py": "template",
+          "config.py": "template"
+        },
+        "models/": {
+          "__init__.py": "template",
+          "base.py": "template",
+          "user.py": "template"
+        },
+        "utils/": {
+          "__init__.py": "template",
+          "validators.py": "template",
+          "helpers.py": "template"
+        }
+      },
+      "tests/": {
+        "__init__.py": "template",
+        "conftest.py": "template",
+        "test_api.py": "template",
+        "unit/": {
+          "__init__.py": "template"
+        },
+        "integration/": {
+          "__init__.py": "template"
+        }
+      },
+      "docs/": {
+        "README.md": "template",
+        "API.md": "template",
+        "DEPLOYMENT.md": "template"
+      },
+      "scripts/": {
+        "setup-dev.sh": "template",
+        "run-tests.sh": "template",
+        "quality-check.sh": "template"
+      }
+    }
+  }
+}
