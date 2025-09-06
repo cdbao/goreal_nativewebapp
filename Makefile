@@ -25,6 +25,11 @@ help:
 	@echo "  make backup       - Backup database"
 	@echo "  make jupyter      - Open Jupyter Lab"
 	@echo ""
+	@echo "Code Quality Commands:"
+	@echo "  make format-py    - Format Python code with black"
+	@echo "  make check-py     - Check Python code formatting"
+	@echo "  make lint-py      - Run Python linting"
+	@echo ""
 	@echo "Maintenance Commands:"
 	@echo "  make clean        - Clean up containers and volumes"
 	@echo "  make reset        - Full reset (clean + setup)"
@@ -125,6 +130,24 @@ db-reset:
 	@docker-compose up -d postgres
 	@sleep 10
 	@echo "✅ Database reset completed"
+
+# Python Code Quality Commands
+.PHONY: format-py check-py lint-py
+
+# Format Python code with black
+format-py:
+	@echo "🎨 Formatting Python code with black..."
+	@black goreal/ tests/ scripts/ *.py
+
+# Check Python code formatting
+check-py:
+	@echo "🔍 Checking Python code formatting..."
+	@black --check --diff goreal/ tests/ scripts/ *.py
+
+# Run Python linting
+lint-py:
+	@echo "🔍 Running Python linting with flake8..."
+	@flake8 goreal/ tests/ scripts/ *.py
 
 # Quick development workflow
 quick-start: build start sample-data

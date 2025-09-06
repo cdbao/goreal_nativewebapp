@@ -3,7 +3,17 @@ GoREAL Project - Database Connection and Models
 SQLAlchemy models and database connection management.
 """
 
-from sqlalchemy import create_engine, Column, Integer, String, Text, Boolean, DateTime, ForeignKey, JSON
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Text,
+    Boolean,
+    DateTime,
+    ForeignKey,
+    JSON,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
@@ -13,8 +23,7 @@ import os
 
 # Database URL from environment variable
 DATABASE_URL = os.getenv(
-    'DATABASE_URL', 
-    'postgresql://goreal_user:goreal_password@localhost:5432/goreal_db'
+    "DATABASE_URL", "postgresql://goreal_user:goreal_password@localhost:5432/goreal_db"
 )
 
 # Create database engine
@@ -25,8 +34,9 @@ Base = declarative_base()
 
 class Player(Base):
     """Player model for storing player information."""
-    __tablename__ = 'players'
-    
+
+    __tablename__ = "players"
+
     id = Column(Integer, primary_key=True, index=True)
     player_id = Column(String(50), unique=True, nullable=False, index=True)
     player_name = Column(String(100), nullable=False)
@@ -35,7 +45,7 @@ class Player(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     is_active = Column(Boolean, default=True)
     total_points = Column(Integer, default=0)
-    
+
     # Relationships
     challenges = relationship("PlayerChallenge", back_populates="player")
     achievements = relationship("PlayerAchievement", back_populates="player")
@@ -43,38 +53,42 @@ class Player(Base):
 
 class Challenge(Base):
     """Challenge model for storing challenge definitions."""
-    __tablename__ = 'challenges'
-    
+
+    __tablename__ = "challenges"
+
     id = Column(Integer, primary_key=True, index=True)
     challenge_id = Column(String(50), unique=True, nullable=False, index=True)
     title = Column(String(200), nullable=False)
     description = Column(Text, nullable=False)
     reward_points = Column(Integer, nullable=False, default=0)
-    difficulty_level = Column(String(20), default='easy')
-    category = Column(String(50), default='general')
+    difficulty_level = Column(String(20), default="easy")
+    category = Column(String(50), default="general")
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
+
     # Relationships
     player_challenges = relationship("PlayerChallenge", back_populates="challenge")
 
 
 class PlayerChallenge(Base):
     """Player challenge model for tracking individual challenge attempts."""
-    __tablename__ = 'player_challenges'
-    
+
+    __tablename__ = "player_challenges"
+
     id = Column(Integer, primary_key=True, index=True)
-    player_id = Column(String(50), ForeignKey('players.player_id'), nullable=False)
-    challenge_id = Column(String(50), ForeignKey('challenges.challenge_id'), nullable=False)
-    status = Column(String(20), default='received')
+    player_id = Column(String(50), ForeignKey("players.player_id"), nullable=False)
+    challenge_id = Column(
+        String(50), ForeignKey("challenges.challenge_id"), nullable=False
+    )
+    status = Column(String(20), default="received")
     submission_text = Column(Text)
     submitted_at = Column(DateTime(timezone=True))
     completed_at = Column(DateTime(timezone=True))
     points_awarded = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
+
     # Relationships
     player = relationship("Player", back_populates="challenges")
     challenge = relationship("Challenge", back_populates="player_challenges")
@@ -82,8 +96,9 @@ class PlayerChallenge(Base):
 
 class ActivityLog(Base):
     """Activity log model for audit trail."""
-    __tablename__ = 'activity_logs'
-    
+
+    __tablename__ = "activity_logs"
+
     id = Column(Integer, primary_key=True, index=True)
     player_id = Column(String(50))
     challenge_id = Column(String(50))
@@ -95,8 +110,9 @@ class ActivityLog(Base):
 
 class Achievement(Base):
     """Achievement model for storing achievement definitions."""
-    __tablename__ = 'achievements'
-    
+
+    __tablename__ = "achievements"
+
     id = Column(Integer, primary_key=True, index=True)
     achievement_id = Column(String(50), unique=True, nullable=False, index=True)
     title = Column(String(200), nullable=False)
@@ -105,20 +121,25 @@ class Achievement(Base):
     points_required = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     # Relationships
-    player_achievements = relationship("PlayerAchievement", back_populates="achievement")
+    player_achievements = relationship(
+        "PlayerAchievement", back_populates="achievement"
+    )
 
 
 class PlayerAchievement(Base):
     """Player achievement model for tracking earned achievements."""
-    __tablename__ = 'player_achievements'
-    
+
+    __tablename__ = "player_achievements"
+
     id = Column(Integer, primary_key=True, index=True)
-    player_id = Column(String(50), ForeignKey('players.player_id'), nullable=False)
-    achievement_id = Column(String(50), ForeignKey('achievements.achievement_id'), nullable=False)
+    player_id = Column(String(50), ForeignKey("players.player_id"), nullable=False)
+    achievement_id = Column(
+        String(50), ForeignKey("achievements.achievement_id"), nullable=False
+    )
     earned_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     # Relationships
     player = relationship("Player", back_populates="achievements")
     achievement = relationship("Achievement", back_populates="player_achievements")

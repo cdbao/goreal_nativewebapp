@@ -8,10 +8,10 @@ from .data_handlers import fetch_playerlog_data, fetch_challenges_data
 from .components import display_playerlog_statistics, display_challenges_statistics
 
 __all__ = [
-    'main',
-    'configure_page', 
-    'fetch_playerlog_data',
-    'fetch_challenges_data',
-    'display_playerlog_statistics',
-    'display_challenges_statistics'
+    "main",
+    "configure_page",
+    "fetch_playerlog_data",
+    "fetch_challenges_data",
+    "display_playerlog_statistics",
+    "display_challenges_statistics",
 ]
