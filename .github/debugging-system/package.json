@@ -1,0 +1,24 @@
+{
+  "name": "goreal-automated-debugging",
+  "version": "1.0.0",
+  "description": "Automated CI/CD debugging and self-healing system for GoREAL project",
+  "main": "log-retriever.js",
+  "scripts": {
+    "analyze-failures": "node log-retriever.js",
+    "generate-fixes": "node ai-debugger.js",
+    "debug-pipeline": "npm run analyze-failures && npm run generate-fixes",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.1.2"
+  },
+  "keywords": [
+    "automation",
+    "debugging",
+    "ci-cd",
+    "github-actions",
+    "self-healing"
+  ],
+  "author": "GoREAL Development Team",
+  "license": "MIT"
+}

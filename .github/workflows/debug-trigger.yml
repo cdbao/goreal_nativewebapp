@@ -1,0 +1,95 @@
+name: Debug Trigger
+
+# This workflow automatically triggers the debugging system when CI/CD failures are detected
+on:
+  workflow_run:
+    workflows: ["CI/CD Pipeline", "Deploy to Firebase"]
+    types:
+      - completed
+    branches: [main]
+
+jobs:
+  check-and-trigger-debug:
+    name: Check Failures and Trigger Debugging
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    
+    permissions:
+      actions: write
+      contents: read
+      
+    steps:
+    - name: Wait for workflow completion
+      run: |
+        echo "⏱️  Waiting 30 seconds for logs to be fully available..."
+        sleep 30
+        
+    - name: Trigger automated debugging
+      uses: actions/github-script@v7
+      with:
+        script: |
+          console.log('🚨 CI/CD Failure Detected!');
+          console.log(`Failed Workflow: ${context.payload.workflow_run.name}`);
+          console.log(`Run ID: ${context.payload.workflow_run.id}`);
+          console.log(`SHA: ${context.payload.workflow_run.head_sha}`);
+          console.log(`Branch: ${context.payload.workflow_run.head_branch}`);
+          
+          // Trigger the auto-fix workflow
+          await github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: 'auto-fix.yml',
+            ref: 'main',
+            inputs: {
+              workflow_run_id: context.payload.workflow_run.id.toString(),
+              force_analysis: 'true'
+            }
+          });
+          
+          console.log('🤖 Automated debugging workflow triggered!');
+
+  # Fallback: Also trigger debugging on schedule if recent failures exist
+  scheduled-check:
+    name: Scheduled Failure Check
+    runs-on: ubuntu-latest
+    # Run every hour during business hours
+    if: github.event_name == 'schedule'
+    
+    permissions:
+      actions: write
+      contents: read
+      
+    steps:
+    - name: Check for recent failures
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // Check for failures in the last 2 hours
+          const since = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+          
+          const { data: runs } = await github.rest.actions.listWorkflowRuns({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            status: 'failure',
+            created: `>${since}`,
+            per_page: 5
+          });
+          
+          if (runs.workflow_runs.length > 0) {
+            console.log(`Found ${runs.workflow_runs.length} recent failures`);
+            
+            // Trigger debugging for the most recent failure
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'auto-fix.yml',
+              ref: 'main',
+              inputs: {
+                force_analysis: 'true'
+              }
+            });
+            
+            console.log('🤖 Scheduled debugging workflow triggered!');
+          } else {
+            console.log('✅ No recent failures found');
+          }
