@@ -1,11 +1,12 @@
 [flake8]
 max-line-length = 88
 max-complexity = 10
-extend-ignore = 
-    E203,  # whitespace before ':'
-    E501,  # line too long (handled by black)
-    W503,  # line break before binary operator
-    E231,  # missing whitespace after ','
+# Ignored error codes:
+# E203: whitespace before ':'
+# E501: line too long (handled by black)
+# W503: line break before binary operator
+# E231: missing whitespace after ','
+extend-ignore = E203,E501,W503,E231
 exclude = 
     .git,
     __pycache__,
