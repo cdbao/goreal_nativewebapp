@@ -1,6 +1,8 @@
 # GoREAL - Roblox Challenge Management System
 
-GoREAL is a comprehensive challenge management system designed for Roblox game integration, featuring a Flask API backend and Streamlit dashboard for administration.
+GoREAL is a comprehensive challenge management system designed for Roblox game integration, featuring a Flask API backend, React frontend, and Firebase backend services.
+
+🌟 **Latest Update**: Migrated to Firebase Native with automated CI/CD deployment pipeline.
 
 ## 🚀 Features
 
