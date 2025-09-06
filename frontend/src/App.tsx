@@ -4,7 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
-} from 'react-router-dom';
+} from 'react-router-dom'
 import * as Sentry from '@sentry/react';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -13,8 +13,8 @@ import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import AdminPanel from './components/AdminPanel';
 import GuildSelection from './components/GuildSelection';
-import {
-  ProtectedRoute,
+ import {
+   ProtectedRoute,
   GuildSelectionRoute,
   AuthRoute,
   LandingRoute,
