@@ -1,0 +1,278 @@
+# {{project_title}} - Git ignore file
+
+# =============================================================================
+# Python
+# =============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# =============================================================================
+# Streamlit
+# =============================================================================
+
+{% if template_type == 'streamlit-dashboard' or template_type == 'fullstack' %}
+# Streamlit cache
+.streamlit/
+{% endif %}
+
+# =============================================================================
+# Development Tools
+# =============================================================================
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =============================================================================
+# Application Specific
+# =============================================================================
+
+# Logs
+logs/
+*.log
+log/
+
+# Data files
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Configuration files with secrets
+.env.*
+!.env.example
+!.env.template
+secrets/
+*.key
+*.pem
+*.crt
+google-credentials.json
+
+# Backups
+backups/
+*.backup
+*.bak
+
+{% if use_docker %}
+# =============================================================================
+# Docker
+# =============================================================================
+
+# Docker volumes
+docker-volumes/
+{% endif %}
+
+{% if use_monitoring %}
+# =============================================================================
+# Monitoring
+# =============================================================================
+
+# Prometheus data
+prometheus-data/
+
+# Grafana data
+grafana-data/
+{% endif %}
+
+# =============================================================================
+# Testing
+# =============================================================================
+
+# Test artifacts
+test-results/
+test-reports/
+.coverage.*
+
+# Security scan results
+bandit-report.json
+safety-report.json
+trivy-results.sarif
+
+# =============================================================================
+# Build and Deploy
+# =============================================================================
+
+# Build artifacts
+build/
+dist/
+*.tar.gz
+
+# Deployment artifacts
+deploy.log
+deployment-*.tar.gz
+
+# =============================================================================
+# External Services
+# =============================================================================
+
+{% if 'aws_s3' in external_integrations %}
+# AWS
+.aws/
+{% endif %}
+
+{% if 'google_sheets' in external_integrations %}
+# Google credentials
+*-credentials.json
+service-account.json
+{% endif %}
+
+# =============================================================================
+# Project Specific
+# =============================================================================
+
+# Add your project-specific ignore patterns here
+# uploads/
+# static/uploads/
+# media/

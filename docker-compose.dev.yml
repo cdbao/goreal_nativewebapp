@@ -1,0 +1,59 @@
+version: '3.8'
+
+# Development-specific overrides
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000", "--debug"]
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    command: ["streamlit", "run", "goreal/dashboard/app.py", "--server.address=0.0.0.0", "--server.runOnSave=true"]
+
+  # Additional development tools
+  pgadmin:
+    image: dpage/pgadmin4:7
+    container_name: goreal_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@goreal.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - goreal_network
+
+  # Redis Commander for Redis management
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: goreal_redis_commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - goreal_network
+
+volumes:
+  pgadmin_data:

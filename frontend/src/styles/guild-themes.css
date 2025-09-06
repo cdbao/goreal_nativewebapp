@@ -1,0 +1,147 @@
+/* Guild Theme System - CSS Variables */
+
+:root {
+  /* Default Guild Theme (Titans) */
+  --guild-primary: #FF4500;
+  --guild-secondary: #FF6347;
+  --guild-accent: #FFD700;
+  --guild-background: linear-gradient(135deg, #FF4500, #FF6347);
+  
+  /* Base theme colors that remain consistent */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  
+  /* Background colors with guild theming */
+  --bg-primary: rgba(0, 0, 0, 0.8);
+  --bg-secondary: rgba(0, 0, 0, 0.6);
+  --bg-glass: rgba(255, 255, 255, 0.1);
+  --bg-glass-hover: rgba(255, 255, 255, 0.15);
+  
+  /* Border colors with guild accent */
+  --border-primary: rgba(255, 255, 255, 0.2);
+  --border-guild: var(--guild-accent);
+  
+  /* Status colors that remain consistent */
+  --status-success: #4CAF50;
+  --status-warning: #FF9800;
+  --status-error: #F44336;
+  --status-info: #2196F3;
+}
+
+/* Guild-specific theme overrides */
+.guild-theme-titans {
+  --guild-primary: #FF4500;
+  --guild-secondary: #FF6347;
+  --guild-accent: #FFD700;
+  --guild-background: linear-gradient(135deg, #FF4500, #FF6347);
+}
+
+.guild-theme-illumination {
+  --guild-primary: #4169E1;
+  --guild-secondary: #87CEEB;
+  --guild-accent: #FFFFFF;
+  --guild-background: linear-gradient(135deg, #4169E1, #87CEEB);
+}
+
+.guild-theme-envoys {
+  --guild-primary: #32CD32;
+  --guild-secondary: #98FB98;
+  --guild-accent: #FFD700;
+  --guild-background: linear-gradient(135deg, #32CD32, #98FB98);
+}
+
+/* Guild-themed components */
+.guild-themed-button {
+  background: var(--guild-background);
+  border: 1px solid var(--guild-accent);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.guild-themed-button:hover {
+  box-shadow: 0 5px 15px rgba(var(--guild-primary), 0.4);
+  transform: translateY(-2px);
+}
+
+.guild-themed-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-primary);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+}
+
+.guild-themed-card:hover {
+  border-color: var(--guild-accent);
+  background: var(--bg-glass-hover);
+}
+
+.guild-accent-text {
+  color: var(--guild-accent);
+}
+
+.guild-primary-bg {
+  background: var(--guild-primary);
+}
+
+.guild-gradient-bg {
+  background: var(--guild-background);
+}
+
+/* Progress bars with guild theming */
+.guild-progress-bar {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.guild-progress-fill {
+  background: var(--guild-background);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* Notification badges with guild colors */
+.guild-notification-badge {
+  background: var(--guild-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--guild-accent);
+}
+
+/* Tab buttons with guild theming */
+.guild-tab-button {
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.guild-tab-button.active {
+  background: var(--guild-background);
+  border-color: var(--guild-accent);
+  color: var(--text-primary);
+}
+
+.guild-tab-button:hover {
+  border-color: var(--guild-accent);
+  background: rgba(var(--guild-primary), 0.1);
+}
+
+/* Status badges with guild integration */
+.status-approved {
+  background: var(--status-success);
+}
+
+.status-pending {
+  background: var(--status-warning);  
+}
+
+.status-rejected {
+  background: var(--status-error);
+}
+
+.status-guild-special {
+  background: var(--guild-background);
+  border: 1px solid var(--guild-accent);
+}

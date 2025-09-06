@@ -1,0 +1,248 @@
+/* Enhanced Quest Card with Gaming Dark Theme */
+.enhanced-quest-card {
+  background: rgba(20, 25, 35, 0.95) !important;
+  border: 2px solid rgba(255, 215, 0, 0.4) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-6) !important;
+  margin: var(--space-4) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  transition: all var(--transition-smooth) !important;
+  backdrop-filter: blur(15px) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  
+  /* Use guild-specific theming */
+  border-color: rgba(var(--primary-color-rgb, 255, 215, 0), 0.4) !important;
+}
+
+.enhanced-quest-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-2xl);
+  filter: brightness(1.05);
+}
+
+/* Guild-themed background pattern */
+.enhanced-quest-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(var(--primary-color-rgb, 255, 215, 0), 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(var(--secondary-color-rgb, 138, 43, 226), 0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.enhanced-quest-card:hover::before {
+  opacity: 1;
+}
+
+/* Guild stamp/seal effect */
+.quest-guild-seal {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(45deg, rgba(var(--primary-color-rgb, 255, 215, 0), 0.2), rgba(var(--primary-color-rgb, 255, 215, 0), 0.4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-3xl);
+  border: 2px solid rgba(var(--primary-color-rgb, 255, 215, 0), 0.5);
+  opacity: 0.7;
+  transition: all var(--transition-base);
+}
+
+.enhanced-quest-card:hover .quest-guild-seal {
+  transform: rotate(10deg) scale(1.1);
+  opacity: 1;
+  box-shadow: 0 0 20px var(--glow-color);
+}
+
+/* Quest header */
+.quest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+  position: relative;
+  z-index: 2;
+}
+
+.quest-title {
+  font-size: var(--font-size-2xl) !important;
+  font-weight: 800 !important;
+  color: #00E5FF !important;
+  text-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.6),
+    1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)) !important;
+  margin: 0 !important;
+  max-width: 70%;
+  line-height: var(--line-height-tight);
+}
+
+.aura-reward {
+  background: linear-gradient(45deg, var(--secondary-color), #FFA500);
+  color: var(--color-black);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-md);
+  animation: auraGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes auraGlow {
+  0% { box-shadow: var(--shadow-md); }
+  100% { box-shadow: var(--shadow-lg); }
+}
+
+/* Quest description */
+.quest-description {
+  color: var(--text-color-muted);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-6);
+  text-shadow: var(--text-shadow);
+}
+
+/* Accept Challenge Button - Now handled by Design System .btn classes */
+.accept-challenge-btn {
+  /* Additional quest-specific styling */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: 200px;
+  justify-content: center;
+  gap: var(--space-2);
+  
+  /* Pulse glow effect for quest buttons */
+  animation: challengePulse 2s ease-in-out infinite;
+}
+
+@keyframes challengePulse {
+  0%, 100% { 
+    box-shadow: var(--shadow-lg);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: var(--shadow-2xl);
+    transform: scale(1.02);
+  }
+}
+
+.accept-challenge-btn:hover {
+  animation: none;
+}
+
+/* Accepted state styles */
+.enhanced-quest-card.accepted {
+  border-color: var(--success-color);
+  background: linear-gradient(135deg, rgba(var(--success-color-rgb, 76, 175, 80), 0.1) 0%, rgba(var(--success-color-rgb, 76, 175, 80), 0.05) 100%);
+  animation: questAccepted 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes questAccepted {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+    box-shadow: 0 0 40px var(--success-color);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1.1);
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+/* Guild seal acceptance animation */
+.quest-guild-seal.accepted {
+  background: linear-gradient(45deg, rgba(var(--success-color-rgb, 76, 175, 80), 0.3), rgba(var(--success-color-rgb, 76, 175, 80), 0.6));
+  border-color: var(--success-color);
+  animation: sealAccepted 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes sealAccepted {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    box-shadow: 0 0 30px var(--success-color);
+  }
+  100% {
+    transform: scale(1.1) rotate(360deg);
+    box-shadow: 0 0 20px var(--success-color);
+  }
+}
+
+/* Report type indicator */
+.report-type-indicator {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  background: rgba(var(--color-black-rgb, 0, 0, 0), 0.6);
+  color: var(--color-white);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  backdrop-filter: var(--blur-sm);
+}
+
+.report-type-indicator .icon {
+  font-size: var(--font-size-base);
+}
+
+/* Loading state */
+.enhanced-quest-card.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.enhanced-quest-card.loading .accept-challenge-btn {
+  animation: none;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .enhanced-quest-card {
+    margin: var(--space-3) var(--space-2);
+    padding: var(--space-5);
+  }
+  
+  .quest-title {
+    font-size: var(--font-size-xl);
+    max-width: 60%;
+  }
+  
+  .quest-guild-seal {
+    width: 50px;
+    height: 50px;
+    font-size: var(--font-size-2xl);
+    top: var(--space-3);
+    right: var(--space-3);
+  }
+  
+  .accept-challenge-btn {
+    width: 100%;
+    padding: var(--space-3) var(--space-6);
+  }
+}

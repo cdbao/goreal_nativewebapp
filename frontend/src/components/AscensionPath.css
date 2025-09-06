@@ -1,0 +1,722 @@
+/* Ascension Path - Dark Gaming Theme */
+.ascension-path {
+  min-height: 100vh !important;
+  background: linear-gradient(135deg, #0a0e17 0%, #1a1a2e 30%, #16213e 70%, #0f1419 100%) !important;
+  background-attachment: fixed !important;
+  padding: var(--space-8) !important;
+  position: relative !important;
+  overflow-x: hidden !important;
+  color: white !important;
+}
+
+.ascension-path::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Header Section */
+.path-header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: white;
+}
+
+.path-title {
+  font-size: clamp(2.5rem, 5vw, 4rem) !important;
+  font-weight: 800 !important;
+  margin-bottom: 1rem !important;
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)) !important;
+  animation: fadeInUp 1s ease both !important;
+}
+
+.title-icon {
+  display: block;
+  font-size: 0.8em;
+  margin-bottom: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.path-subtitle {
+  font-size: 1.3rem;
+  color: #ccc;
+  margin-bottom: 2rem;
+  animation: fadeInUp 1s ease 0.2s both;
+}
+
+/* Current Status Section */
+.current-status {
+  background: rgba(20, 25, 35, 0.95) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 2px solid rgba(255, 215, 0, 0.4) !important;
+  border-radius: 20px !important;
+  padding: 2rem !important;
+  max-width: 600px !important;
+  margin: 0 auto 3rem !important;
+  animation: fadeInUp 1s ease 0.4s both !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.current-level {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.current-icon {
+  font-size: 3rem;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  animation: pulse 2s infinite;
+}
+
+.current-info h3 {
+  font-size: 1.8rem;
+  color: #ffd700;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.current-info p {
+  color: #ccc;
+  margin: 0;
+}
+
+.aura-count {
+  color: #4ecdc4;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Progress Section */
+.next-level-progress {
+  text-align: center;
+}
+
+.progress-label {
+  font-size: 1.1rem;
+  color: #ffd700;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ecdc4 0%, #44a08d 100%);
+  border-radius: 20px;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressShine 2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.progress-text {
+  color: #4ecdc4;
+  font-weight: bold;
+  font-size: 1rem;
+  min-width: 50px;
+}
+
+.aura-needed {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.aura-needed span {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+/* Ascension Road */
+.ascension-road {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.road-path {
+  position: relative;
+}
+
+/* Road Segments */
+.road-segment {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+/* Connection Lines */
+.connection-line {
+  height: 80px;
+  width: 4px;
+  margin: 0 auto 1rem;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.connection-line.unlocked {
+  background: linear-gradient(180deg, #4ecdc4 0%, #44a08d 100%);
+  box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+}
+
+.connection-line.locked {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.line-flow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  animation: flowDown 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+.connection-line.unlocked .line-flow {
+  opacity: 1;
+}
+
+@keyframes flowDown {
+  0% { 
+    top: -20px;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% { 
+    top: 100px;
+    opacity: 0;
+  }
+}
+
+/* Level Cards */
+.level-card {
+  background: rgba(20, 25, 35, 0.8) !important;
+  border: 2px solid transparent !important;
+  border-radius: 20px !important;
+  padding: 2rem !important;
+  position: relative !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(15px) !important;
+  overflow: hidden !important;
+  color: white !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.level-card.unlocked {
+  background: rgba(20, 25, 35, 0.95) !important;
+  border-color: rgba(255, 215, 0, 0.4) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.level-card.locked {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  opacity: 0.6 !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.level-card.current {
+  border-color: #ffd700;
+  box-shadow: 
+    0 15px 40px rgba(255, 215, 0, 0.3),
+    inset 0 1px 0 rgba(255, 215, 0, 0.2);
+  transform: scale(1.02);
+  animation: currentPulse 3s ease-in-out infinite;
+}
+
+@keyframes currentPulse {
+  0%, 100% {
+    box-shadow: 
+      0 15px 40px rgba(255, 215, 0, 0.3),
+      inset 0 1px 0 rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 20px 50px rgba(255, 215, 0, 0.5),
+      inset 0 1px 0 rgba(255, 215, 0, 0.4);
+  }
+}
+
+.level-card:hover.unlocked {
+  transform: translateY(-5px) scale(1.02);
+  border-color: rgba(78, 205, 196, 0.6);
+  box-shadow: 0 20px 40px rgba(78, 205, 196, 0.2);
+}
+
+/* Level Icon */
+.level-icon-container {
+  position: relative;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.level-icon {
+  font-size: 4rem;
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 20px rgba(78, 205, 196, 0.8);
+}
+
+.level-card.locked .level-icon {
+  text-shadow: none;
+  opacity: 0.5;
+}
+
+.current-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: glow 2s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes glow {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Level Information */
+.level-info {
+  text-align: center;
+  color: white;
+}
+
+.level-header {
+  margin-bottom: 1.5rem;
+}
+
+.level-name {
+  font-size: 1.8rem !important;
+  font-weight: 800 !important;
+  color: #00E5FF !important;
+  margin-bottom: 0.5rem !important;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)) !important;
+}
+
+.level-card.locked .level-name {
+  color: #666;
+}
+
+.level-english {
+  font-size: 1rem;
+  color: #ccc;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.aura-requirement {
+  display: inline-block;
+  background: rgba(78, 205, 196, 0.2);
+  border: 1px solid rgba(78, 205, 196, 0.5);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  color: #4ecdc4;
+  font-weight: 600;
+}
+
+.level-card.locked .aura-requirement {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #999;
+}
+
+.level-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* Rewards Section */
+.level-rewards h4 {
+  font-size: 1.3rem;
+  color: #ffd700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.level-rewards h4::before,
+.level-rewards h4::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ffd700, transparent);
+}
+
+.rewards-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.reward-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.reward-item.unlocked {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+.reward-item.locked {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+  opacity: 0.5;
+}
+
+.reward-item:hover.unlocked {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+  border-color: rgba(255, 215, 0, 0.8);
+}
+
+.reward-icon {
+  font-size: 1.5rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.reward-item.locked .reward-icon {
+  text-shadow: none;
+}
+
+.reward-name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.reward-item.locked .reward-name {
+  color: #999;
+}
+
+/* Reward Tooltip */
+.reward-tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.3s ease both;
+}
+
+.tooltip-content {
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 8px;
+  padding: 1rem;
+  max-width: 250px;
+  color: white;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip-content strong {
+  color: #ffd700;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.95);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Hover Effects */
+.level-hover-glow {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, transparent, rgba(78, 205, 196, 0.3), transparent);
+  border-radius: 25px;
+  z-index: -1;
+  animation: hoverGlow 2s ease-in-out infinite;
+}
+
+@keyframes hoverGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Unlock Particles */
+.unlock-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffd700;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 4s ease-in-out infinite;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  top: 30%;
+  right: 30%;
+  animation-delay: 1.3s;
+}
+
+.particle-3 {
+  bottom: 20%;
+  left: 50%;
+  animation-delay: 2.6s;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0px) scale(1);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.5);
+  }
+}
+
+/* Road End */
+.road-end {
+  text-align: center;
+  padding: 3rem 0;
+  position: relative;
+}
+
+.end-glow {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  animation: endGlow 4s ease-in-out infinite;
+}
+
+@keyframes endGlow {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.path-complete-text {
+  font-size: 1.3rem;
+  color: #ffd700;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  animation: fadeInUp 1s ease both;
+}
+
+/* Common Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ascension-path {
+    padding: 1rem;
+  }
+  
+  .path-title {
+    font-size: 2.5rem;
+  }
+  
+  .current-status {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .current-level {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .level-card {
+    padding: 1.5rem;
+  }
+  
+  .level-icon {
+    font-size: 3rem;
+  }
+  
+  .level-name {
+    font-size: 1.5rem;
+  }
+  
+  .rewards-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-bar-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .progress-text {
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .current-status {
+    padding: 1rem;
+  }
+  
+  .level-card {
+    padding: 1rem;
+  }
+  
+  .level-icon {
+    font-size: 2.5rem;
+  }
+  
+  .reward-item {
+    padding: 0.8rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .tooltip-content {
+    max-width: 200px;
+    font-size: 0.8rem;
+  }
+}

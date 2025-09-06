@@ -1,0 +1,58 @@
+# GoREAL Project - Code Owners
+# This file defines who owns and can review different parts of the codebase
+
+# Global owners - these users will be requested for review on all PRs
+* @repo-admin
+
+# API and backend code
+goreal/api/ @backend-team @api-team
+goreal/core/ @backend-team @api-team
+
+# Dashboard and frontend code
+goreal/dashboard/ @frontend-team @ui-team
+
+# Database code and migrations
+database/ @database-team @backend-team
+goreal/core/database.py @database-team
+goreal/core/sheets_client.py @backend-team @integrations-team
+
+# Configuration and settings
+goreal/config/ @devops-team @backend-team
+
+# Testing
+tests/ @qa-team @backend-team
+notebooks/api_testing/ @qa-team @api-team
+
+# Documentation
+docs/ @documentation-team
+*.md @documentation-team
+README.md @repo-admin @documentation-team
+
+# CI/CD and DevOps
+.github/ @devops-team @repo-admin
+.github/workflows/ @devops-team @ci-team
+Dockerfile* @devops-team @infrastructure-team
+docker-compose* @devops-team @infrastructure-team
+scripts/ @devops-team
+
+# Dependencies and requirements
+requirements*.txt @devops-team @backend-team
+setup.py @devops-team @backend-team
+Makefile @devops-team
+
+# Security and configuration
+.env.example @devops-team @security-team
+.gitignore @devops-team
+
+# Jupyter notebooks
+notebooks/ @data-team @analytics-team
+notebooks/data_analysis/ @data-team @analytics-team
+
+# Sample data and database initialization
+database/init/ @database-team @data-team
+scripts/generate-sample-data.py @data-team @backend-team
+
+# Project root files
+pyproject.toml @devops-team @backend-team
+.flake8 @devops-team @qa-team
+.pre-commit-config.yaml @devops-team @qa-team

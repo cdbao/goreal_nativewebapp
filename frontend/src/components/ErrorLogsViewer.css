@@ -1,0 +1,409 @@
+/* ========================================
+   🐛 ERROR LOGS VIEWER - ADMIN PANEL
+   ======================================== */
+
+.error-logs-viewer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.error-logs-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  gap: var(--space-4);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s linear infinite;
+}
+
+/* ========================================
+   📊 HEADER & STATS
+   ======================================== */
+
+.error-logs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  padding: var(--space-6);
+  background: var(--background-card);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--blur-md);
+}
+
+.error-logs-header h2 {
+  font-family: var(--font-fantasy);
+  font-size: var(--font-size-3xl);
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.error-stats {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  min-width: 80px;
+  backdrop-filter: var(--blur-sm);
+}
+
+.stat-item.critical {
+  background: rgba(239, 68, 68, 0.2);
+  border: 2px solid rgba(239, 68, 68, 0.4);
+}
+
+.stat-item.high {
+  background: rgba(245, 158, 11, 0.2);
+  border: 2px solid rgba(245, 158, 11, 0.4);
+}
+
+.stat-item.total {
+  background: rgba(99, 102, 241, 0.2);
+  border: 2px solid rgba(99, 102, 241, 0.4);
+}
+
+.stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-fantasy);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ========================================
+   🔍 FILTERS
+   ======================================== */
+
+.error-logs-filters {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background: var(--background-card);
+  border-radius: var(--radius-lg);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  background: var(--background-color);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  min-width: 140px;
+  transition: all var(--transition-base);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 99, 102, 241), 0.1);
+}
+
+.refresh-btn {
+  margin-left: auto;
+  min-width: 120px;
+}
+
+/* ========================================
+   📋 ERROR LOGS LIST
+   ======================================== */
+
+.error-logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.no-errors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  text-align: center;
+  background: var(--background-card);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--blur-md);
+}
+
+.no-errors-icon {
+  font-size: var(--font-size-5xl);
+  margin-bottom: var(--space-4);
+}
+
+.no-errors h3 {
+  font-family: var(--font-fantasy);
+  color: var(--success-color);
+  margin: 0 0 var(--space-2);
+}
+
+/* ========================================
+   🐛 ERROR LOG ITEMS
+   ======================================== */
+
+.error-log-item {
+  background: var(--background-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  backdrop-filter: var(--blur-md);
+  border: 2px solid transparent;
+}
+
+.error-log-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.error-log-item.critical {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.error-log-item.high {
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.error-log-item.medium {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.error-log-item.low {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.error-log-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-base);
+}
+
+.error-log-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.error-log-icons {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--font-size-xl);
+}
+
+.error-log-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.error-message {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  color: var(--text-color);
+  margin-bottom: var(--space-1);
+  word-break: break-word;
+}
+
+.error-meta {
+  display: flex;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--text-color-muted);
+}
+
+.error-type {
+  background: var(--primary-color);
+  color: white;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+}
+
+.error-component {
+  background: rgba(107, 114, 128, 0.2);
+  color: var(--text-color);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+}
+
+.error-time {
+  font-family: var(--font-mono);
+}
+
+.error-expand-icon {
+  font-size: var(--font-size-lg);
+  color: var(--text-color-muted);
+  transition: transform var(--transition-base);
+}
+
+.error-log-item.expanded .error-expand-icon {
+  transform: rotate(90deg);
+}
+
+/* ========================================
+   📋 ERROR LOG DETAILS
+   ======================================== */
+
+.error-log-details {
+  border-top: 1px solid var(--border-color-light);
+  padding: var(--space-4);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.detail-section {
+  margin-bottom: var(--space-4);
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h4 {
+  font-family: var(--font-fantasy);
+  font-size: var(--font-size-lg);
+  margin: 0 0 var(--space-2);
+  color: var(--primary-color);
+}
+
+.stack-trace,
+.additional-data {
+  background: rgba(0, 0, 0, 0.6);
+  color: #00ff00;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.technical-details {
+  background: rgba(0, 0, 0, 0.3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color-light);
+}
+
+.technical-details div {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.technical-details strong {
+  color: var(--primary-color);
+}
+
+/* ========================================
+   📱 RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .error-logs-header {
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  .error-logs-header h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .error-stats {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .error-logs-filters {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .refresh-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .error-meta {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stack-trace,
+  .additional-data {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .error-logs-viewer {
+    padding: var(--space-4);
+  }
+
+  .error-log-header {
+    padding: var(--space-3);
+  }
+
+  .error-log-details {
+    padding: var(--space-3);
+  }
+}
+
+/* ========================================
+   ✨ ANIMATIONS
+   ======================================== */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-log-item {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

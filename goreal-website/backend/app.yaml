@@ -1,0 +1,6 @@
+# Cấu hình cho Google App Engine
+runtime: python311
+
+# Câu lệnh để khởi động server production
+# Nó sẽ tìm đối tượng 'app' trong file 'main.py'
+entrypoint: gunicorn --bind :$PORT main:app

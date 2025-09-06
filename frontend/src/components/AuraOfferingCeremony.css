@@ -1,0 +1,391 @@
+/* AURA Offering Ceremony with Particle Effects */
+.aura-offering-ceremony {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(25, 25, 112, 0.9) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  animation: ceremonyEnter 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes ceremonyEnter {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+}
+
+.ceremony-container {
+  text-align: center;
+  position: relative;
+  z-index: 1001;
+  max-width: 500px;
+  padding: 40px;
+}
+
+/* Mystical Background Effects */
+.ceremony-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mystical-orbs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0.2) 70%, transparent 100%);
+  animation: orbFloat 4s ease-in-out infinite;
+  filter: blur(1px);
+}
+
+.orb:nth-child(1) {
+  width: 120px;
+  height: 120px;
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 6s;
+}
+
+.orb:nth-child(2) {
+  width: 80px;
+  height: 80px;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+  animation-duration: 5s;
+}
+
+.orb:nth-child(3) {
+  width: 60px;
+  height: 60px;
+  bottom: 30%;
+  left: 20%;
+  animation-delay: 1s;
+  animation-duration: 7s;
+}
+
+.orb:nth-child(4) {
+  width: 100px;
+  height: 100px;
+  top: 10%;
+  right: 25%;
+  animation-delay: 3s;
+  animation-duration: 4s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  33% { 
+    transform: translate(30px, -20px) scale(1.1);
+    opacity: 0.8;
+  }
+  66% { 
+    transform: translate(-20px, 30px) scale(0.9);
+    opacity: 0.7;
+  }
+}
+
+/* Central AURA Symbol */
+.aura-symbol {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 30px;
+  position: relative;
+  animation: auraSymbolPulse 2s ease-in-out infinite;
+}
+
+@keyframes auraSymbolPulse {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+  }
+  50% { 
+    transform: scale(1.1) rotate(180deg);
+    filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.9));
+  }
+}
+
+.aura-symbol-inner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #FFD700, #FFA500, #FF6B6B, #9C27B0);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.aura-symbol-inner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: rotate(45deg);
+  animation: symbolShimmer 3s linear infinite;
+}
+
+@keyframes symbolShimmer {
+  0% { transform: rotate(45deg) translate(-100%, -100%); }
+  100% { transform: rotate(45deg) translate(100%, 100%); }
+}
+
+/* Ceremony Text */
+.ceremony-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: 16px;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% { 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  100% { 
+    text-shadow: 2px 2px 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+  }
+}
+
+.ceremony-message {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 1.6;
+}
+
+.aura-gain-display {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.3));
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  border-radius: 50px;
+  padding: 20px 40px;
+  margin: 30px 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  animation: auraGainPulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes auraGainPulse {
+  0% { 
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  }
+  100% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+  }
+}
+
+/* Particle Canvas */
+.particle-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Energy Particles */
+.energy-particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 1) 0%, rgba(255, 215, 0, 0.8) 50%, transparent 100%);
+  border-radius: 50%;
+  animation: particleFloat 3s linear infinite;
+}
+
+/* Generate different particle animations */
+@keyframes particleFloat {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--end-x, 100px), var(--end-y, -100px)) scale(0);
+    opacity: 0;
+  }
+}
+
+.particle:nth-child(odd) {
+  background: radial-gradient(circle, rgba(255, 107, 107, 1) 0%, rgba(255, 107, 107, 0.8) 50%, transparent 100%);
+}
+
+.particle:nth-child(3n) {
+  background: radial-gradient(circle, rgba(156, 39, 176, 1) 0%, rgba(156, 39, 176, 0.8) 50%, transparent 100%);
+}
+
+/* Submission Status */
+.submission-status {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(76, 175, 80, 0.8);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 30px;
+  backdrop-filter: blur(5px);
+}
+
+.status-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  animation: statusIconSpin 2s linear infinite;
+}
+
+@keyframes statusIconSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.status-message {
+  font-size: 1.2rem;
+  color: #4CAF50;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.status-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+/* Continue Button */
+.continue-btn {
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+}
+
+.continue-btn:hover {
+  background: linear-gradient(135deg, #45a049, #7CB342);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 36px rgba(76, 175, 80, 0.6);
+}
+
+/* AURA Counter Animation */
+.aura-counter {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #FFD700;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+  z-index: 1002;
+  animation: auraCounterUpdate 0.5s ease-in-out;
+}
+
+@keyframes auraCounterUpdate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .ceremony-container {
+    padding: 20px;
+    max-width: 90%;
+  }
+  
+  .ceremony-title {
+    font-size: 2rem;
+  }
+  
+  .ceremony-message {
+    font-size: 1.1rem;
+  }
+  
+  .aura-symbol {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .aura-symbol-inner {
+    font-size: 3rem;
+  }
+  
+  .aura-gain-display {
+    padding: 16px 32px;
+    font-size: 1.5rem;
+  }
+  
+  .orb {
+    transform: scale(0.7);
+  }
+  
+  .energy-particles {
+    width: 400px;
+    height: 400px;
+  }
+}

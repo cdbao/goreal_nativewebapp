@@ -1,0 +1,295 @@
+version: '3.8'
+
+services:
+  # Reverse Proxy / Load Balancer
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: goreal_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/production/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/production/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./docker/production/ssl:/etc/ssl/certs:ro
+      - static_files:/var/www/static:ro
+      - media_files:/var/www/media:ro
+    depends_on:
+      - api-1
+      - api-2
+      - dashboard
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # API Server Instances (Load Balanced)
+  api-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        VERSION: ${VERSION:-latest}
+        VCS_REF: ${VCS_REF:-unknown}
+    container_name: goreal_api_1
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - GOOGLE_CREDENTIALS_FILE=/app/secrets/google-credentials.json
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - WORKERS=2
+      - INSTANCE_ID=api-1
+    volumes:
+      - ./docker/production/secrets:/app/secrets:ro
+      - static_files:/app/static
+      - media_files:/app/media
+      - logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  api-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        VERSION: ${VERSION:-latest}
+        VCS_REF: ${VCS_REF:-unknown}
+    container_name: goreal_api_2
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - GOOGLE_CREDENTIALS_FILE=/app/secrets/google-credentials.json
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - WORKERS=2
+      - INSTANCE_ID=api-2
+    volumes:
+      - ./docker/production/secrets:/app/secrets:ro
+      - static_files:/app/static
+      - media_files:/app/media
+      - logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # Dashboard Service
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: goreal_dashboard
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - GOOGLE_CREDENTIALS_FILE=/app/secrets/google-credentials.json
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    volumes:
+      - ./docker/production/secrets:/app/secrets:ro
+      - logs:/app/logs
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - goreal_network
+    command: ["streamlit", "run", "goreal/dashboard/app.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: goreal_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./docker/production/postgres:/etc/postgresql:ro
+    ports:
+      - "127.0.0.1:5432:5432"  # Only bind to localhost for security
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: goreal_redis
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - redis_data:/data
+      - ./docker/production/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "127.0.0.1:6379:6379"  # Only bind to localhost
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # Log Management
+  logrotate:
+    image: alpine:3.18
+    container_name: goreal_logrotate
+    restart: unless-stopped
+    volumes:
+      - logs:/var/log/goreal
+      - ./docker/production/logrotate/logrotate.conf:/etc/logrotate.conf:ro
+    command: >
+      sh -c "
+        while true; do
+          logrotate -f /etc/logrotate.conf
+          sleep 3600
+        done
+      "
+    networks:
+      - goreal_network
+
+  # Backup Service
+  backup:
+    image: postgres:15-alpine
+    container_name: goreal_backup
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      BACKUP_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - backups:/backups
+      - ./docker/production/scripts/backup.sh:/backup.sh:ro
+    depends_on:
+      - postgres
+    networks:
+      - goreal_network
+    command: >
+      sh -c "
+        apk add --no-cache dcron
+        echo \"$${BACKUP_SCHEDULE} /backup.sh\" | crontab -
+        crond -f
+      "
+
+  # Monitoring Agent (Optional)
+  monitoring:
+    image: prom/node-exporter:latest
+    container_name: goreal_monitoring
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    networks:
+      - goreal_network
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/host'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  static_files:
+    driver: local
+  media_files:
+    driver: local
+  logs:
+    driver: local
+  backups:
+    driver: local
+
+networks:
+  goreal_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

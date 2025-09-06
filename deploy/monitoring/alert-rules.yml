@@ -1,0 +1,215 @@
+# Prometheus Alert Rules for GoREAL Production
+
+groups:
+  - name: goreal-api
+    rules:
+      # API Health Alerts
+      - alert: APIDown
+        expr: up{job=~"goreal-api-.*"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "GoREAL API instance is down"
+          description: "API instance {{ $labels.instance }} has been down for more than 1 minute"
+
+      - alert: APIHighResponseTime
+        expr: http_request_duration_seconds{quantile="0.95",job=~"goreal-api-.*"} > 2
+        for: 2m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "High API response time"
+          description: "95th percentile response time for {{ $labels.instance }} is {{ $value }}s"
+
+      - alert: APIHighErrorRate
+        expr: rate(http_requests_total{status=~"5..",job=~"goreal-api-.*"}[5m]) / rate(http_requests_total{job=~"goreal-api-.*"}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "High API error rate"
+          description: "API error rate for {{ $labels.instance }} is {{ $value | humanizePercentage }}"
+
+      # Database Alerts
+      - alert: DatabaseDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL database has been down for more than 1 minute"
+
+      - alert: DatabaseHighConnections
+        expr: postgres_stat_database_numbackends / postgres_settings_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "High database connection usage"
+          description: "Database connection usage is {{ $value | humanizePercentage }}"
+
+      - alert: DatabaseSlowQueries
+        expr: postgres_stat_database_tup_returned / postgres_stat_database_tup_fetched > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Database has slow queries"
+          description: "Database query efficiency is degraded (returned/fetched ratio: {{ $value }})"
+
+      # Redis Alerts
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis is down"
+          description: "Redis has been down for more than 1 minute"
+
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_config_maxmemory > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}"
+
+      # System Resource Alerts
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage on {{ $labels.instance }} is {{ $value }}%"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage on {{ $labels.instance }} is {{ $value | humanizePercentage }}"
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "Low disk space"
+          description: "Disk usage on {{ $labels.instance }} {{ $labels.mountpoint }} is {{ $value | humanizePercentage }}"
+
+      # Application-specific Alerts
+      - alert: DashboardDown
+        expr: up{job="goreal-dashboard"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          service: dashboard
+        annotations:
+          summary: "GoREAL Dashboard is down"
+          description: "Streamlit dashboard has been down for more than 2 minutes"
+
+      - alert: HighRequestRate
+        expr: rate(http_requests_total{job=~"goreal-api-.*"}[5m]) > 100
+        for: 5m
+        labels:
+          severity: info
+          service: api
+        annotations:
+          summary: "High request rate"
+          description: "API request rate for {{ $labels.instance }} is {{ $value }} requests/second"
+
+      - alert: NoRecentDeployment
+        expr: time() - goreal_last_deployment_timestamp > 604800  # 7 days
+        for: 0s
+        labels:
+          severity: info
+          service: deployment
+        annotations:
+          summary: "No recent deployment"
+          description: "Last deployment was more than 7 days ago"
+
+  - name: goreal-business
+    rules:
+      # Business Logic Alerts
+      - alert: LowChallengeCompletionRate
+        expr: goreal_challenges_completed_total / goreal_challenges_attempted_total < 0.5
+        for: 10m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "Low challenge completion rate"
+          description: "Challenge completion rate is {{ $value | humanizePercentage }} over the last 10 minutes"
+
+      - alert: NoRecentActivity
+        expr: increase(goreal_user_actions_total[1h]) == 0
+        for: 1h
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "No user activity"
+          description: "No user actions recorded in the last hour"
+
+      - alert: GoogleSheetsConnectionFailure
+        expr: goreal_google_sheets_errors_total > 0
+        for: 1m
+        labels:
+          severity: warning
+          service: integration
+        annotations:
+          summary: "Google Sheets connection issues"
+          description: "{{ $value }} Google Sheets API errors in the last minute"
+
+  - name: goreal-security
+    rules:
+      # Security Alerts
+      - alert: HighFailedLoginAttempts
+        expr: rate(goreal_failed_login_attempts_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "High failed login attempts"
+          description: "Failed login rate is {{ $value }} attempts/second"
+
+      - alert: SuspiciousAPIActivity
+        expr: rate(http_requests_total{status="403",job=~"goreal-api-.*"}[5m]) > 1
+        for: 1m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "Suspicious API activity detected"
+          description: "High rate of 403 responses: {{ $value }} requests/second"
+
+      - alert: SSLCertificateExpiring
+        expr: (ssl_certificate_expiry_timestamp - time()) / 86400 < 30
+        for: 1m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate for {{ $labels.instance }} expires in {{ $value }} days"

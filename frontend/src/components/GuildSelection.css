@@ -1,0 +1,915 @@
+/* ========================================
+   🏛️ GUILD SELECTION - ASCENSION CITADEL
+   Epic & Immersive Guild Selection Experience
+   ======================================== */
+
+/* Container & Modal Base */
+.guild-selection-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 69, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(65, 105, 225, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(50, 205, 50, 0.1) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(15px);
+  animation: containerFadeIn 0.8s ease-out forwards;
+}
+
+.guild-selection-modal {
+  max-width: 1200px;
+  width: 95%;
+  max-height: 95vh;
+  overflow-y: auto;
+  background: linear-gradient(
+    135deg, 
+    rgba(15, 23, 42, 0.98) 0%,
+    rgba(30, 41, 59, 0.95) 50%, 
+    rgba(15, 23, 42, 0.98) 100%
+  );
+  border-radius: 25px;
+  padding: 3rem;
+  border: 3px solid;
+  border-image: linear-gradient(
+    135deg, 
+    var(--guild-accent, #FFD700), 
+    var(--guild-primary, #FF4500), 
+    var(--guild-secondary, #FF6347)
+  ) 1;
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: white;
+  position: relative;
+  animation: modalSlideIn 0.8s ease-out 0.2s both;
+  overflow: hidden;
+}
+
+.guild-selection-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,215,0,0.1)"/><circle cx="80" cy="30" r="1" fill="rgba(255,69,0,0.1)"/><circle cx="60" cy="70" r="1.5" fill="rgba(65,105,225,0.1)"/><circle cx="30" cy="80" r="1" fill="rgba(50,205,50,0.1)"/></svg>') repeat;
+  animation: starfield 20s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Header Section */
+.selection-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.selection-title {
+  font-size: 3.5rem;
+  font-family: var(--font-fantasy);
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    #FFD700 0%,
+    #FFA500 25%,
+    #FF6B6B 50%,
+    #FF8E53 75%,
+    #FFD700 100%
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: epicShimmer 4s ease-in-out infinite;
+  text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+}
+
+.selection-subtitle-primary {
+  font-size: 2rem;
+  font-family: var(--font-fantasy);
+  color: var(--guild-accent, #FFD700);
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+.selection-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.7;
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+  font-weight: 400;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Error & Success Handling */
+.error-banner {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border: 2px solid #fca5a5;
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+  animation: errorSlideDown 0.4s ease-out;
+}
+
+.success-banner {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: 2px solid #6ee7b7;
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+  animation: successSlideDown 0.4s ease-out;
+}
+
+.success-icon {
+  font-size: 1.5rem;
+  animation: successBounce 0.6s ease-out;
+}
+
+.success-message {
+  flex: 1;
+  font-weight: 600;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.connection-status {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9));
+  border: 2px solid rgba(147, 197, 253, 0.5);
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+  animation: pulseGlow 2s ease-in-out infinite;
+  color: white;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  animation: shake 0.5s ease-in-out infinite alternate;
+}
+
+.error-message {
+  flex: 1;
+  font-weight: 600;
+  color: white;
+}
+
+.error-dismiss {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.error-dismiss:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Guild Cards Grid */
+.guilds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  perspective: 1000px;
+}
+
+/* Individual Guild Cards */
+.guild-card {
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  transform-style: preserve-3d;
+  animation: cardFloat 3s ease-in-out infinite;
+}
+
+.guild-card:nth-child(1) { animation-delay: 0s; }
+.guild-card:nth-child(2) { animation-delay: 0.5s; }
+.guild-card:nth-child(3) { animation-delay: 1s; }
+
+/* Guild Card Hover Effects */
+.guild-card:hover,
+.guild-card.hovered {
+  transform: translateY(-15px) scale(1.05);
+  border-color: var(--guild-accent, #FFD700);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 0 40px var(--guild-primary, #FF4500),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  animation: none;
+}
+
+.guild-card.selected {
+  border-color: var(--guild-accent, #FFD700);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px var(--guild-primary, #FF4500),
+    inset 0 0 50px rgba(var(--guild-primary, 255, 69, 0), 0.1);
+  transform: translateY(-8px) scale(1.02);
+  animation: selectedPulse 2s ease-in-out infinite;
+}
+
+.guild-card.clicked {
+  animation: clickFeedback 0.3s ease-out;
+  transform: translateY(-10px) scale(1.08) !important;
+}
+
+/* Guild Card Content */
+.guild-card-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.guild-icon-large {
+  font-size: 4.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
+  text-shadow: 0 0 20px currentColor;
+  animation: iconPulse 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+}
+
+.guild-name {
+  font-size: 2rem;
+  color: var(--guild-accent, #FFD700);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.05em;
+}
+
+.guild-motto {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--guild-accent, #FFD700);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  opacity: 0.9;
+}
+
+.guild-focus {
+  font-size: 0.95rem;
+  color: var(--guild-secondary, #FF6347);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.guild-description {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.guild-path-button {
+  margin-top: auto;
+}
+
+.choose-path-btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--guild-accent, #FFD700);
+  background: linear-gradient(135deg, var(--guild-primary, #FF4500), var(--guild-secondary, #FF6347));
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.choose-path-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.choose-path-btn:hover::before {
+  left: 100%;
+}
+
+.choose-path-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--guild-primary, #FF4500),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
+/* Selection Indicator */
+.selection-indicator {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--guild-accent, #FFD700);
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: indicatorPulse 1.5s ease-in-out infinite;
+}
+
+.indicator-icon {
+  font-size: 1.1rem;
+}
+
+/* Selection Actions */
+.selection-actions {
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.selected-guild-info {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.selection-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--guild-primary, #FF4500), var(--guild-secondary, #FF6347));
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.badge-icon {
+  font-size: 2rem;
+  text-shadow: 0 0 15px currentColor;
+}
+
+.badge-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.selection-motto {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--guild-accent, #FFD700);
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.selection-note {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.cancel-button, .confirm-button {
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.cancel-button {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.confirm-button {
+  background: linear-gradient(135deg, var(--guild-primary, #4CAF50), var(--guild-secondary, #45a049));
+  color: white;
+  border: 2px solid var(--guild-accent, #FFD700);
+  animation: confirmButtonPulse 3s ease-in-out infinite;
+}
+
+.confirm-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 35px rgba(0, 0, 0, 0.4),
+    0 0 25px var(--guild-primary, #4CAF50);
+  animation: none;
+  background: linear-gradient(135deg, var(--guild-secondary, #45a049), var(--guild-primary, #4CAF50));
+}
+
+.confirm-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+  animation: none;
+}
+
+.confirm-icon {
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* Loading States */
+.loading-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Footer */
+.selection-footer {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+/* Success Exit Animation */
+.guild-selection-modal.success-exit {
+  animation: successExit 1s ease-in-out forwards;
+}
+
+/* ========================================
+   📱 RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .guild-selection-modal {
+    width: 90%;
+    padding: 2rem;
+  }
+  
+  .guilds-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+  
+  .selection-title {
+    font-size: 2.8rem;
+  }
+  
+  .selection-subtitle-primary {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .guild-selection-container {
+    padding: 1rem;
+  }
+  
+  .guild-selection-modal {
+    width: 95%;
+    padding: 1.5rem;
+    border-radius: 20px;
+    max-height: 95vh;
+  }
+
+  .selection-header {
+    margin-bottom: 2rem;
+  }
+
+  .selection-title {
+    font-size: 2.2rem;
+    line-height: 1.2;
+  }
+
+  .selection-subtitle-primary {
+    font-size: 1.4rem;
+  }
+
+  .selection-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .guilds-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .guild-card {
+    padding: 1.5rem;
+  }
+
+  .guild-icon-large {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .guild-name {
+    font-size: 1.6rem;
+  }
+
+  .guild-motto {
+    font-size: 1rem;
+  }
+
+  .guild-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cancel-button, .confirm-button {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .selection-actions {
+    padding: 1.5rem;
+  }
+
+  .badge-text {
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .guild-selection-modal {
+    padding: 1rem;
+    border-radius: 15px;
+  }
+
+  .selection-title {
+    font-size: 1.8rem;
+  }
+
+  .selection-subtitle-primary {
+    font-size: 1.2rem;
+  }
+
+  .guild-icon-large {
+    font-size: 3rem;
+  }
+
+  .guild-card {
+    padding: 1rem;
+  }
+
+  .choose-path-btn {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* ========================================
+   ✨ ANIMATIONS & KEYFRAMES
+   ======================================== */
+
+@keyframes containerFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(15px);
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes starfield {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100px); }
+}
+
+@keyframes epicShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+  }
+  50% {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+    filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6));
+  }
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes selectedPulse {
+  0%, 100% {
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 30px var(--guild-primary, #FF4500),
+      inset 0 0 50px rgba(255, 69, 0, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.4),
+      0 0 50px var(--guild-primary, #FF4500),
+      inset 0 0 80px rgba(255, 69, 0, 0.2);
+  }
+}
+
+@keyframes clickFeedback {
+  0% { transform: translateY(-10px) scale(1.08); }
+  50% { transform: translateY(-15px) scale(1.12); }
+  100% { transform: translateY(-10px) scale(1.08); }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7));
+    transform: scale(1.05);
+  }
+}
+
+@keyframes indicatorPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes confirmButtonPulse {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: var(--guild-accent, #FFD700);
+  }
+  50% {
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.4),
+      0 0 20px var(--guild-accent, #FFD700);
+    border-color: white;
+  }
+}
+
+@keyframes errorSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes successSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes successBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+    border-color: rgba(147, 197, 253, 0.5);
+  }
+  50% {
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+    border-color: rgba(147, 197, 253, 0.8);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+@keyframes successExit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Animation utility classes */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .guild-card {
+    border-width: 3px;
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .selection-title,
+  .guild-name,
+  .guild-motto {
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .guild-card {
+    animation: none;
+  }
+  
+  .selection-title {
+    animation: none;
+  }
+}

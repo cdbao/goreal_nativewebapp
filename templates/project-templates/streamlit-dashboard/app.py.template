@@ -1,0 +1,102 @@
+"""{{project_title}} - Main Streamlit Application"""
+
+import streamlit as st
+import sys
+from pathlib import Path
+
+# Add src to path
+src_path = Path(__file__).parent / "src"
+sys.path.insert(0, str(src_path))
+
+from config import AppConfig
+{% if use_authentication %}from auth import authenticate_user{% endif %}
+from pages import home, analytics, settings
+{% if use_sidebar %}from components.filters import sidebar_filters{% endif %}
+
+
+def main():
+    """Main application entry point"""
+    # Page configuration
+    st.set_page_config(
+        page_title="{{project_title}}",
+        page_icon="📊",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    
+    # Load custom CSS
+    load_custom_css()
+    
+    {% if use_authentication %}# Authentication
+    if not authenticate_user():
+        return
+    {% endif %}
+    
+    # Navigation
+    setup_navigation()
+    
+    # Main content
+    render_main_content()
+
+
+def load_custom_css():
+    """Load custom CSS styling"""
+    css_file = Path(__file__).parent / "assets" / "css" / "style.css"
+    if css_file.exists():
+        with open(css_file) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+def setup_navigation():
+    """Setup page navigation"""
+    {% if use_sidebar %}
+    st.sidebar.title("{{project_title}}")
+    st.sidebar.markdown("---")
+    
+    # Navigation menu
+    pages = {
+        "🏠 Home": "home",
+        "📈 Analytics": "analytics", 
+        "⚙️ Settings": "settings"
+    }
+    
+    selected_page = st.sidebar.selectbox(
+        "Navigate to:",
+        options=list(pages.keys()),
+        index=0
+    )
+    
+    st.session_state.current_page = pages[selected_page]
+    
+    # Sidebar filters
+    st.sidebar.markdown("---")
+    sidebar_filters()
+    {% else %}
+    # Top navigation tabs
+    tabs = st.tabs(["🏠 Home", "📈 Analytics", "⚙️ Settings"])
+    
+    with tabs[0]:
+        st.session_state.current_page = "home"
+    with tabs[1]:
+        st.session_state.current_page = "analytics"
+    with tabs[2]:
+        st.session_state.current_page = "settings"
+    {% endif %}
+
+
+def render_main_content():
+    """Render the main content area"""
+    page = getattr(st.session_state, 'current_page', 'home')
+    
+    if page == "home":
+        home.render()
+    elif page == "analytics":
+        analytics.render()
+    elif page == "settings":
+        settings.render()
+    else:
+        st.error(f"Unknown page: {page}")
+
+
+if __name__ == "__main__":
+    main()

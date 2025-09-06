@@ -1,0 +1,431 @@
+/* Dynamic Quest Report Interface */
+.dynamic-quest-report {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 2px solid rgba(138, 43, 226, 0.4);
+  border-radius: 20px;
+  padding: 32px;
+  margin: 24px 16px;
+  backdrop-filter: blur(15px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  
+  /* Entrance animation */
+  animation: reportInterfaceReveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform: translateY(30px) scale(0.95);
+  opacity: 0;
+}
+
+@keyframes reportInterfaceReveal {
+  0% {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mystical background effects */
+.dynamic-quest-report::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(75, 0, 130, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Report header */
+.report-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.report-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 8px;
+  background: linear-gradient(45deg, #9C27B0, #3F51B5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.report-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.report-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(45deg, rgba(138, 43, 226, 0.3), rgba(138, 43, 226, 0.5));
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: 1px solid rgba(138, 43, 226, 0.6);
+}
+
+/* Input sections */
+.report-input-section {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 32px;
+}
+
+.input-label {
+  display: block;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Text input styling */
+.text-input {
+  width: 100%;
+  min-height: 120px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(138, 43, 226, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: vertical;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: rgba(138, 43, 226, 0.8);
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.text-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* File input styling */
+.file-input-container {
+  position: relative;
+  border: 2px dashed rgba(138, 43, 226, 0.5);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.file-input-container:hover {
+  border-color: rgba(138, 43, 226, 0.8);
+  background: rgba(138, 43, 226, 0.1);
+}
+
+.file-input-container.drag-over {
+  border-color: #9C27B0;
+  background: rgba(156, 39, 176, 0.2);
+  transform: scale(1.02);
+}
+
+.file-input-container.has-file {
+  border-color: rgba(76, 175, 80, 0.8);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-input-content {
+  pointer-events: none;
+}
+
+.file-input-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.file-input-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.file-input-hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+/* File preview */
+.file-preview {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.file-preview-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #4CAF50;
+}
+
+.file-preview-icon {
+  font-size: 1.5rem;
+}
+
+.file-preview-details {
+  flex: 1;
+}
+
+.file-preview-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.file-preview-size {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.file-remove-btn {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  color: #F44336;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.file-remove-btn:hover {
+  background: rgba(244, 67, 54, 0.3);
+  border-color: rgba(244, 67, 54, 0.8);
+}
+
+/* Audio recording interface */
+.audio-recorder {
+  text-align: center;
+  padding: 24px;
+}
+
+.record-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid rgba(244, 67, 54, 0.8);
+  background: linear-gradient(45deg, #F44336, #FF5722);
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.record-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(244, 67, 54, 0.5);
+}
+
+.record-button.recording {
+  animation: recordingPulse 1s ease-in-out infinite;
+  background: linear-gradient(45deg, #FF1744, #F44336);
+}
+
+@keyframes recordingPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+  }
+}
+
+.recording-status {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.recording-timer {
+  color: #F44336;
+  font-size: 1.3rem;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+/* Submit button */
+.complete-training-btn {
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  color: white;
+  border: none;
+  padding: 18px 36px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+  width: 100%;
+  margin-top: 24px;
+  
+  /* Success pulse effect */
+  animation: successPulse 3s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+  0%, 100% { 
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 8px 32px rgba(76, 175, 80, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+.complete-training-btn:hover {
+  background: linear-gradient(135deg, #45a049, #7CB342);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 36px rgba(76, 175, 80, 0.6);
+  animation: none;
+}
+
+.complete-training-btn:disabled {
+  background: linear-gradient(135deg, #9E9E9E, #757575);
+  cursor: not-allowed;
+  animation: none;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(158, 158, 158, 0.3);
+}
+
+/* Submit button shimmer effect */
+.complete-training-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.complete-training-btn:hover::before {
+  left: 100%;
+}
+
+/* Loading state */
+.dynamic-quest-report.submitting {
+  opacity: 0.8;
+}
+
+.dynamic-quest-report.submitting .complete-training-btn {
+  pointer-events: none;
+}
+
+.submitting-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+
+.submitting-message {
+  background: rgba(138, 43, 226, 0.9);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(138, 43, 226, 0.4);
+}
+
+.submitting-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dynamic-quest-report {
+    margin: 16px 8px;
+    padding: 24px 20px;
+  }
+  
+  .report-title {
+    font-size: 1.5rem;
+  }
+  
+  .file-input-container {
+    padding: 24px;
+  }
+  
+  .record-button {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+  
+  .complete-training-btn {
+    padding: 16px 28px;
+    font-size: 1.1rem;
+  }
+}

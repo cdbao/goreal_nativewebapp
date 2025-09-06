@@ -1,0 +1,292 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Code Quality Checks
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: Code formatting with Black
+      run: |
+        black --check --diff goreal/ tests/ scripts/
+        
+    - name: Linting with flake8
+      run: |
+        flake8 goreal/ tests/ scripts/ --max-line-length=88 --extend-ignore=E203,W503
+        
+    - name: Type checking with mypy
+      run: |
+        mypy goreal/ --ignore-missing-imports --no-strict-optional
+        
+    - name: Import sorting with isort
+      run: |
+        isort --check-only --diff goreal/ tests/ scripts/
+        
+    - name: Security check with bandit
+      run: |
+        bandit -r goreal/ -f json -o bandit-report.json || true
+        
+    - name: Upload bandit results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: bandit-results
+        path: bandit-report.json
+
+  # Unit Tests
+  test:
+    runs-on: ubuntu-latest
+    name: Unit Tests
+    
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+        
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: goreal_password
+          POSTGRES_USER: goreal_user
+          POSTGRES_DB: goreal_test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        pip install -e .
+        
+    - name: Set up test environment
+      env:
+        DATABASE_URL: postgresql://goreal_user:goreal_password@localhost:5432/goreal_test_db
+        REDIS_URL: redis://localhost:6379/0
+      run: |
+        # Create test database tables
+        python -c "from goreal.core.database import create_tables; create_tables()"
+        
+    - name: Run tests with coverage
+      env:
+        DATABASE_URL: postgresql://goreal_user:goreal_password@localhost:5432/goreal_test_db
+        REDIS_URL: redis://localhost:6379/0
+        FLASK_ENV: testing
+      run: |
+        pytest tests/ -v \
+          --cov=goreal \
+          --cov-report=xml \
+          --cov-report=html \
+          --cov-report=term-missing \
+          --cov-fail-under=80 \
+          --junitxml=pytest-results.xml
+          
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          pytest-results.xml
+          htmlcov/
+          coverage.xml
+
+  # Integration Tests
+  integration-test:
+    runs-on: ubuntu-latest
+    name: Integration Tests
+    needs: [code-quality]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build test environment
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+        
+    - name: Start services
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d postgres redis
+        sleep 10
+        
+    - name: Run integration tests
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm api \
+          pytest tests/integration/ -v --tb=short
+          
+    - name: Test API endpoints
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d api
+        sleep 15
+        
+        # Wait for API to be ready
+        timeout 60 bash -c 'until curl -f http://localhost:5000/health; do sleep 2; done'
+        
+        # Run API tests
+        chmod +x scripts/test-api.sh
+        ./scripts/test-api.sh
+        
+    - name: Collect logs
+      if: failure()
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs > docker-logs.txt
+        
+    - name: Upload logs
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-logs
+        path: docker-logs.txt
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+
+  # Security Scanning
+  security:
+    runs-on: ubuntu-latest
+    name: Security Scan
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Build and Push Docker Images
+  docker-build:
+    runs-on: ubuntu-latest
+    name: Docker Build
+    needs: [test, integration-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ secrets.DOCKER_USERNAME }}/goreal
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix=sha-
+          type=raw,value=latest,enable={{is_default_branch}}
+          
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: Update deployment
+      if: success()
+      run: |
+        echo "Docker image built and pushed successfully"
+        # Add deployment trigger here if needed

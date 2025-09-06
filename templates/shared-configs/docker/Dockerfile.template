@@ -1,0 +1,111 @@
+# {{project_title}} - Production Dockerfile
+# Multi-stage build for optimized production image
+
+# Build stage
+FROM python:3.11-slim-bullseye AS builder
+
+# Set build arguments
+ARG BUILD_DATE
+ARG VERSION
+ARG VCS_REF
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create application directory
+WORKDIR /app
+
+# Copy requirements first for better caching
+COPY requirements.txt requirements-prod.txt ./
+
+# Create virtual environment and install dependencies
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip wheel setuptools && \
+    pip install --no-cache-dir -r requirements-prod.txt
+
+# Production stage
+FROM python:3.11-slim-bullseye AS production
+
+# Set build arguments and labels
+ARG BUILD_DATE
+ARG VERSION=latest
+ARG VCS_REF
+
+LABEL maintainer="{{author_name}} <{{author_email}}>" \
+      org.opencontainers.image.title="{{project_title}}" \
+      org.opencontainers.image.description="{{project_description}}" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.vendor="{{author_name}}" \
+      org.opencontainers.image.source="https://github.com/{{github_username}}/{{project_name}}"
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user for security
+RUN groupadd -r {{project_name|replace('-', '')}} && \
+    useradd -r -g {{project_name|replace('-', '')}} -d /app -s /bin/bash {{project_name|replace('-', '')}}
+
+# Copy virtual environment from builder stage
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code
+COPY --chown={{project_name|replace('-', '')}}:{{project_name|replace('-', '')}} . .
+
+# Create necessary directories with correct permissions
+RUN mkdir -p /app/logs /app/tmp /app/data && \
+    chown -R {{project_name|replace('-', '')}}:{{project_name|replace('-', '')}} /app && \
+    chmod -R 755 /app && \
+    chmod -R 644 /app/{{project_name|replace('-', '_')}}/ || true
+
+# Copy health check script
+COPY --chown={{project_name|replace('-', '')}}:{{project_name|replace('-', '')}} docker/healthcheck.sh /healthcheck.sh
+COPY --chown={{project_name|replace('-', '')}}:{{project_name|replace('-', '')}} docker/entrypoint.sh /entrypoint.sh
+
+# Make scripts executable
+RUN chmod +x /healthcheck.sh /entrypoint.sh
+
+# Switch to non-root user
+USER {{project_name|replace('-', '')}}
+
+# Set environment variables
+ENV PYTHONPATH="/app:$PYTHONPATH" \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Expose port
+EXPOSE {{api_port|default(8000)}}
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD /healthcheck.sh
+
+# Set entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Default command
+{% if template_type == 'flask-api' %}
+CMD ["gunicorn", "--bind", "0.0.0.0:{{api_port|default(8000)}}", "--workers", "4", "{{project_name|replace('-', '_')}}.api.app:create_app()"]
+{% elif template_type == 'streamlit-dashboard' %}
+CMD ["streamlit", "run", "app.py", "--server.port={{dashboard_port|default(8501)}}", "--server.address=0.0.0.0"]
+{% else %}
+CMD ["python", "-m", "{{project_name|replace('-', '_')}}"]
+{% endif %}

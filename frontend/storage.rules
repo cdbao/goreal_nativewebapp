@@ -1,0 +1,70 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for GoREAL Project
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Background images - Allow authenticated users to read/write for now
+    // TODO: Implement proper admin-only write access via Cloud Functions
+    match /backgrounds/{fileName} {
+      // Allow read for all authenticated users
+      allow read: if request.auth != null;
+      
+      // Temporarily allow write for all authenticated users
+      // This will be restricted via application logic and Cloud Functions
+      allow write, delete: if request.auth != null;
+    }
+    
+    // Background thumbnails - Same rules as main backgrounds  
+    match /backgrounds/thumbnails/{fileName} {
+      // Allow read for all authenticated users
+      allow read: if request.auth != null;
+      
+      // Temporarily allow write for all authenticated users
+      allow write, delete: if request.auth != null;
+    }
+    
+    // Quest proof uploads - Users can upload to their own folder
+    match /proofs/{userId}/{fileName} {
+      // Allow read for owner
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow create/write for owner
+      allow create, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow delete for owner
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Quest submissions - Users can upload to their own folder
+    match /submissions/{userId}/{questId}/{fileName} {
+      // Allow read for owner
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow create/write for owner
+      allow create, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow delete for owner
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Legacy quest proofs (backward compatibility)
+    match /quest-proofs/{fileName} {
+      // Allow read for authenticated users
+      allow read: if request.auth != null;
+      
+      // Allow write for authenticated users (legacy support)
+      allow write: if request.auth != null;
+      
+      // Allow delete only for admins
+      allow delete: if request.auth != null && 
+                    exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+                    get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Deny all other paths by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

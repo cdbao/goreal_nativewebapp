@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: goreal_postgres
+    environment:
+      POSTGRES_DB: goreal_db
+      POSTGRES_USER: goreal_user
+      POSTGRES_PASSWORD: goreal_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goreal_user -d goreal_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: goreal_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - goreal_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # GoREAL API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: goreal_api
+    environment:
+      - DATABASE_URL=postgresql://goreal_user:goreal_password@postgres:5432/goreal_db
+      - REDIS_URL=redis://redis:6379/0
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - goreal_network
+    restart: unless-stopped
+    command: ["python", "-m", "goreal.api.app"]
+
+  # Streamlit Dashboard
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: goreal_dashboard
+    environment:
+      - DATABASE_URL=postgresql://goreal_user:goreal_password@postgres:5432/goreal_db
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    depends_on:
+      - api
+    networks:
+      - goreal_network
+    restart: unless-stopped
+    command: ["streamlit", "run", "goreal/dashboard/app.py", "--server.address=0.0.0.0"]
+
+  # Development Environment with Jupyter
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: goreal_jupyter
+    environment:
+      - DATABASE_URL=postgresql://goreal_user:goreal_password@postgres:5432/goreal_db
+      - REDIS_URL=redis://redis:6379/0
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - goreal_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  goreal_network:
+    driver: bridge

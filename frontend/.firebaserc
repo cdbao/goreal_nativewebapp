@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "goreal-470006-b3689",
+    "native": "goreal-native"
+  },
+  "targets": {},
+  "etags": {}
+}
