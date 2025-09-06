@@ -60,7 +60,7 @@ jobs:
         bandit -r goreal/ -f json -o bandit-report.json || true
         
     - name: Upload bandit results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: bandit-results
@@ -156,7 +156,7 @@ jobs:
         fail_ci_if_error: true
         
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-${{ matrix.python-version }}
@@ -211,7 +211,7 @@ jobs:
         
     - name: Upload logs
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: docker-logs
         path: docker-logs.txt
