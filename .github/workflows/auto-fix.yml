@@ -1,6 +1,14 @@
 name: Automated CI/CD Debugging and Fix
 
 on:
+  # Primary trigger: Automatic start when CI/CD workflows fail
+  workflow_run:
+    workflows: ["CI/CD Pipeline", "Deploy to Firebase"]
+    types:
+      - completed
+    branches: [main]
+  
+  # Secondary triggers: Manual and scheduled
   workflow_dispatch:
     inputs:
       workflow_run_id:
@@ -13,8 +21,8 @@ on:
         type: boolean
         default: false
   schedule:
-    # Run every 30 minutes during business hours (UTC)
-    - cron: '*/30 8-18 * * 1-5'
+    # Backup check every 2 hours during business hours (UTC)  
+    - cron: '0 */2 8-18 * * 1-5'
 
 env:
   NODE_VERSION: '18'
@@ -25,12 +33,26 @@ jobs:
   detect-failures:
     name: Detect CI/CD Failures
     runs-on: ubuntu-latest
+    # Only run if: workflow failed, manual trigger, or scheduled
+    if: >
+      github.event.workflow_run.conclusion == 'failure' || 
+      github.event_name == 'workflow_dispatch' || 
+      github.event_name == 'schedule'
     
     outputs:
       has_failures: ${{ steps.detection.outputs.has_failures }}
       analysis_file: ${{ steps.detection.outputs.analysis_file }}
+      triggered_by_failure: ${{ steps.detection.outputs.triggered_by_failure }}
       
     steps:
+    - name: Wait for workflow logs to be available
+      if: github.event.workflow_run.conclusion == 'failure'
+      run: |
+        echo "⏱️ Waiting 45 seconds for logs to be fully available..."
+        echo "Failed workflow: ${{ github.event.workflow_run.name }}"
+        echo "Run ID: ${{ github.event.workflow_run.id }}"
+        echo "SHA: ${{ github.event.workflow_run.head_sha }}"
+        sleep 45
     - name: Checkout repository
       uses: actions/checkout@v4
       
@@ -51,13 +73,30 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+        WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
       run: |
         cd .github/debugging-system
         
         echo "🔍 Starting automated failure detection..."
         
-        # Run log retrieval
-        node log-retriever.js ci.yml
+        # Set triggered by failure flag
+        if [ "${{ github.event.workflow_run.conclusion }}" == "failure" ]; then
+          echo "triggered_by_failure=true" >> $GITHUB_OUTPUT
+          echo "🚨 Triggered by workflow failure: ${{ github.event.workflow_run.name }}"
+          echo "📋 Failed Run ID: ${{ github.event.workflow_run.id }}"
+          
+          # Use specific workflow run ID if available
+          if [ -n "$WORKFLOW_RUN_ID" ]; then
+            node log-retriever.js ci.yml "$WORKFLOW_RUN_ID"
+          else
+            node log-retriever.js ci.yml
+          fi
+        else
+          echo "triggered_by_failure=false" >> $GITHUB_OUTPUT
+          echo "📅 Triggered by: ${{ github.event_name }}"
+          # Run standard analysis for scheduled/manual triggers
+          node log-retriever.js ci.yml
+        fi
         
         if [ -f "latest-failure-analysis.json" ]; then
           echo "has_failures=true" >> $GITHUB_OUTPUT
@@ -180,7 +219,7 @@ jobs:
     name: Apply Fixes and Test
     runs-on: ubuntu-latest
     needs: [detect-failures, generate-fixes]
-    if: needs.generate-fixes.outputs.fixes_generated == 'true' && needs.generate-fixes.outputs.confidence_score > '0.6'
+    if: needs.generate-fixes.outputs.fixes_generated == 'true' && needs.generate-fixes.outputs.confidence_score > '0.8'
     
     permissions:
       contents: write
@@ -332,36 +371,128 @@ jobs:
           cd ..
         fi
         
-        echo "tests_passed=true" >> $GITHUB_OUTPUT
+        # Determine if tests actually passed by checking return codes
+        PYTHON_LINT_PASSED=true
+        PYTHON_TESTS_PASSED=true  
+        FRONTEND_TESTS_PASSED=true
         
-    - name: Commit fixes if tests pass
-      if: steps.test-fixes.outputs.tests_passed == 'true'
+        # Check Python linting
+        if command -v flake8 &> /dev/null; then
+          if ! flake8 goreal/ tests/ scripts/ --max-line-length=88 --extend-ignore=E203,W503 >/dev/null 2>&1; then
+            PYTHON_LINT_PASSED=false
+            echo "❌ Python linting still has errors"
+          else
+            echo "✅ Python linting passed"
+          fi
+        fi
+        
+        if command -v black &> /dev/null; then
+          if ! black --check goreal/ tests/ scripts/ >/dev/null 2>&1; then
+            PYTHON_LINT_PASSED=false
+            echo "❌ Black formatting still has errors"
+          else
+            echo "✅ Black formatting passed"
+          fi
+        fi
+        
+        # Check Python tests
+        if command -v pytest &> /dev/null; then
+          if ! pytest tests/ --maxfail=1 -x >/dev/null 2>&1; then
+            PYTHON_TESTS_PASSED=false
+            echo "❌ Python tests still failing"
+          else
+            echo "✅ Python tests passed"
+          fi
+        fi
+        
+        # Check frontend tests
+        if [ -d "frontend" ]; then
+          cd frontend
+          if ! npm test -- --watchAll=false --passWithNoTests >/dev/null 2>&1; then
+            FRONTEND_TESTS_PASSED=false
+            echo "❌ Frontend tests still failing"
+          else
+            echo "✅ Frontend tests passed"
+          fi
+          cd ..
+        fi
+        
+        # Overall test result
+        if [ "$PYTHON_LINT_PASSED" = "true" ] && [ "$PYTHON_TESTS_PASSED" = "true" ] && [ "$FRONTEND_TESTS_PASSED" = "true" ]; then
+          echo "tests_passed=true" >> $GITHUB_OUTPUT
+          echo "🎉 All tests passed - fix is validated!"
+        else
+          echo "tests_passed=false" >> $GITHUB_OUTPUT
+          echo "❌ Some tests still failing - fix needs review"
+        fi
+        
+    - name: Auto-commit validated fixes
+      if: steps.test-fixes.outputs.tests_passed == 'true' && needs.generate-fixes.outputs.confidence_score > '0.8'
       run: |
-        # Configure git
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action Auto-Fix"
+        # Configure git for autonomous commits
+        git config --local user.email "actions[bot]@github.com"
+        git config --local user.name "GoREAL Auto-Fix Bot"
         
         # Check if there are changes to commit
         if ! git diff --quiet; then
-          echo "📝 Committing automatic fixes..."
+          echo "🚀 Auto-committing validated high-confidence fixes..."
           
-          # Create commit message from fix descriptions
+          # Generate detailed commit message
           cd .github/debugging-system
-          COMMIT_MSG=$(node -e "
+          
+          # Extract fix details for commit message
+          WORKFLOW_NAME="${{ github.event.workflow_run.name || 'CI/CD' }}"
+          FIX_COUNT=$(node -e "
             const fs = require('fs');
-            const data = JSON.parse(fs.readFileSync('proposed-fixes.json', 'utf8'));
-            const descriptions = data.fixes.map(f => f.consolidatedFix.description);
-            console.log('fix(auto): Resolve CI failures\\n\\n' + descriptions.map(d => '- ' + d).join('\\n') + '\\n\\n🤖 Generated with automated debugging system');
-          ")
+            if (fs.existsSync('proposed-fixes.json')) {
+              const data = JSON.parse(fs.readFileSync('proposed-fixes.json', 'utf8'));
+              console.log(data.fixes.length);
+            } else { console.log('0'); }
+          " 2>/dev/null || echo "0")
+          
+          FIX_TYPES=$(node -e "
+            const fs = require('fs');
+            if (fs.existsSync('proposed-fixes.json')) {
+              const data = JSON.parse(fs.readFileSync('proposed-fixes.json', 'utf8'));
+              const types = [...new Set(data.fixes.map(f => f.consolidatedFix.description.split(' ')[0]))];
+              console.log(types.slice(0, 3).join(', '));
+            } else { console.log('General'); }
+          " 2>/dev/null || echo "General")
+          
+          CONFIDENCE=$(node -e "
+            const fs = require('fs');
+            if (fs.existsSync('proposed-fixes.json')) {
+              const data = JSON.parse(fs.readFileSync('proposed-fixes.json', 'utf8'));
+              console.log(Math.round(data.analysis.confidence * 100));
+            } else { console.log('85'); }
+          " 2>/dev/null || echo "85")
           
           cd ../..
+          
+          # Create comprehensive commit message
           git add -A
-          git commit -m "$COMMIT_MSG"
+          git commit -m "fix(auto): ${FIX_TYPES} - Resolve ${WORKFLOW_NAME} failures
+
+🤖 Autonomous Fix Summary:
+- Fixed ${FIX_COUNT} issues with ${CONFIDENCE}% confidence
+- All tests validated and passing
+- Auto-applied by self-healing CI/CD system
+
+Triggered by: ${{ github.event.workflow_run.html_url || github.event_name }}
+Run ID: ${{ github.event.workflow_run.id || 'N/A' }}
+
+🤖 Generated with automated debugging system
+Co-Authored-By: GoREAL Auto-Fix Bot <actions[bot]@github.com>"
+
+          # Push the fix
+          echo "📤 Pushing autonomous fix to main branch..."
           git push origin main
           
-          echo "✅ Fixes committed and pushed successfully"
+          echo "✅ Autonomous fix committed successfully!"
+          echo "🔄 This will trigger the original workflow to re-run and should now pass."
+          
         else
-          echo "ℹ️  No changes to commit"
+          echo "ℹ️ No file changes detected - fix may have been command-based only"
         fi
 
   # Step 4: Create Issue if Fixes Fail
@@ -369,7 +500,7 @@ jobs:
     name: Create Issue for Manual Review
     runs-on: ubuntu-latest
     needs: [detect-failures, generate-fixes, apply-and-test]
-    if: always() && (needs.generate-fixes.outputs.fixes_generated != 'true' || needs.apply-and-test.result == 'failure' || needs.generate-fixes.outputs.confidence_score <= '0.6')
+    if: always() && (needs.generate-fixes.outputs.fixes_generated != 'true' || needs.apply-and-test.result == 'failure' || needs.generate-fixes.outputs.confidence_score <= '0.8' || needs.apply-and-test.outputs.tests_passed != 'true')
     
     permissions:
       issues: write

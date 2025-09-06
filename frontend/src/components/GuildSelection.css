@@ -3,13 +3,15 @@
    Epic & Immersive Guild Selection Experience
    ======================================== */
 
-/* Container & Modal Base */
+/* Container & Modal Base - SCROLLING BUG FIX */
 .guild-selection-container {
-  position: fixed;
+  /* ✅ FIXED: Changed from position: fixed to allow natural document flow */
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  /* ✅ FIXED: Removed bottom: 0 to allow height expansion */
+  min-height: 100vh;  /* ✅ FIXED: Minimum full viewport, can grow taller */
   background:
     radial-gradient(
       circle at 20% 20%,
@@ -28,18 +30,27 @@
     ),
     rgba(0, 0, 0, 0.95);
   display: flex;
+  /* ✅ FIXED: Center content when smaller than viewport, allow scrolling when larger */
   align-items: center;
   justify-content: center;
+  /* ✅ FIXED: Added padding to provide breathing room when scrolling */
+  padding: 2rem 0;
+  /* ✅ ENHANCEMENT: Ensure content can grow beyond viewport and scroll */
+  box-sizing: border-box;
   z-index: 9999;
   backdrop-filter: blur(15px);
   animation: containerFadeIn 0.8s ease-out forwards;
+  /* ✅ FIXED: Ensure overflow is visible for scrolling */
+  overflow-y: auto;
 }
 
 .guild-selection-modal {
   max-width: 1200px;
   width: 95%;
-  max-height: 95vh;
-  overflow-y: auto;
+  /* ✅ FIXED: Removed max-height restriction to allow natural content expansion */
+  /* max-height: 95vh; */
+  /* ✅ FIXED: Removed overflow-y as parent container now handles scrolling */
+  /* overflow-y: auto; */
   background: linear-gradient(
     135deg,
     rgba(15, 23, 42, 0.98) 0%,
@@ -62,7 +73,12 @@
   color: white;
   position: relative;
   animation: modalSlideIn 0.8s ease-out 0.2s both;
-  overflow: hidden;
+  /* ✅ FIXED: Changed from overflow: hidden to visible for scrolling */
+  overflow: visible;
+  /* ✅ FIXED: Added margin to ensure proper centering when content is smaller than viewport */
+  margin: auto 0;
+  /* ✅ ENHANCEMENT: Ensure minimum space from viewport edges */
+  min-height: fit-content;
 }
 
 .guild-selection-modal::before {
@@ -625,14 +641,18 @@
 
 @media (max-width: 768px) {
   .guild-selection-container {
-    padding: 1rem;
+    /* ✅ FIXED: Reduced padding for mobile but maintained scrolling capability */
+    padding: 1rem 0;
+    /* ✅ FIXED: Mobile maintains center alignment with scrolling capability */
+    align-items: center;
   }
 
   .guild-selection-modal {
     width: 95%;
     padding: 1.5rem;
     border-radius: 20px;
-    max-height: 95vh;
+    /* ✅ FIXED: Removed max-height restriction for mobile */
+    /* max-height: 95vh; */
   }
 
   .selection-header {
