@@ -132,7 +132,7 @@ FAILED tests/test_validation.py::test_email_format - ValueError: Invalid email f
                 name: 'Flake8 F401 Fix',
                 error: {
                     type: 'flake8_error',
-                    message: 'goreal/test.py:1:1: F401 \'os\' imported but unused',
+                    message: 'test-temp.py:1:1: F401 \'os\' imported but unused',
                     jobName: 'lint'
                 },
                 expectFix: true
@@ -163,6 +163,8 @@ FAILED tests/test_validation.py::test_email_format - ValueError: Invalid email f
                 const mockFile = `# Test file\nimport os\nprint("Hello World")`;
                 await fs.writeFile(path.join(__dirname, 'test-temp.py'), mockFile);
                 
+                // Initialize strategies before use
+                aiDebugger.initializeStrategies();
                 const fix = await aiDebugger.generateFixForError(testCase.error, {});
                 
                 const hasFix = fix !== null && fix !== undefined;

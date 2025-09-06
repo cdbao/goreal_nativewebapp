@@ -8,28 +8,31 @@ const path = require('path');
 
 class AIDebuggingAgent {
     constructor() {
-        // Initialize strategies after methods are defined
+        // Initialize empty strategies, will be populated lazily
+        this.fixStrategies = null;
     }
     
     initializeStrategies() {
-        this.fixStrategies = {
-            // Python-specific fixes
-            'flake8_error': this.generateFlake8Fix.bind(this),
-            'black_error': this.generateBlackFix.bind(this),
-            'python_error': this.generatePythonErrorFix.bind(this),
-            'test_failure': this.generateTestFix.bind(this),
-            'assertion_error': this.generateAssertionFix.bind(this),
-            
-            // JavaScript/Node fixes
-            'npm_error': this.generateNpmFix.bind(this),
-            'compilation_error': this.generateCompilationFix.bind(this),
-            
-            // Security fixes
-            'security_issue': this.generateSecurityFix.bind(this),
-            
-            // Generic fixes
-            'generic_failure': this.generateGenericFix.bind(this)
-        };
+        if (!this.fixStrategies) {
+            this.fixStrategies = {
+                // Python-specific fixes
+                'flake8_error': this.generateFlake8Fix.bind(this),
+                'black_error': this.generateBlackFix.bind(this),
+                'python_error': this.generatePythonErrorFix.bind(this),
+                'test_failure': this.generateTestFix.bind(this),
+                'assertion_error': this.generateAssertionFix.bind(this),
+                
+                // JavaScript/Node fixes
+                'npm_error': this.generateNpmFix.bind(this),
+                'compilation_error': this.generateCompilationFix.bind(this),
+                
+                // Security fixes
+                'security_issue': this.generateSecurityFix.bind(this),
+                
+                // Generic fixes
+                'generic_failure': this.generateGenericFix.bind(this)
+            };
+        }
     }
 
     /**
@@ -145,7 +148,7 @@ class AIDebuggingAgent {
             const problemLine = lines[parseInt(lineNum) - 1];
             
             let fixedLine = problemLine;
-            let confidence = 0.8;
+            let confidence = 0.85; // Increased for autonomous operation
 
             // Common flake8 fixes
             switch (errorCode) {
@@ -164,7 +167,7 @@ class AIDebuggingAgent {
                         filePath,
                         fix: this.addBlankLines(lines, parseInt(lineNum) - 1, 2),
                         description: `Add 2 blank lines before function/class definition`,
-                        confidence: 0.9
+                        confidence: 0.95 // High confidence for simple formatting fix
                     };
                     
                 case 'F401': // Imported but unused
@@ -174,7 +177,7 @@ class AIDebuggingAgent {
                             filePath,
                             fix: this.removeUnusedImport(lines, importMatch[1]),
                             description: `Remove unused import: ${importMatch[1]}`,
-                            confidence: 0.9
+                            confidence: 0.92 // High confidence for safe removal
                         };
                     }
                     break;
@@ -214,7 +217,7 @@ class AIDebuggingAgent {
                 fix: null, // Will be handled by running black command
                 command: `black ${filePath}`,
                 description: `Format file with black`,
-                confidence: 0.95
+                confidence: 0.98 // Very high confidence for formatting
             };
         } catch (err) {
             console.error(`Error processing black fix for ${filePath}:`, err.message);
@@ -268,6 +271,28 @@ class AIDebuggingAgent {
         }
 
         return null;
+    }
+
+    /**
+     * Generate fix for assertion errors
+     */
+    async generateAssertionFix(error, analysisResult) {
+        return {
+            description: `Manual review required for assertion error: ${error.message}`,
+            confidence: 0.2,
+            requiresHumanReview: true
+        };
+    }
+
+    /**
+     * Generate fix for compilation errors
+     */
+    async generateCompilationFix(error, analysisResult) {
+        return {
+            description: `Manual review required for compilation error: ${error.message}`,
+            confidence: 0.4,
+            requiresHumanReview: true
+        };
     }
 
     /**
@@ -414,7 +439,7 @@ class AIDebuggingAgent {
                 filePath: 'requirements.txt',
                 description: 'Update setuptools to fix pkgutil AttributeError',
                 fix: 'setuptools>=69.5.1',
-                confidence: 0.9
+                confidence: 0.94 // High confidence for known setuptools fix
             };
         }
         return null;
@@ -424,11 +449,18 @@ class AIDebuggingAgent {
         const moduleMatch = error.message.match(/No module named '(.+?)'/);
         if (moduleMatch) {
             const moduleName = moduleMatch[1];
+            // Higher confidence for common/known modules
+            let confidence = 0.75;
+            const commonModules = ['requests', 'numpy', 'pandas', 'flask', 'django'];
+            if (commonModules.includes(moduleName.toLowerCase())) {
+                confidence = 0.88;
+            }
+            
             return {
                 filePath: 'requirements.txt',
                 description: `Add missing Python module: ${moduleName}`,
                 fix: `${moduleName}>=1.0.0`,
-                confidence: 0.7
+                confidence
             };
         }
         return null;
@@ -439,7 +471,7 @@ class AIDebuggingAgent {
             return {
                 filePath: '.flake8',
                 description: 'Fix flake8 configuration ValueError',
-                confidence: 0.8
+                confidence: 0.90 // High confidence for config fix
             };
         }
         return null;

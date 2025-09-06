@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-09-06T05:27:35.072Z",
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "successRate": 100
+  },
+  "tests": [
+    {
+      "name": "LogRetriever - Parse Python Error",
+      "passed": true,
+      "details": "Found 3 errors, expected at least 1"
+    },
+    {
+      "name": "LogRetriever - Parse Flake8 Error",
+      "passed": true,
+      "details": "Found 2 errors, expected at least 2"
+    },
+    {
+      "name": "LogRetriever - Parse Test Failure",
+      "passed": true,
+      "details": "Found 9 errors, expected at least 2"
+    },
+    {
+      "name": "AIDebugger - Fix Generation",
+      "passed": true,
+      "details": "Generated 1 fixes"
+    },
+    {
+      "name": "AIDebugger - Confidence Calculation",
+      "passed": true,
+      "details": "Confidence: 0.88"
+    },
+    {
+      "name": "FixGeneration - Flake8 F401 Fix",
+      "passed": true,
+      "details": "Generated fix: Remove unused import: os"
+    },
+    {
+      "name": "FixGeneration - Module Not Found Fix",
+      "passed": true,
+      "details": "Generated fix: Add missing Python module: requests"
+    },
+    {
+      "name": "FixGeneration - NPM Error Fix",
+      "passed": true,
+      "details": "Generated fix: Install missing module: express"
+    },
+    {
+      "name": "ErrorParsing - Complex Log",
+      "passed": true,
+      "details": "Found error types: python_error, test_failure, assertion_error, flake8_error, black_error, npm_error, compilation_error, security_issue, generic_failure"
+    },
+    {
+      "name": "ErrorParsing - File References",
+      "passed": true,
+      "details": "Found 2 file references"
+    }
+  ]
+}
