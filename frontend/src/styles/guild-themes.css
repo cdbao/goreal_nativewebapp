@@ -2,53 +2,53 @@
 
 :root {
   /* Default Guild Theme (Titans) */
-  --guild-primary: #FF4500;
-  --guild-secondary: #FF6347;
-  --guild-accent: #FFD700;
-  --guild-background: linear-gradient(135deg, #FF4500, #FF6347);
-  
+  --guild-primary: #ff4500;
+  --guild-secondary: #ff6347;
+  --guild-accent: #ffd700;
+  --guild-background: linear-gradient(135deg, #ff4500, #ff6347);
+
   /* Base theme colors that remain consistent */
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.8);
   --text-muted: rgba(255, 255, 255, 0.6);
-  
+
   /* Background colors with guild theming */
   --bg-primary: rgba(0, 0, 0, 0.8);
   --bg-secondary: rgba(0, 0, 0, 0.6);
   --bg-glass: rgba(255, 255, 255, 0.1);
   --bg-glass-hover: rgba(255, 255, 255, 0.15);
-  
+
   /* Border colors with guild accent */
   --border-primary: rgba(255, 255, 255, 0.2);
   --border-guild: var(--guild-accent);
-  
+
   /* Status colors that remain consistent */
-  --status-success: #4CAF50;
-  --status-warning: #FF9800;
-  --status-error: #F44336;
-  --status-info: #2196F3;
+  --status-success: #4caf50;
+  --status-warning: #ff9800;
+  --status-error: #f44336;
+  --status-info: #2196f3;
 }
 
 /* Guild-specific theme overrides */
 .guild-theme-titans {
-  --guild-primary: #FF4500;
-  --guild-secondary: #FF6347;
-  --guild-accent: #FFD700;
-  --guild-background: linear-gradient(135deg, #FF4500, #FF6347);
+  --guild-primary: #ff4500;
+  --guild-secondary: #ff6347;
+  --guild-accent: #ffd700;
+  --guild-background: linear-gradient(135deg, #ff4500, #ff6347);
 }
 
 .guild-theme-illumination {
-  --guild-primary: #4169E1;
-  --guild-secondary: #87CEEB;
-  --guild-accent: #FFFFFF;
-  --guild-background: linear-gradient(135deg, #4169E1, #87CEEB);
+  --guild-primary: #4169e1;
+  --guild-secondary: #87ceeb;
+  --guild-accent: #ffffff;
+  --guild-background: linear-gradient(135deg, #4169e1, #87ceeb);
 }
 
 .guild-theme-envoys {
-  --guild-primary: #32CD32;
-  --guild-secondary: #98FB98;
-  --guild-accent: #FFD700;
-  --guild-background: linear-gradient(135deg, #32CD32, #98FB98);
+  --guild-primary: #32cd32;
+  --guild-secondary: #98fb98;
+  --guild-accent: #ffd700;
+  --guild-background: linear-gradient(135deg, #32cd32, #98fb98);
 }
 
 /* Guild-themed components */
@@ -134,7 +134,7 @@
 }
 
 .status-pending {
-  background: var(--status-warning);  
+  background: var(--status-warning);
 }
 
 .status-rejected {

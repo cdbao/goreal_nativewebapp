@@ -25,30 +25,40 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
         alert('File quá lớn! Vui lòng chọn file dưới 10MB.');
         return;
       }
-      
+
       const allowedTypes = [
-        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
-        'video/mp4', 'video/webm', 'video/quicktime', 'video/avi', 'video/mov'
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'video/mp4',
+        'video/webm',
+        'video/quicktime',
+        'video/avi',
+        'video/mov',
       ];
-      
+
       console.log('QuestReporting file validation:', {
         fileName: file.name,
         fileType: file.type,
-        isValid: allowedTypes.includes(file.type)
+        isValid: allowedTypes.includes(file.type),
       });
-      
+
       if (!allowedTypes.includes(file.type)) {
-        alert(`Định dạng file không được hỗ trợ!\n\nFile hiện tại: ${file.type}\nĐịnh dạng được hỗ trợ: ${allowedTypes.join(', ')}`);
+        alert(
+          `Định dạng file không được hỗ trợ!\n\nFile hiện tại: ${file.type}\nĐịnh dạng được hỗ trợ: ${allowedTypes.join(', ')}`
+        );
         return;
       }
-      
+
       setSelectedFile(file);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!selectedFile || !currentUser) {
       alert('Vui lòng chọn file và đảm bảo đã đăng nhập.');
       return;
@@ -59,12 +69,12 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
     try {
       // Generate unique submission ID
       const submissionId = `${currentUser.uid}_${quest.questId}_${Date.now()}`;
-      
+
       // Upload file to Firebase Storage
       const fileExtension = selectedFile.name.split('.').pop();
       const fileName = `submissions/${currentUser.uid}/${submissionId}.${fileExtension}`;
       const storageRef = ref(storage, fileName);
-      
+
       const snapshot = await uploadBytes(storageRef, selectedFile);
       const downloadURL = await getDownloadURL(snapshot.ref);
 
@@ -76,14 +86,13 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
         proofData: downloadURL,
         proofType: 'image',
         status: 'pending',
-        submittedAt: serverTimestamp()
+        submittedAt: serverTimestamp(),
       });
 
       setSuccess(true);
       setTimeout(() => {
         onClose();
       }, 2000);
-
     } catch (error) {
       console.error('Error submitting quest report:', error);
       alert('Có lỗi xảy ra khi gửi báo cáo. Vui lòng thử lại.');
@@ -112,7 +121,9 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
       <div className="reporting-modal">
         <div className="modal-header">
           <h3>🔥 Báo cáo rèn luyện</h3>
-          <button onClick={onClose} className="close-button">✕</button>
+          <button onClick={onClose} className="close-button">
+            ✕
+          </button>
         </div>
 
         <div className="quest-info">
@@ -128,7 +139,7 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
             <label htmlFor="proof-file" className="upload-label">
               📸 Tải lên bằng chứng rèn luyện
             </label>
-            
+
             <div className="upload-area">
               <input
                 id="proof-file"
@@ -138,7 +149,7 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
                 className="file-input"
                 disabled={uploading}
               />
-              
+
               {selectedFile ? (
                 <div className="file-preview">
                   <div className="file-info">
@@ -147,7 +158,7 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
                       ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                     </span>
                   </div>
-                  
+
                   {selectedFile.type.startsWith('image/') && (
                     <img
                       src={URL.createObjectURL(selectedFile)}
@@ -175,7 +186,7 @@ const QuestReporting: React.FC<QuestReportingProps> = ({ quest, onClose }) => {
             >
               Hủy
             </button>
-            
+
             <button
               type="submit"
               className="submit-button"

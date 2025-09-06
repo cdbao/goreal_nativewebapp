@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import * as Sentry from "@sentry/react";
+import * as Sentry from '@sentry/react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -11,7 +11,10 @@ Sentry.init({
   environment: process.env.NODE_ENV || 'development',
   beforeSend(event, hint) {
     // Chỉ gửi lỗi trong production hoặc khi có SENTRY_DSN
-    if (process.env.NODE_ENV === 'development' && !process.env.REACT_APP_SENTRY_DSN) {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      !process.env.REACT_APP_SENTRY_DSN
+    ) {
       console.log('Sentry event (dev mode):', event);
       return null;
     }

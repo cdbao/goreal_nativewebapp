@@ -11,17 +11,17 @@
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--guild-accent, #FFD700);
+  border-bottom: 2px solid var(--guild-accent, #ffd700);
 }
 
 .debug-header h2 {
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   margin: 0;
   font-size: 1.5rem;
 }
 
 .refresh-btn {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
+  background: linear-gradient(135deg, #2196f3, #1976d2);
   border: none;
   color: white;
   padding: 0.5rem 1rem;
@@ -48,7 +48,11 @@
 }
 
 .debug-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   border-radius: 12px;
   padding: 1.5rem;
   border: 2px solid;
@@ -56,23 +60,39 @@
 }
 
 .debug-card.success {
-  border-color: #4CAF50;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+  border-color: #4caf50;
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.1),
+    rgba(76, 175, 80, 0.05)
+  );
 }
 
 .debug-card.error {
   border-color: #f44336;
-  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(244, 67, 54, 0.1),
+    rgba(244, 67, 54, 0.05)
+  );
 }
 
 .debug-card.warning {
-  border-color: #FF9800;
-  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
+  border-color: #ff9800;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 152, 0, 0.1),
+    rgba(255, 152, 0, 0.05)
+  );
 }
 
 .debug-card.info {
-  border-color: #2196F3;
-  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.05));
+  border-color: #2196f3;
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.1),
+    rgba(33, 150, 243, 0.05)
+  );
 }
 
 .debug-card h3 {
@@ -115,22 +135,22 @@
 
 .value.success {
   background: rgba(76, 175, 80, 0.3);
-  color: #81C784;
+  color: #81c784;
 }
 
 .value.error {
   background: rgba(244, 67, 54, 0.3);
-  color: #E57373;
+  color: #e57373;
 }
 
 .value.warning {
   background: rgba(255, 152, 0, 0.3);
-  color: #FFB74D;
+  color: #ffb74d;
 }
 
 .value.info {
   background: rgba(33, 150, 243, 0.3);
-  color: #64B5F6;
+  color: #64b5f6;
 }
 
 .debug-solutions {
@@ -146,7 +166,7 @@
 
 .solution-item.success {
   background: rgba(76, 175, 80, 0.1);
-  border-left-color: #4CAF50;
+  border-left-color: #4caf50;
 }
 
 .solution-item.error {
@@ -156,7 +176,7 @@
 
 .solution-item.warning {
   background: rgba(255, 152, 0, 0.1);
-  border-left-color: #FF9800;
+  border-left-color: #ff9800;
 }
 
 .solution-item strong {
@@ -176,7 +196,7 @@
   padding: 0.2rem 0.4rem;
   border-radius: 3px;
   font-family: 'Courier New', monospace;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
 }
 
 .debug-raw-data {
@@ -203,7 +223,7 @@
   border-radius: 6px;
   overflow-x: auto;
   font-size: 0.8rem;
-  color: #E0E0E0;
+  color: #e0e0e0;
   margin: 0.5rem 0 0 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, where, limit } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  where,
+  limit,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { getGuildInfo } from '../constants/guilds';
@@ -19,8 +26,12 @@ interface LeaderboardEntry {
 
 const HallOfHonor: React.FC = () => {
   const { userData } = useAuth();
-  const [globalLeaderboard, setGlobalLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [guildLeaderboard, setGuildLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [globalLeaderboard, setGlobalLeaderboard] = useState<
+    LeaderboardEntry[]
+  >([]);
+  const [guildLeaderboard, setGuildLeaderboard] = useState<LeaderboardEntry[]>(
+    []
+  );
   const [activeView, setActiveView] = useState<'global' | 'guild'>('global');
   const [loading, setLoading] = useState(true);
   const [userRank, setUserRank] = useState<number | null>(null);
@@ -32,17 +43,17 @@ const HallOfHonor: React.FC = () => {
   const fetchLeaderboards = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch all users for global leaderboard
       const usersQuery = query(
         collection(db, 'users'),
         orderBy('currentAura', 'desc'),
         limit(50)
       );
-      
+
       const usersSnapshot = await getDocs(usersQuery);
       const allUsers: LeaderboardEntry[] = [];
-      
+
       usersSnapshot.docs.forEach((doc, index) => {
         const data = doc.data();
         if (data.displayName && data.guild && data.currentAura !== undefined) {
@@ -55,30 +66,33 @@ const HallOfHonor: React.FC = () => {
             currentStreak: data.currentStreak || 0,
             totalSubmissions: data.totalSubmissions || 0,
             approvedSubmissions: data.approvedSubmissions || 0,
-            rank: index + 1
+            rank: index + 1,
           });
         }
       });
-      
+
       setGlobalLeaderboard(allUsers);
-      
+
       // Find user's rank
       if (userData?.userId) {
-        const userIndex = allUsers.findIndex(user => user.userId === userData.userId);
+        const userIndex = allUsers.findIndex(
+          user => user.userId === userData.userId
+        );
         setUserRank(userIndex >= 0 ? userIndex + 1 : null);
       }
-      
+
       // Filter for guild leaderboard
       if (userData?.guild) {
-        const guildUsers = allUsers.filter(user => user.guild === userData.guild);
+        const guildUsers = allUsers.filter(
+          user => user.guild === userData.guild
+        );
         // Recalculate ranks for guild
         const guildWithRanks = guildUsers.map((user, index) => ({
           ...user,
-          rank: index + 1
+          rank: index + 1,
         }));
         setGuildLeaderboard(guildWithRanks);
       }
-      
     } catch (error) {
       console.error('Error fetching leaderboards:', error);
     } finally {
@@ -98,10 +112,14 @@ const HallOfHonor: React.FC = () => {
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
-      case 1: return '🥇';
-      case 2: return '🥈';
-      case 3: return '🥉';
-      default: return `#${rank}`;
+      case 1:
+        return '🥇';
+      case 2:
+        return '🥈';
+      case 3:
+        return '🥉';
+      default:
+        return `#${rank}`;
     }
   };
 
@@ -115,7 +133,8 @@ const HallOfHonor: React.FC = () => {
     return userId === userData?.userId;
   };
 
-  const currentLeaderboard = activeView === 'global' ? globalLeaderboard : guildLeaderboard;
+  const currentLeaderboard =
+    activeView === 'global' ? globalLeaderboard : guildLeaderboard;
 
   if (loading) {
     return (
@@ -130,17 +149,18 @@ const HallOfHonor: React.FC = () => {
   }
 
   return (
-    <div 
-      className="hall-of-honor frosted-glass" 
+    <div
+      className="hall-of-honor frosted-glass"
       data-guild={userData?.guild}
       style={{
         background: 'rgba(20, 25, 35, 0.95)',
         backdropFilter: 'blur(15px)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
         borderRadius: '20px',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+        boxShadow:
+          '0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
         color: 'white',
-        padding: '2rem'
+        padding: '2rem',
       }}
     >
       {/* Hall Header */}
@@ -148,26 +168,28 @@ const HallOfHonor: React.FC = () => {
         <div className="hall-title">
           <div className="title-icon animate-glow">🏆</div>
           <div className="title-content">
-            <h1 
+            <h1
               className="text-fantasy text-primary text-shadow"
               style={{
-                background: 'linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B)',
+                background:
+                  'linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                textShadow: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8)',
+                textShadow:
+                  '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8)',
                 filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.5))',
-                fontWeight: '800'
+                fontWeight: '800',
               }}
             >
               Đài Vinh Danh
             </h1>
-            <p 
+            <p
               className="text-elegant text-muted"
               style={{
                 color: 'rgba(255, 255, 255, 0.95)',
                 textShadow: '1px 1px 3px rgba(0, 0, 0, 0.7)',
-                fontWeight: '500'
+                fontWeight: '500',
               }}
             >
               Vinh danh những Chiến Binh xuất sắc nhất của GoREAL
@@ -201,7 +223,9 @@ const HallOfHonor: React.FC = () => {
           disabled={!userData?.guild}
         >
           <span>{userData?.guild ? getGuildIcon(userData.guild) : '⚔️'}</span>
-          {userData?.guild ? getGuildDisplayName(userData.guild) : 'Chưa có Guild'}
+          {userData?.guild
+            ? getGuildDisplayName(userData.guild)
+            : 'Chưa có Guild'}
         </button>
       </div>
 
@@ -212,10 +236,9 @@ const HallOfHonor: React.FC = () => {
             <div className="empty-icon">🏆</div>
             <h3 className="text-fantasy">Chưa có dữ liệu xếp hạng</h3>
             <p>
-              {activeView === 'guild' 
+              {activeView === 'guild'
                 ? 'Guild của bạn chưa có thành viên nào hoàn thành nhiệm vụ.'
-                : 'Hệ thống đang thu thập dữ liệu xếp hạng.'
-              }
+                : 'Hệ thống đang thu thập dữ liệu xếp hạng.'}
             </p>
           </div>
         ) : (
@@ -242,7 +265,9 @@ const HallOfHonor: React.FC = () => {
                 >
                   <div className="table-cell rank-col">
                     <div className="rank-display">
-                      <span className="rank-icon">{getRankIcon(entry.rank)}</span>
+                      <span className="rank-icon">
+                        {getRankIcon(entry.rank)}
+                      </span>
                     </div>
                   </div>
 
@@ -259,7 +284,8 @@ const HallOfHonor: React.FC = () => {
                           )}
                         </span>
                         <span className="player-stats text-muted">
-                          {entry.approvedSubmissions || 0}/{entry.totalSubmissions || 0} nhiệm vụ
+                          {entry.approvedSubmissions || 0}/
+                          {entry.totalSubmissions || 0} nhiệm vụ
                         </span>
                       </div>
                     </div>
@@ -267,8 +293,12 @@ const HallOfHonor: React.FC = () => {
 
                   <div className="table-cell guild-col">
                     <div className="guild-info">
-                      <span className="guild-icon">{getGuildIcon(entry.guild)}</span>
-                      <span className="guild-name">{getGuildDisplayName(entry.guild)}</span>
+                      <span className="guild-icon">
+                        {getGuildIcon(entry.guild)}
+                      </span>
+                      <span className="guild-name">
+                        {getGuildDisplayName(entry.guild)}
+                      </span>
                     </div>
                   </div>
 
@@ -288,7 +318,9 @@ const HallOfHonor: React.FC = () => {
 
                   <div className="table-cell streak-col">
                     <div className="streak-display">
-                      <span className="streak-number">{entry.currentStreak}</span>
+                      <span className="streak-number">
+                        {entry.currentStreak}
+                      </span>
                     </div>
                   </div>
                 </div>

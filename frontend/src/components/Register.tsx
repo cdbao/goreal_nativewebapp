@@ -32,7 +32,7 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
       await register(email, password, displayName);
     } catch (error: any) {
       console.error('Registration error:', error);
-      
+
       // Xử lý các loại lỗi Firebase cụ thể
       if (error?.code === 'auth/email-already-in-use') {
         setError('Email này đã được sử dụng. Vui lòng sử dụng email khác.');
@@ -59,9 +59,9 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
           <h2>Gia nhập Titans' Guild</h2>
           <p>Bắt đầu hành trình trở thành Vệ Thần</p>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="displayName">Tên hiển thị</label>
@@ -69,53 +69,57 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
               id="displayName"
               type="text"
               value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              onChange={e => setDisplayName(e.target.value)}
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Mật khẩu</label>
             <input
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
             <input
               id="confirmPassword"
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
               required
             />
           </div>
-          
+
           <button disabled={loading} type="submit" className="auth-button">
             {loading ? 'Đang đăng ký...' : 'Gia nhập Guild'}
           </button>
         </form>
-        
+
         <div className="auth-switch">
           <p>
             Đã có tài khoản?{' '}
-            <button type="button" onClick={onSwitchToLogin} className="link-button">
+            <button
+              type="button"
+              onClick={onSwitchToLogin}
+              className="link-button"
+            >
               Đăng nhập
             </button>
           </p>

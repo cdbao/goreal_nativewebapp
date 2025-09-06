@@ -3,7 +3,9 @@ import { FirebaseTimestamp } from '../types';
 /**
  * Safely converts a Firebase timestamp to a Date object
  */
-export const toDate = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined): Date => {
+export const toDate = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined
+): Date => {
   if (!timestamp) {
     return new Date();
   }
@@ -14,12 +16,20 @@ export const toDate = (timestamp: FirebaseTimestamp | Date | string | number | n
   }
 
   // If it's a Firebase Timestamp with toDate method
-  if (typeof timestamp === 'object' && 'toDate' in timestamp && typeof timestamp.toDate === 'function') {
+  if (
+    typeof timestamp === 'object' &&
+    'toDate' in timestamp &&
+    typeof timestamp.toDate === 'function'
+  ) {
     return timestamp.toDate();
   }
 
   // If it's a Firebase Timestamp with seconds property
-  if (typeof timestamp === 'object' && 'seconds' in timestamp && typeof timestamp.seconds === 'number') {
+  if (
+    typeof timestamp === 'object' &&
+    'seconds' in timestamp &&
+    typeof timestamp.seconds === 'number'
+  ) {
     return new Date(timestamp.seconds * 1000);
   }
 
@@ -35,7 +45,10 @@ export const toDate = (timestamp: FirebaseTimestamp | Date | string | number | n
 /**
  * Formats a Firebase timestamp to Vietnamese locale string
  */
-export const formatDate = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined, locale: string = 'vi-VN'): string => {
+export const formatDate = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined,
+  locale: string = 'vi-VN'
+): string => {
   const date = toDate(timestamp);
   return date.toLocaleDateString(locale);
 };
@@ -43,7 +56,10 @@ export const formatDate = (timestamp: FirebaseTimestamp | Date | string | number
 /**
  * Formats a Firebase timestamp to Vietnamese locale date and time string
  */
-export const formatDateTime = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined, locale: string = 'vi-VN'): string => {
+export const formatDateTime = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined,
+  locale: string = 'vi-VN'
+): string => {
   const date = toDate(timestamp);
   return date.toLocaleString(locale);
 };
@@ -51,7 +67,10 @@ export const formatDateTime = (timestamp: FirebaseTimestamp | Date | string | nu
 /**
  * Formats a Firebase timestamp to time string
  */
-export const formatTime = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined, locale: string = 'vi-VN'): string => {
+export const formatTime = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined,
+  locale: string = 'vi-VN'
+): string => {
   const date = toDate(timestamp);
   return date.toLocaleTimeString(locale);
 };
@@ -59,7 +78,9 @@ export const formatTime = (timestamp: FirebaseTimestamp | Date | string | number
 /**
  * Gets relative time string (e.g., "2 hours ago")
  */
-export const getRelativeTime = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined): string => {
+export const getRelativeTime = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined
+): string => {
   const date = toDate(timestamp);
   const now = new Date();
   const diff = now.getTime() - date.getTime();
@@ -84,23 +105,30 @@ export const getRelativeTime = (timestamp: FirebaseTimestamp | Date | string | n
 /**
  * Checks if a timestamp is today
  */
-export const isToday = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined): boolean => {
+export const isToday = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined
+): boolean => {
   const date = toDate(timestamp);
   const today = new Date();
-  
-  return date.getDate() === today.getDate() &&
-         date.getMonth() === today.getMonth() &&
-         date.getFullYear() === today.getFullYear();
+
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
 };
 
 /**
  * Checks if a timestamp is within the last N days
  */
-export const isWithinDays = (timestamp: FirebaseTimestamp | Date | string | number | null | undefined, days: number): boolean => {
+export const isWithinDays = (
+  timestamp: FirebaseTimestamp | Date | string | number | null | undefined,
+  days: number
+): boolean => {
   const date = toDate(timestamp);
   const now = new Date();
   const diffTime = now.getTime() - date.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   return diffDays <= days;
 };

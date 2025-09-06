@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
+import {
   User as FirebaseUser,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import * as Sentry from "@sentry/react";
+import * as Sentry from '@sentry/react';
 import { auth, db } from '../firebase';
 import { User, GuildId } from '../types';
 
@@ -15,7 +15,11 @@ interface AuthContextType {
   currentUser: FirebaseUser | null;
   userData: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, displayName: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    displayName: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
   updateUserGuild: (guildId: string) => Promise<void>;
@@ -28,24 +32,34 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const register = async (email: string, password: string, displayName: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    displayName: string
+  ) => {
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
-      
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       const newUserData: User = {
         userId: user.uid,
         displayName,
         email,
-        guild: "", // No guild assigned, user must select one
-        level: "Môn Sinh",
+        guild: '', // No guild assigned, user must select one
+        level: 'Môn Sinh',
         currentAura: 0,
         currentStreak: 0,
-        role: "player"
+        role: 'player',
       };
 
       await setDoc(doc(db, 'users', user.uid), newUserData);
@@ -73,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (userDoc.exists()) {
         const userData = userDoc.data() as User;
         setUserData(userData);
-        
+
         // Thiết lập User Context cho Sentry
         Sentry.setUser({
           id: user.uid,
@@ -81,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           username: userData.displayName,
           role: userData.role,
           guild: userData.guild,
-          level: userData.level
+          level: userData.level,
         });
       }
     } catch (error) {
@@ -116,7 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           username: userData.displayName,
           role: userData.role,
           guild: guildId,
-          level: userData.level
+          level: userData.level,
         });
       }
 
@@ -124,12 +138,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const userRef = doc(db, 'users', currentUser.uid);
       await updateDoc(userRef, {
         guild: guildId,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
 
       // Verify the update by fetching fresh data
       await fetchUserData(currentUser);
-
     } catch (error) {
       console.error('Error updating guild:', error);
       Sentry.captureException(error);
@@ -147,7 +160,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           username: userData.displayName,
           role: userData.role,
           guild: userData.guild,
-          level: userData.level
+          level: userData.level,
         });
       }
 
@@ -170,7 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async user => {
       setCurrentUser(user);
       if (user) {
         await fetchUserData(user);
@@ -191,7 +204,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     loading,
     updateUserGuild,
-    refreshUserData
+    refreshUserData,
   };
 
   return (

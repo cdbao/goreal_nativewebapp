@@ -34,6 +34,11 @@ jobs:
           cd frontend
           npm ci
 
+      - name: Check Code Formatting
+        run: |
+          cd frontend
+          npm run format:check
+
       - name: Run Frontend Tests
         run: |
           cd frontend

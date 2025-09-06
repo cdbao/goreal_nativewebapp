@@ -16,15 +16,22 @@ export interface User {
 }
 
 // Firebase Timestamp type for better type safety
-export type FirebaseTimestamp = {
-  seconds: number;
-  nanoseconds: number;
-  toDate(): Date;
-  toMillis(): number;
-} | any; // Allow any for server timestamps
+export type FirebaseTimestamp =
+  | {
+      seconds: number;
+      nanoseconds: number;
+      toDate(): Date;
+      toMillis(): number;
+    }
+  | any; // Allow any for server timestamps
 
 export type ReportType = 'image' | 'text' | 'audio' | 'video';
-export type QuestStatus = 'accepted' | 'in_progress' | 'submitted' | 'completed' | 'rejected';
+export type QuestStatus =
+  | 'accepted'
+  | 'in_progress'
+  | 'submitted'
+  | 'completed'
+  | 'rejected';
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
 
 export interface Quest {
@@ -114,7 +121,13 @@ export interface AppConfig {
   maxAuraPerQuest?: number;
 }
 
-export type NotificationType = 'quest_approved' | 'level_up' | 'daily_quest' | 'general' | 'system' | 'ceremony';
+export type NotificationType =
+  | 'quest_approved'
+  | 'level_up'
+  | 'daily_quest'
+  | 'general'
+  | 'system'
+  | 'ceremony';
 
 export interface Notification {
   id: string;

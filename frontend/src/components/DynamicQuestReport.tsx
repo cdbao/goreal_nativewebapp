@@ -16,7 +16,7 @@ interface DynamicQuestReportProps {
 const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
   quest,
   onSubmissionComplete,
-  onStartSubmission
+  onStartSubmission,
 }) => {
   const { currentUser } = useAuth();
   const [textContent, setTextContent] = useState('');
@@ -26,39 +26,64 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const detectReportTypeFromDescription = (description: string): 'image' | 'text' | 'audio' | 'video' => {
+  const detectReportTypeFromDescription = (
+    description: string
+  ): 'image' | 'text' | 'audio' | 'video' => {
     if (!description) return 'text';
-    
+
     const desc = description.toLowerCase();
-    
+
     // Video keywords
-    if (desc.includes('clip') || desc.includes('video') || desc.includes('quay') || desc.includes('ghi hình')) {
+    if (
+      desc.includes('clip') ||
+      desc.includes('video') ||
+      desc.includes('quay') ||
+      desc.includes('ghi hình')
+    ) {
       return 'video';
     }
-    
-    // Image keywords  
-    if (desc.includes('hình') || desc.includes('ảnh') || desc.includes('chụp') || desc.includes('photo')) {
+
+    // Image keywords
+    if (
+      desc.includes('hình') ||
+      desc.includes('ảnh') ||
+      desc.includes('chụp') ||
+      desc.includes('photo')
+    ) {
       return 'image';
     }
-    
+
     // Audio keywords
-    if (desc.includes('ghi âm') || desc.includes('audio') || desc.includes('voice') || desc.includes('tiếng')) {
+    if (
+      desc.includes('ghi âm') ||
+      desc.includes('audio') ||
+      desc.includes('voice') ||
+      desc.includes('tiếng')
+    ) {
       return 'audio';
     }
-    
+
     // Default to text
     return 'text';
   };
 
-  const getEffectiveReportType = (reportType: string | undefined): 'image' | 'text' | 'audio' | 'video' => {
-    const detectedType = reportType || detectReportTypeFromDescription(quest.description);
+  const getEffectiveReportType = (
+    reportType: string | undefined
+  ): 'image' | 'text' | 'audio' | 'video' => {
+    const detectedType =
+      reportType || detectReportTypeFromDescription(quest.description);
     // Ensure we return only valid types
-    if (detectedType === 'image' || detectedType === 'text' || detectedType === 'audio' || detectedType === 'video') {
+    if (
+      detectedType === 'image' ||
+      detectedType === 'text' ||
+      detectedType === 'audio' ||
+      detectedType === 'video'
+    ) {
       return detectedType;
     }
     return 'text'; // fallback to text for any invalid types
@@ -70,7 +95,7 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       image: '📸',
       text: '📝',
       audio: '🎤',
-      video: '🎥'
+      video: '🎥',
     };
     return icons[effectiveType as keyof typeof icons] || '📝';
   };
@@ -79,9 +104,9 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
     const effectiveType = getEffectiveReportType(reportType);
     const names = {
       image: 'Hình ảnh',
-      text: 'Văn bản', 
+      text: 'Văn bản',
       audio: 'Ghi âm',
-      video: 'Video'
+      video: 'Video',
     };
     return names[effectiveType as keyof typeof names] || 'Văn bản';
   };
@@ -92,44 +117,71 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       text: 'Chia sẻ chi tiết về quá trình rèn luyện của bạn...\n\nVí dụ:\n- Bạn đã làm gì?\n- Khó khăn gặp phải?\n- Bài học rút ra?\n- Cảm nhận của bạn?',
       image: 'Chọn hình ảnh minh chứng cho quá trình rèn luyện',
       video: 'Chọn video ghi lại quá trình thực hiện',
-      audio: 'Ghi âm báo cáo của bạn bằng cách nhấn nút mic'
+      audio: 'Ghi âm báo cáo của bạn bằng cách nhấn nút mic',
     };
-    return placeholders[effectiveType as keyof typeof placeholders] || 'Chia sẻ chi tiết về quá trình rèn luyện của bạn...';
+    return (
+      placeholders[effectiveType as keyof typeof placeholders] ||
+      'Chia sẻ chi tiết về quá trình rèn luyện của bạn...'
+    );
   };
 
   // File handling
-  const handleFileSelect = useCallback((file: File) => {
-    const allowedTypes = {
-      image: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'],
-      video: ['video/mp4', 'video/webm', 'video/quicktime', 'video/avi', 'video/mov'],
-      audio: ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm']
-    };
+  const handleFileSelect = useCallback(
+    (file: File) => {
+      const allowedTypes = {
+        image: [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/gif',
+          'image/webp',
+        ],
+        video: [
+          'video/mp4',
+          'video/webm',
+          'video/quicktime',
+          'video/avi',
+          'video/mov',
+        ],
+        audio: [
+          'audio/mp3',
+          'audio/mpeg',
+          'audio/wav',
+          'audio/ogg',
+          'audio/webm',
+        ],
+      };
 
-    const effectiveReportType = getEffectiveReportType(quest.reportType);
-    const validTypes = allowedTypes[effectiveReportType as keyof typeof allowedTypes] || [];
-    
-    console.log('File validation:', {
-      fileName: file.name,
-      fileType: file.type,
-      questReportType: quest.reportType,
-      effectiveReportType,
-      validTypes,
-      isValid: validTypes.includes(file.type)
-    });
-    
-    if (!validTypes.includes(file.type)) {
-      alert(`Vui lòng chọn file ${getReportTypeName(quest.reportType).toLowerCase()} hợp lệ!\n\nFile hiện tại: ${file.type}\nĐịnh dạng được hỗ trợ: ${validTypes.join(', ')}`);
-      return;
-    }
+      const effectiveReportType = getEffectiveReportType(quest.reportType);
+      const validTypes =
+        allowedTypes[effectiveReportType as keyof typeof allowedTypes] || [];
 
-    // Check file size (max 50MB)
-    if (file.size > 50 * 1024 * 1024) {
-      alert('File quá lớn! Vui lòng chọn file dưới 50MB.');
-      return;
-    }
+      console.log('File validation:', {
+        fileName: file.name,
+        fileType: file.type,
+        questReportType: quest.reportType,
+        effectiveReportType,
+        validTypes,
+        isValid: validTypes.includes(file.type),
+      });
 
-    setSelectedFile(file);
-  }, [quest.reportType]);
+      if (!validTypes.includes(file.type)) {
+        alert(
+          `Vui lòng chọn file ${getReportTypeName(quest.reportType).toLowerCase()} hợp lệ!\n\nFile hiện tại: ${file.type}\nĐịnh dạng được hỗ trợ: ${validTypes.join(', ')}`
+        );
+        return;
+      }
+
+      // Check file size (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        alert('File quá lớn! Vui lòng chọn file dưới 50MB.');
+        return;
+      }
+
+      setSelectedFile(file);
+    },
+    [quest.reportType]
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -151,7 +203,7 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const file = e.dataTransfer.files[0];
     if (file) {
       handleFileSelect(file);
@@ -173,8 +225,8 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       mediaRecorderRef.current = mediaRecorder;
 
       const chunks: Blob[] = [];
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-      
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+
       mediaRecorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         setAudioBlob(blob);
@@ -184,7 +236,7 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       mediaRecorder.start();
       setIsRecording(true);
       setRecordingTime(0);
-      
+
       recordingIntervalRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
       }, 1000);
@@ -228,23 +280,29 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
         proofData = textContent.trim();
         hasValidData = true;
         break;
-      
+
       case 'image':
       case 'video':
         if (!selectedFile) {
-          alert(`Vui lòng chọn file ${getReportTypeName(quest.reportType).toLowerCase()}.`);
+          alert(
+            `Vui lòng chọn file ${getReportTypeName(quest.reportType).toLowerCase()}.`
+          );
           return;
         }
         proofData = selectedFile;
         hasValidData = true;
         break;
-        
+
       case 'audio':
         if (!audioBlob && !selectedFile) {
           alert('Vui lòng ghi âm hoặc chọn file audio.');
           return;
         }
-        proofData = selectedFile || new File([audioBlob!], `recording-${Date.now()}.webm`, { type: 'audio/webm' });
+        proofData =
+          selectedFile ||
+          new File([audioBlob!], `recording-${Date.now()}.webm`, {
+            type: 'audio/webm',
+          });
         hasValidData = true;
         break;
     }
@@ -260,12 +318,18 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       let finalProofData: string = '';
 
       // Handle file uploads
-      if (proofData instanceof File || (proofData as any)?.constructor?.name === 'Blob') {
+      if (
+        proofData instanceof File ||
+        (proofData as any)?.constructor?.name === 'Blob'
+      ) {
         try {
-          const fileRef = ref(storage, `submissions/${currentUser.uid}/${quest.questId}/${Date.now()}-${(proofData as File).name || 'recording'}`);
+          const fileRef = ref(
+            storage,
+            `submissions/${currentUser.uid}/${quest.questId}/${Date.now()}-${(proofData as File).name || 'recording'}`
+          );
           const uploadResult = await uploadBytes(fileRef, proofData as File);
           finalProofData = await getDownloadURL(uploadResult.ref);
-          
+
           console.log('File uploaded successfully:', finalProofData);
         } catch (uploadError: any) {
           errorLogger.logUploadError(
@@ -276,7 +340,7 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
               fileSize: (proofData as File).size,
               fileType: (proofData as File).type,
               reportType,
-              errorCode: uploadError.code
+              errorCode: uploadError.code,
             },
             currentUser.uid
           );
@@ -294,16 +358,19 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
         proofData: finalProofData,
         proofType: reportType,
         status: 'pending',
-        submittedAt: serverTimestamp()
+        submittedAt: serverTimestamp(),
       };
 
       try {
-        const submissionRef = await addDoc(collection(db, 'submissions'), submissionData);
-        
+        const submissionRef = await addDoc(
+          collection(db, 'submissions'),
+          submissionData
+        );
+
         const newSubmission: Submission = {
           submissionId: submissionRef.id,
           ...submissionData,
-          submittedAt: new Date()
+          submittedAt: new Date(),
         };
 
         console.log('Submission created successfully:', submissionRef.id);
@@ -315,33 +382,35 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
           {
             questId: quest.questId,
             proofType: reportType,
-            errorCode: firestoreError.code
+            errorCode: firestoreError.code,
           },
           currentUser.uid
         );
         throw firestoreError;
       }
-
     } catch (error: any) {
       console.error('Error submitting quest report:', error);
-      
+
       // Log the general error if not already logged
       if (!error.logged) {
-        errorLogger.logError({
-          errorType: 'general',
-          message: `Quest report submission failed: ${error.message}`,
-          stack: error.stack,
-          severity: 'high',
-          component: 'DynamicQuestReport',
-          additionalData: {
-            questId: quest.questId,
-            reportType,
-            errorName: error.name,
-            errorCode: error.code
-          }
-        }, currentUser.uid);
+        errorLogger.logError(
+          {
+            errorType: 'general',
+            message: `Quest report submission failed: ${error.message}`,
+            stack: error.stack,
+            severity: 'high',
+            component: 'DynamicQuestReport',
+            additionalData: {
+              questId: quest.questId,
+              reportType,
+              errorName: error.name,
+              errorCode: error.code,
+            },
+          },
+          currentUser.uid
+        );
       }
-      
+
       alert('Có lỗi xảy ra khi nộp báo cáo. Vui lòng thử lại.');
       setIsSubmitting(false);
     }
@@ -350,14 +419,14 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
   const isSubmitDisabled = () => {
     // Smart detection of reportType if missing
     const reportType = getEffectiveReportType(quest.reportType);
-    
+
     console.log('Smart reportType detection:', {
       originalReportType: quest.reportType,
       description: quest.description,
       detectedType: detectReportTypeFromDescription(quest.description),
-      finalType: reportType
+      finalType: reportType,
     });
-    
+
     const disabled = (() => {
       switch (reportType) {
         case 'text':
@@ -372,7 +441,7 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
           return false;
       }
     })();
-    
+
     console.log('Submit button disabled check:', {
       originalReportType: quest.reportType,
       effectiveReportType: reportType,
@@ -381,9 +450,9 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       audioBlob: !!audioBlob,
       isSubmitting,
       disabled,
-      finalDisabled: disabled || isSubmitting
+      finalDisabled: disabled || isSubmitting,
     });
-    
+
     return disabled;
   };
 
@@ -415,19 +484,21 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
             <textarea
               className="text-input"
               value={textContent}
-              onChange={(e) => setTextContent(e.target.value)}
+              onChange={e => setTextContent(e.target.value)}
               placeholder={getPlaceholderText(quest.reportType)}
               rows={8}
             />
           </>
         )}
 
-        {(getEffectiveReportType(quest.reportType) === 'image' || getEffectiveReportType(quest.reportType) === 'video') && (
+        {(getEffectiveReportType(quest.reportType) === 'image' ||
+          getEffectiveReportType(quest.reportType) === 'video') && (
           <>
             <label className="input-label">
-              {getReportTypeIcon(quest.reportType)} Chọn {getReportTypeName(quest.reportType)}
+              {getReportTypeIcon(quest.reportType)} Chọn{' '}
+              {getReportTypeName(quest.reportType)}
             </label>
-            <div 
+            <div
               className={`file-input-container ${isDragOver ? 'drag-over' : ''} ${selectedFile ? 'has-file' : ''}`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -439,29 +510,35 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
                 type="file"
                 className="file-input"
                 accept={
-                  getEffectiveReportType(quest.reportType) === 'image' ? 'image/*,image/jpeg,image/jpg,image/png,image/gif,image/webp' :
-                  getEffectiveReportType(quest.reportType) === 'video' ? 'video/*,video/mp4,video/webm,video/quicktime,video/avi,video/mov' :
-                  getEffectiveReportType(quest.reportType) === 'audio' ? 'audio/*,audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/webm' :
-                  '*/*'
+                  getEffectiveReportType(quest.reportType) === 'image'
+                    ? 'image/*,image/jpeg,image/jpg,image/png,image/gif,image/webp'
+                    : getEffectiveReportType(quest.reportType) === 'video'
+                      ? 'video/*,video/mp4,video/webm,video/quicktime,video/avi,video/mov'
+                      : getEffectiveReportType(quest.reportType) === 'audio'
+                        ? 'audio/*,audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/webm'
+                        : '*/*'
                 }
                 onChange={handleFileChange}
               />
-              
+
               {!selectedFile ? (
                 <div className="file-input-content">
                   <div className="file-input-icon">
                     {getReportTypeIcon(quest.reportType)}
                   </div>
                   <div className="file-input-text">
-                    Kéo thả hoặc nhấn để chọn {getReportTypeName(quest.reportType).toLowerCase()}
+                    Kéo thả hoặc nhấn để chọn{' '}
+                    {getReportTypeName(quest.reportType).toLowerCase()}
                   </div>
                   <div className="file-input-hint">
-                    {
-                      getEffectiveReportType(quest.reportType) === 'image' ? 'PNG, JPG, GIF, WEBP' :
-                      getEffectiveReportType(quest.reportType) === 'video' ? 'MP4, WEBM, MOV, AVI' :
-                      getEffectiveReportType(quest.reportType) === 'audio' ? 'MP3, WAV, OGG, WEBM' :
-                      'Mọi định dạng'
-                    } • Tối đa 50MB
+                    {getEffectiveReportType(quest.reportType) === 'image'
+                      ? 'PNG, JPG, GIF, WEBP'
+                      : getEffectiveReportType(quest.reportType) === 'video'
+                        ? 'MP4, WEBM, MOV, AVI'
+                        : getEffectiveReportType(quest.reportType) === 'audio'
+                          ? 'MP3, WAV, OGG, WEBM'
+                          : 'Mọi định dạng'}{' '}
+                    • Tối đa 50MB
                   </div>
                 </div>
               ) : (
@@ -469,12 +546,16 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
                   <div className="file-preview-info">
                     <div className="file-preview-icon">✅</div>
                     <div className="file-preview-details">
-                      <div className="file-preview-name">{selectedFile.name}</div>
-                      <div className="file-preview-size">{formatFileSize(selectedFile.size)}</div>
+                      <div className="file-preview-name">
+                        {selectedFile.name}
+                      </div>
+                      <div className="file-preview-size">
+                        {formatFileSize(selectedFile.size)}
+                      </div>
                     </div>
-                    <button 
+                    <button
                       className="file-remove-btn"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         removeFile();
                       }}
@@ -499,17 +580,21 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
               >
                 {isRecording ? '⏹️' : '🎤'}
               </button>
-              
+
               <div className="recording-status">
-                {isRecording ? 'Đang ghi âm...' : audioBlob ? 'Đã ghi âm xong' : 'Nhấn để bắt đầu ghi âm'}
+                {isRecording
+                  ? 'Đang ghi âm...'
+                  : audioBlob
+                    ? 'Đã ghi âm xong'
+                    : 'Nhấn để bắt đầu ghi âm'}
               </div>
-              
+
               {(isRecording || audioBlob) && (
                 <div className="recording-timer">
                   {formatTime(recordingTime)}
                 </div>
               )}
-              
+
               {!audioBlob && !isRecording && (
                 <div style={{ marginTop: '16px' }}>
                   <label className="input-label">Hoặc chọn file audio</label>
@@ -527,23 +612,34 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       </div>
 
       {/* Debug Info */}
-      <div style={{ 
-        background: 'rgba(255, 0, 0, 0.1)', 
-        padding: '10px', 
-        margin: '10px 0', 
-        fontSize: '12px',
-        color: 'white'
-      }}>
-        <div><strong>Debug Quest Object:</strong></div>
+      <div
+        style={{
+          background: 'rgba(255, 0, 0, 0.1)',
+          padding: '10px',
+          margin: '10px 0',
+          fontSize: '12px',
+          color: 'white',
+        }}
+      >
+        <div>
+          <strong>Debug Quest Object:</strong>
+        </div>
         <div>questId: {quest.questId}</div>
         <div>title: {quest.title}</div>
-        <div>reportType: "{quest.reportType}" (type: {typeof quest.reportType})</div>
-        <div>effectiveReportType: "{getEffectiveReportType(quest.reportType)}"</div>
+        <div>
+          reportType: "{quest.reportType}" (type: {typeof quest.reportType})
+        </div>
+        <div>
+          effectiveReportType: "{getEffectiveReportType(quest.reportType)}"
+        </div>
         <div>textLength: {textContent.length}</div>
         <div>hasFile: {!!selectedFile ? 'true' : 'false'}</div>
         <div>hasAudio: {!!audioBlob ? 'true' : 'false'}</div>
         <div>disabled: {isSubmitDisabled() ? 'true' : 'false'}</div>
-        <div><strong>Fix:</strong> Based on description "quay clip", this should be video type</div>
+        <div>
+          <strong>Fix:</strong> Based on description "quay clip", this should be
+          video type
+        </div>
       </div>
 
       {/* Test Button */}
@@ -554,7 +650,7 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
           padding: '10px',
           margin: '10px 0',
           border: 'none',
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
         onClick={() => {
           console.log('TEST BUTTON CLICKED!');
@@ -567,20 +663,21 @@ const DynamicQuestReport: React.FC<DynamicQuestReportProps> = ({
       {/* Submit Button */}
       <button
         className="complete-training-btn"
-        onClick={(e) => {
+        onClick={e => {
           console.log('Submit button clicked!', {
             disabled: isSubmitDisabled() || isSubmitting,
             event: e,
             target: e.target,
-            currentTarget: e.currentTarget
+            currentTarget: e.currentTarget,
           });
           handleSubmit();
         }}
         disabled={isSubmitDisabled() || isSubmitting}
         style={{
           pointerEvents: 'auto !important' as any,
-          cursor: isSubmitDisabled() || isSubmitting ? 'not-allowed' : 'pointer',
-          opacity: isSubmitDisabled() || isSubmitting ? 0.5 : 1
+          cursor:
+            isSubmitDisabled() || isSubmitting ? 'not-allowed' : 'pointer',
+          opacity: isSubmitDisabled() || isSubmitting ? 0.5 : 1,
         }}
       >
         {isSubmitting ? (

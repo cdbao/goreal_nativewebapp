@@ -14,7 +14,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -32,7 +32,11 @@
 
 /* Error Banner */
 .error-banner {
-  background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(244, 67, 54, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(244, 67, 54, 0.2),
+    rgba(244, 67, 54, 0.1)
+  );
   border: 2px solid rgba(244, 67, 54, 0.5);
   border-radius: 12px;
   margin-bottom: 2rem;
@@ -58,7 +62,7 @@
 
 .error-details h3 {
   margin: 0 0 0.5rem 0;
-  color: #E57373;
+  color: #e57373;
   font-size: 1.2rem;
 }
 
@@ -80,7 +84,7 @@
 }
 
 .debug-toggle-btn {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
+  background: linear-gradient(135deg, #2196f3, #1976d2);
   border: none;
   color: white;
   padding: 0.5rem 1rem;
@@ -125,7 +129,11 @@
 
 /* Upload Section */
 .upload-section {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 2rem;
@@ -137,7 +145,7 @@
   font-size: 1.3rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
 }
 
 .upload-area {
@@ -169,7 +177,7 @@
 }
 
 .upload-label:hover {
-  border-color: var(--guild-accent, #FFD700);
+  border-color: var(--guild-accent, #ffd700);
   background: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
 }
@@ -208,7 +216,7 @@
 
 .preview-header h4 {
   margin: 0;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
 }
 
 .clear-btn {
@@ -307,7 +315,7 @@
 .more-icon {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
 }
 
 .more-text {
@@ -320,7 +328,7 @@
 }
 
 .upload-btn {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+  background: linear-gradient(135deg, #4caf50, #45a049);
   border: none;
   color: white;
   padding: 0.75rem 2rem;
@@ -380,7 +388,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4CAF50, #45a049);
+  background: linear-gradient(90deg, #4caf50, #45a049);
   transition: width 0.3s ease;
   border-radius: 4px;
 }
@@ -393,7 +401,11 @@
 
 /* Current Background Section */
 .current-background-section {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2),
+    rgba(76, 175, 80, 0.1)
+  );
   border: 1px solid rgba(76, 175, 80, 0.3);
   border-radius: 12px;
   padding: 2rem;
@@ -421,13 +433,17 @@
 
 .current-background-label {
   font-size: 1.1rem;
-  color: #81C784;
+  color: #81c784;
   font-weight: bold;
 }
 
 /* Backgrounds Section */
 .backgrounds-section {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 2rem;
@@ -441,7 +457,11 @@
 }
 
 .background-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 1.5rem;
@@ -452,12 +472,16 @@
 .background-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border-color: var(--guild-accent, #FFD700);
+  border-color: var(--guild-accent, #ffd700);
 }
 
 .background-card.current {
-  border-color: #4CAF50;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1));
+  border-color: #4caf50;
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2),
+    rgba(76, 175, 80, 0.1)
+  );
 }
 
 .background-image-container {
@@ -493,7 +517,7 @@
 .background-name {
   font-size: 1.1rem;
   font-weight: bold;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   margin-bottom: 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -537,7 +561,7 @@
 }
 
 .select-btn {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
+  background: linear-gradient(135deg, #2196f3, #1976d2);
   color: white;
 }
 
@@ -608,22 +632,26 @@
 .loading-content h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid var(--guild-accent, #FFD700);
+  border-top: 3px solid var(--guild-accent, #ffd700);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mobile Responsive */

@@ -30,28 +30,31 @@ const ENHANCED_GUILDS: Record<GuildId, GuildData> = {
     name: 'Titans',
     icon: '⚡',
     motto: 'Mồ hôi hôm nay là sức mạnh ngày mai',
-    description: 'Masters of discipline and raw power. The Titans forge themselves through trials of strength and unwavering determination.',
+    description:
+      'Masters of discipline and raw power. The Titans forge themselves through trials of strength and unwavering determination.',
     focus: 'Discipline & Strength',
-    theme: GUILDS.titans.theme
+    theme: GUILDS.titans.theme,
   },
   illumination: {
-    id: 'illumination', 
+    id: 'illumination',
     name: 'Illumination',
     icon: '🔮',
     motto: 'Tri thức là ánh sáng dẫn lối',
-    description: 'Seekers of wisdom and truth. The Illumination guild unravels mysteries through knowledge and enlightenment.',
+    description:
+      'Seekers of wisdom and truth. The Illumination guild unravels mysteries through knowledge and enlightenment.',
     focus: 'Wisdom & Knowledge',
-    theme: GUILDS.illumination.theme
+    theme: GUILDS.illumination.theme,
   },
   envoys: {
     id: 'envoys',
     name: 'Envoys',
     icon: '🌿',
     motto: 'Hài hòa trong đa dạng, sức mạnh trong đoàn kết',
-    description: 'Guardians of balance and unity. The Envoys bridge differences with diplomacy and natural harmony.',
+    description:
+      'Guardians of balance and unity. The Envoys bridge differences with diplomacy and natural harmony.',
     focus: 'Balance & Nature',
-    theme: GUILDS.envoys.theme
-  }
+    theme: GUILDS.envoys.theme,
+  },
 };
 
 const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
@@ -78,7 +81,7 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
   const handleGuildPreview = (guildId: GuildId) => {
     setHoveredGuild(guildId);
     applyGuildTheme(guildId);
-    
+
     // Add body background transition
     document.body.style.transition = 'background 0.5s ease';
     document.body.style.background = ENHANCED_GUILDS[guildId].theme.background;
@@ -88,13 +91,16 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
     setHoveredGuild(null);
     if (selectedGuild) {
       applyGuildTheme(selectedGuild);
-      document.body.style.background = ENHANCED_GUILDS[selectedGuild].theme.background;
+      document.body.style.background =
+        ENHANCED_GUILDS[selectedGuild].theme.background;
     } else if (userData?.guild) {
       applyGuildTheme(userData.guild);
-      document.body.style.background = ENHANCED_GUILDS[userData.guild as GuildId]?.theme.background || '';
+      document.body.style.background =
+        ENHANCED_GUILDS[userData.guild as GuildId]?.theme.background || '';
     } else {
       applyGuildTheme('titans'); // Default
-      document.body.style.background = ENHANCED_GUILDS['titans'].theme.background;
+      document.body.style.background =
+        ENHANCED_GUILDS['titans'].theme.background;
     }
   };
 
@@ -102,9 +108,11 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
     setSelectedGuild(guildId);
     applyGuildTheme(guildId);
     setHasError(null); // Clear any errors
-    
+
     // Add click feedback animation
-    const clickedCard = document.querySelector(`.guild-card[data-guild="${guildId}"]`);
+    const clickedCard = document.querySelector(
+      `.guild-card[data-guild="${guildId}"]`
+    );
     if (clickedCard) {
       clickedCard.classList.add('clicked');
       setTimeout(() => clickedCard.classList.remove('clicked'), 300);
@@ -142,14 +150,16 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
     try {
       // Step 1: Apply theme immediately for visual feedback
       applyGuildTheme(guildId);
-      
+
       // Step 2: Update via AuthContext (includes optimistic updates and rollback)
       await updateUserGuild(guildId);
 
       // Step 3: Success feedback
       setIsConnecting(false);
       setIsLoading(false);
-      setSuccessMessage(`Welcome to the ${ENHANCED_GUILDS[guildId].name}! Your ascension begins now.`);
+      setSuccessMessage(
+        `Welcome to the ${ENHANCED_GUILDS[guildId].name}! Your ascension begins now.`
+      );
 
       // Step 4: Trigger callback if provided
       if (onSelection) {
@@ -168,10 +178,9 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
           navigate('/dashboard', { replace: true });
         }, 1500);
       }
-
     } catch (error: any) {
       console.error('Error in handleSelectGuild:', error);
-      
+
       // Rollback theme on error
       if (previousTheme) {
         applyGuildTheme(previousTheme);
@@ -179,15 +188,19 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
 
       // Comprehensive error handling
       let errorMessage = 'Failed to join guild. Please try again.';
-      
+
       if (error.code === 'permission-denied') {
-        errorMessage = 'You do not have permission to update your guild. Please contact support.';
+        errorMessage =
+          'You do not have permission to update your guild. Please contact support.';
       } else if (error.code === 'not-found') {
-        errorMessage = 'User account not found. Please try logging out and back in.';
+        errorMessage =
+          'User account not found. Please try logging out and back in.';
       } else if (error.code === 'unavailable') {
-        errorMessage = 'Service temporarily unavailable. Please check your internet connection and try again.';
+        errorMessage =
+          'Service temporarily unavailable. Please check your internet connection and try again.';
       } else if (error.code === 'deadline-exceeded') {
-        errorMessage = 'Request timed out. Please check your internet connection and try again.';
+        errorMessage =
+          'Request timed out. Please check your internet connection and try again.';
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -212,12 +225,11 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
           <h1 className="selection-title text-gaming">
             Welcome to the Ascension Citadel!
           </h1>
-          <h2 className="selection-subtitle-primary">
-            Choose Your Path
-          </h2>
+          <h2 className="selection-subtitle-primary">Choose Your Path</h2>
           <p className="selection-subtitle">
-            Three ancient guilds await your decision. Each path offers unique wisdom, challenges, and power. 
-            Choose wisely, for your journey of ascension begins here.
+            Three ancient guilds await your decision. Each path offers unique
+            wisdom, challenges, and power. Choose wisely, for your journey of
+            ascension begins here.
           </p>
         </div>
 
@@ -225,10 +237,7 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
           <div className="error-banner">
             <span className="error-icon">⚠️</span>
             <span className="error-message">{hasError}</span>
-            <button 
-              className="error-dismiss"
-              onClick={() => setHasError(null)}
-            >
+            <button className="error-dismiss" onClick={() => setHasError(null)}>
               ✕
             </button>
           </div>
@@ -249,7 +258,7 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
         )}
 
         <div className="guilds-grid">
-          {Object.values(ENHANCED_GUILDS).map((guild) => (
+          {Object.values(ENHANCED_GUILDS).map(guild => (
             <div
               key={guild.id}
               data-guild={guild.id}
@@ -259,28 +268,18 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
               onClick={() => handleGuildSelect(guild.id)}
             >
               <div className="guild-card-content">
-                <div className="guild-icon-large">
-                  {guild.icon}
-                </div>
-                <h3 className="guild-name text-fantasy">
-                  {guild.name}
-                </h3>
-                <div className="guild-motto">
-                  "{guild.motto}"
-                </div>
-                <div className="guild-focus">
-                  {guild.focus}
-                </div>
-                <p className="guild-description">
-                  {guild.description}
-                </p>
+                <div className="guild-icon-large">{guild.icon}</div>
+                <h3 className="guild-name text-fantasy">{guild.name}</h3>
+                <div className="guild-motto">"{guild.motto}"</div>
+                <div className="guild-focus">{guild.focus}</div>
+                <p className="guild-description">{guild.description}</p>
                 <div className="guild-path-button">
                   <button className="choose-path-btn btn-primary">
                     Choose This Path
                   </button>
                 </div>
               </div>
-              
+
               {selectedGuild === guild.id && (
                 <div className="selection-indicator animate-pulse">
                   <span className="indicator-icon">⚡</span>
@@ -295,9 +294,12 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
           <div className="selection-actions animate-fadeInUp">
             <div className="selected-guild-info">
               <div className="selection-badge">
-                <span className="badge-icon">{ENHANCED_GUILDS[selectedGuild].icon}</span>
+                <span className="badge-icon">
+                  {ENHANCED_GUILDS[selectedGuild].icon}
+                </span>
                 <span className="badge-text">
-                  You have chosen the path of <strong>{ENHANCED_GUILDS[selectedGuild].name}</strong>
+                  You have chosen the path of{' '}
+                  <strong>{ENHANCED_GUILDS[selectedGuild].name}</strong>
                 </span>
               </div>
               <p className="selection-motto">
@@ -307,7 +309,7 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
                 You can change your guild later in account settings if needed.
               </p>
             </div>
-            
+
             <div className="action-buttons">
               <button
                 className="cancel-button btn-ghost"
@@ -357,7 +359,8 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
 
         <div className="selection-footer">
           <p className="footer-text">
-            Each guild offers a unique journey of growth and mastery. Choose the path that resonates with your spirit.
+            Each guild offers a unique journey of growth and mastery. Choose the
+            path that resonates with your spirit.
           </p>
         </div>
       </div>

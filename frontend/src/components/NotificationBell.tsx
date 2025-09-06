@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, query, orderBy, onSnapshot, doc, writeBatch } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  doc,
+  writeBatch,
+} from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebase';
 import './NotificationBell.css';
@@ -28,14 +35,19 @@ const NotificationBell: React.FC = () => {
     if (!userData?.userId) return;
 
     // Set up real-time listener for notifications
-    const notificationsRef = collection(db, 'users', userData.userId, 'notifications');
+    const notificationsRef = collection(
+      db,
+      'users',
+      userData.userId,
+      'notifications'
+    );
     const q = query(notificationsRef, orderBy('timestamp', 'desc'));
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, snapshot => {
       const notificationsList: Notification[] = [];
       let unreadTotal = 0;
 
-      snapshot.forEach((doc) => {
+      snapshot.forEach(doc => {
         const data = doc.data();
         const notification: Notification = {
           id: doc.id,
@@ -46,9 +58,9 @@ const NotificationBell: React.FC = () => {
           questId: data.questId,
           auraReward: data.auraReward,
           oldLevel: data.oldLevel,
-          newLevel: data.newLevel
+          newLevel: data.newLevel,
         };
-        
+
         notificationsList.push(notification);
         if (!notification.isRead) {
           unreadTotal++;
@@ -66,7 +78,10 @@ const NotificationBell: React.FC = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -77,7 +92,7 @@ const NotificationBell: React.FC = () => {
 
   const toggleDropdown = async () => {
     setIsOpen(!isOpen);
-    
+
     // Mark all notifications as read when opening
     if (!isOpen && unreadCount > 0) {
       await markAllAsRead();
@@ -92,7 +107,13 @@ const NotificationBell: React.FC = () => {
       const unreadNotifications = notifications.filter(n => !n.isRead);
 
       for (const notification of unreadNotifications) {
-        const notificationRef = doc(db, 'users', userData.userId, 'notifications', notification.id);
+        const notificationRef = doc(
+          db,
+          'users',
+          userData.userId,
+          'notifications',
+          notification.id
+        );
         batch.update(notificationRef, { isRead: true });
       }
 
@@ -104,20 +125,25 @@ const NotificationBell: React.FC = () => {
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'quest_approved': return '🎉';
-      case 'level_up': return '🌟';
-      case 'daily_quest': return '🎯';
-      default: return '📢';
+      case 'quest_approved':
+        return '🎉';
+      case 'level_up':
+        return '🌟';
+      case 'daily_quest':
+        return '🎯';
+      default:
+        return '📢';
     }
   };
 
   const formatTimestamp = (timestamp: any) => {
     if (!timestamp) return 'Vừa xong';
 
-    const date = typeof timestamp.toDate === 'function' 
-      ? timestamp.toDate() 
-      : new Date(timestamp);
-    
+    const date =
+      typeof timestamp.toDate === 'function'
+        ? timestamp.toDate()
+        : new Date(timestamp);
+
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -128,16 +154,20 @@ const NotificationBell: React.FC = () => {
     if (diffMinutes < 60) return `${diffMinutes} phút trước`;
     if (diffHours < 24) return `${diffHours} giờ trước`;
     if (diffDays < 7) return `${diffDays} ngày trước`;
-    
+
     return date.toLocaleDateString('vi-VN');
   };
 
   const getNotificationColor = (type: string) => {
     switch (type) {
-      case 'quest_approved': return 'success';
-      case 'level_up': return 'legendary';
-      case 'daily_quest': return 'info';
-      default: return 'default';
+      case 'quest_approved':
+        return 'success';
+      case 'level_up':
+        return 'legendary';
+      case 'daily_quest':
+        return 'info';
+      default:
+        return 'default';
     }
   };
 
@@ -145,7 +175,7 @@ const NotificationBell: React.FC = () => {
 
   return (
     <div className="notification-bell" ref={dropdownRef}>
-      <button 
+      <button
         className="bell-button"
         onClick={toggleDropdown}
         aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
@@ -167,9 +197,7 @@ const NotificationBell: React.FC = () => {
           <div className="dropdown-header">
             <h3>🔔 Thông Báo</h3>
             {unreadCount > 0 && (
-              <span className="unread-indicator">
-                {unreadCount} mới
-              </span>
+              <span className="unread-indicator">{unreadCount} mới</span>
             )}
           </div>
 
@@ -186,15 +214,15 @@ const NotificationBell: React.FC = () => {
                 <p>Bạn sẽ nhận được thông báo khi có cập nhật mới!</p>
               </div>
             ) : (
-              notifications.slice(0, 10).map((notification) => (
-                <div 
-                  key={notification.id} 
+              notifications.slice(0, 10).map(notification => (
+                <div
+                  key={notification.id}
                   className={`notification-item ${notification.isRead ? 'read' : 'unread'} ${getNotificationColor(notification.type)}`}
                 >
                   <div className="notification-icon">
                     {getNotificationIcon(notification.type)}
                   </div>
-                  
+
                   <div className="notification-content">
                     <p className="notification-message">
                       {notification.message}
@@ -204,9 +232,7 @@ const NotificationBell: React.FC = () => {
                     </span>
                   </div>
 
-                  {!notification.isRead && (
-                    <div className="unread-dot"></div>
-                  )}
+                  {!notification.isRead && <div className="unread-dot"></div>}
                 </div>
               ))
             )}

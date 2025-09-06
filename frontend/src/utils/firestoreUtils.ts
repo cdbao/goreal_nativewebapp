@@ -25,7 +25,9 @@ export const retryFirestoreOperation = async <T>(
       }
 
       if (attempt === maxRetries) {
-        console.error(`Firestore operation failed after ${maxRetries} attempts`);
+        console.error(
+          `Firestore operation failed after ${maxRetries} attempts`
+        );
         throw lastError;
       }
 
@@ -44,16 +46,16 @@ const shouldNotRetry = (error: any): boolean => {
   if (error instanceof FirebaseError) {
     const nonRetryableErrors = [
       'permission-denied',
-      'unauthenticated', 
+      'unauthenticated',
       'invalid-argument',
       'not-found',
       'already-exists',
       'failed-precondition',
       'out-of-range',
       'unimplemented',
-      'data-loss'
+      'data-loss',
     ];
-    
+
     return nonRetryableErrors.includes(error.code);
   }
   return false;
@@ -112,17 +114,26 @@ export const getFirestoreErrorMessage = (error: any): string => {
 };
 
 // Enhanced error handler for user-facing operations
-export const handleFirestoreError = (error: any, operation: string = 'thao tác'): void => {
+export const handleFirestoreError = (
+  error: any,
+  operation: string = 'thao tác'
+): void => {
   const errorMessage = getFirestoreErrorMessage(error);
-  
+
   console.error(`Firestore error during ${operation}:`, error);
-  
+
   // Show user-friendly alert
-  alert(`Không thể thực hiện ${operation}: ${errorMessage}\n\nVui lòng thử lại sau ít phút.`);
-  
+  alert(
+    `Không thể thực hiện ${operation}: ${errorMessage}\n\nVui lòng thử lại sau ít phút.`
+  );
+
   // If it's a session error, suggest page refresh
   if (error.message?.includes('SID') || error.message?.includes('session')) {
-    if (window.confirm('Có vẻ như phiên kết nối đã hết hạn. Bạn có muốn làm mới trang không?')) {
+    if (
+      window.confirm(
+        'Có vẻ như phiên kết nối đã hết hạn. Bạn có muốn làm mới trang không?'
+      )
+    ) {
       window.location.reload();
     }
   }
@@ -133,16 +144,17 @@ export const validateUserAuth = (user: any): void => {
   if (!user) {
     throw new Error('User not authenticated');
   }
-  
+
   if (!user.uid) {
     throw new Error('User ID not available');
   }
-  
+
   // Check if auth token is still valid (basic check)
   if (user.accessToken && user.metadata?.lastSignInTime) {
     const lastSignIn = new Date(user.metadata.lastSignInTime);
-    const hoursSinceSignIn = (Date.now() - lastSignIn.getTime()) / (1000 * 60 * 60);
-    
+    const hoursSinceSignIn =
+      (Date.now() - lastSignIn.getTime()) / (1000 * 60 * 60);
+
     // If signed in more than 24 hours ago, suggest re-auth
     if (hoursSinceSignIn > 24) {
       console.warn('User session is old, may need re-authentication');

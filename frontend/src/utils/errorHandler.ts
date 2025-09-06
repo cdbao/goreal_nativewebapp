@@ -32,14 +32,18 @@ export class ErrorLogger {
     return ErrorLogger.instance;
   }
 
-  logError(error: Error | FirebaseError, context: string, severity: ErrorDetails['severity'] = 'medium'): void {
+  logError(
+    error: Error | FirebaseError,
+    context: string,
+    severity: ErrorDetails['severity'] = 'medium'
+  ): void {
     const errorDetails: ErrorDetails = {
       errorType: this.determineErrorType(error),
       message: error.message,
       component: context,
       severity,
       stack: error.stack,
-      additionalData: this.extractAdditionalData(error)
+      additionalData: this.extractAdditionalData(error),
     };
 
     this.processError(errorDetails);
@@ -49,24 +53,31 @@ export class ErrorLogger {
     this.processError(details);
   }
 
-  private determineErrorType(error: Error | FirebaseError): ErrorDetails['errorType'] {
+  private determineErrorType(
+    error: Error | FirebaseError
+  ): ErrorDetails['errorType'] {
     if ('code' in error) {
       return 'firebase';
     }
     if (error.message.includes('fetch') || error.message.includes('network')) {
       return 'network';
     }
-    if (error.message.includes('validation') || error.message.includes('invalid')) {
+    if (
+      error.message.includes('validation') ||
+      error.message.includes('invalid')
+    ) {
       return 'validation';
     }
     return 'general';
   }
 
-  private extractAdditionalData(error: Error | FirebaseError): Record<string, any> {
+  private extractAdditionalData(
+    error: Error | FirebaseError
+  ): Record<string, any> {
     const data: Record<string, any> = {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
-      url: window.location.href
+      url: window.location.href,
     };
 
     if ('code' in error) {
@@ -79,7 +90,9 @@ export class ErrorLogger {
   private processError(errorDetails: ErrorDetails): void {
     // Always log to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.group(`🚨 ${errorDetails.severity.toUpperCase()} Error in ${errorDetails.component}`);
+      console.group(
+        `🚨 ${errorDetails.severity.toUpperCase()} Error in ${errorDetails.component}`
+      );
       console.error('Message:', errorDetails.message);
       console.error('Type:', errorDetails.errorType);
       console.error('Stack:', errorDetails.stack);
@@ -111,7 +124,7 @@ export class ErrorLogger {
       // In a real implementation, you would send to your error tracking service
       // Example: Sentry, LogRocket, custom endpoint, etc.
       console.log('Would send errors to logging service:', errorsToSend);
-      
+
       // For Firebase projects, you could send to Firestore
       // await this.sendToFirestore(errorsToSend);
     } catch (sendError) {
@@ -124,7 +137,7 @@ export class ErrorLogger {
   private showCriticalErrorMessage(errorDetails: ErrorDetails): void {
     // Show a user-friendly error message
     const message = this.getUserFriendlyMessage(errorDetails);
-    
+
     // You could integrate with a toast library here
     alert(`Đã xảy ra lỗi nghiêm trọng: ${message}`);
   }
@@ -150,14 +163,16 @@ export class ErrorLogger {
       'auth/too-many-requests': 'Quá nhiều yêu cầu. Vui lòng thử lại sau.',
       'permission-denied': 'Bạn không có quyền thực hiện hành động này.',
       'not-found': 'Không tìm thấy dữ liệu yêu cầu.',
-      'unavailable': 'Dịch vụ tạm thời không khả dụng.',
+      unavailable: 'Dịch vụ tạm thời không khả dụng.',
     };
 
-    const matchedError = Object.keys(errorMessages).find(key => 
+    const matchedError = Object.keys(errorMessages).find(key =>
       errorMessage.includes(key)
     );
 
-    return matchedError ? errorMessages[matchedError] : 'Đã xảy ra lỗi với dịch vụ.';
+    return matchedError
+      ? errorMessages[matchedError]
+      : 'Đã xảy ra lỗi với dịch vụ.';
   }
 }
 
@@ -166,7 +181,11 @@ export const errorLogger = ErrorLogger.getInstance();
 
 // React Hook for error handling
 export const useErrorHandler = () => {
-  const handleError = (error: Error, context: string, severity: ErrorDetails['severity'] = 'medium') => {
+  const handleError = (
+    error: Error,
+    context: string,
+    severity: ErrorDetails['severity'] = 'medium'
+  ) => {
     errorLogger.logError(error, context, severity);
   };
 

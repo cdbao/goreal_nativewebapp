@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebase';
 import { Submission, Quest } from '../types';
@@ -17,7 +25,9 @@ const JourneyLog: React.FC = () => {
   const { userData, currentUser } = useAuth();
   const [submissions, setSubmissions] = useState<SubmissionWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'approved' | 'pending' | 'rejected'>('all');
+  const [filter, setFilter] = useState<
+    'all' | 'approved' | 'pending' | 'rejected'
+  >('all');
 
   useEffect(() => {
     if (currentUser?.uid) {
@@ -31,9 +41,9 @@ const JourneyLog: React.FC = () => {
       currentUserUid: currentUser?.uid,
       userDataUserId: userData?.userId,
       hasCurrentUser: !!currentUser,
-      hasUserData: !!userData
+      hasUserData: !!userData,
     });
-    
+
     if (!currentUser?.uid) {
       console.log('No currentUser.uid found, exiting fetchSubmissions');
       return;
@@ -41,9 +51,9 @@ const JourneyLog: React.FC = () => {
 
     try {
       setLoading(true);
-      
+
       console.log('Querying submissions for userId:', currentUser.uid);
-      
+
       // Query user's submissions using currentUser.uid
       const submissionsQuery = query(
         collection(db, 'submissions'),
@@ -52,29 +62,34 @@ const JourneyLog: React.FC = () => {
       );
 
       const submissionsSnapshot = await getDocs(submissionsQuery);
-      
+
       console.log('Submissions query result:', {
         size: submissionsSnapshot.size,
         empty: submissionsSnapshot.empty,
-        docs: submissionsSnapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }))
+        docs: submissionsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          data: doc.data(),
+        })),
       });
-      
+
       // Get quest details for each submission
       const submissionsWithDetails = await Promise.all(
-        submissionsSnapshot.docs.map(async (submissionDoc) => {
-          const submissionData = { 
-            submissionId: submissionDoc.id, 
-            ...submissionDoc.data() 
+        submissionsSnapshot.docs.map(async submissionDoc => {
+          const submissionData = {
+            submissionId: submissionDoc.id,
+            ...submissionDoc.data(),
           } as Submission;
 
           // Get quest details
           let questTitle = 'Nhiệm vụ không xác định';
           let questDescription = '';
           let auraReward = 0;
-          
+
           if (submissionData.questId) {
             try {
-              const questDoc = await getDoc(doc(db, 'quests', submissionData.questId));
+              const questDoc = await getDoc(
+                doc(db, 'quests', submissionData.questId)
+              );
               if (questDoc.exists()) {
                 const questData = questDoc.data() as Quest;
                 questTitle = questData.title;
@@ -89,18 +104,19 @@ const JourneyLog: React.FC = () => {
           // Format dates
           let formattedDate = 'Không xác định';
           let relativeTime = '';
-          
+
           if (submissionData.submittedAt) {
-            const date = typeof submissionData.submittedAt.toDate === 'function' 
-              ? submissionData.submittedAt.toDate() 
-              : new Date(submissionData.submittedAt);
-            
+            const date =
+              typeof submissionData.submittedAt.toDate === 'function'
+                ? submissionData.submittedAt.toDate()
+                : new Date(submissionData.submittedAt);
+
             formattedDate = date.toLocaleDateString('vi-VN', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
               hour: '2-digit',
-              minute: '2-digit'
+              minute: '2-digit',
             });
 
             // Calculate relative time
@@ -127,7 +143,7 @@ const JourneyLog: React.FC = () => {
             questDescription,
             formattedDate,
             relativeTime,
-            auraReward
+            auraReward,
           };
         })
       );
@@ -142,33 +158,45 @@ const JourneyLog: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'approved': return '✅';
-      case 'rejected': return '❌';
-      case 'pending': return '⏳';
-      default: return '🔍';
+      case 'approved':
+        return '✅';
+      case 'rejected':
+        return '❌';
+      case 'pending':
+        return '⏳';
+      default:
+        return '🔍';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'approved': return 'Đã duyệt';
-      case 'rejected': return 'Bị từ chối';
-      case 'pending': return 'Chờ duyệt';
-      default: return 'Không xác định';
+      case 'approved':
+        return 'Đã duyệt';
+      case 'rejected':
+        return 'Bị từ chối';
+      case 'pending':
+        return 'Chờ duyệt';
+      default:
+        return 'Không xác định';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved': return 'success';
-      case 'rejected': return 'error';
-      case 'pending': return 'warning';
-      default: return 'neutral';
+      case 'approved':
+        return 'success';
+      case 'rejected':
+        return 'error';
+      case 'pending':
+        return 'warning';
+      default:
+        return 'neutral';
     }
   };
 
-  const filteredSubmissions = submissions.filter(submission => 
-    filter === 'all' || submission.status === filter
+  const filteredSubmissions = submissions.filter(
+    submission => filter === 'all' || submission.status === filter
   );
 
   const totalApproved = submissions.filter(s => s.status === 'approved').length;
@@ -188,29 +216,30 @@ const JourneyLog: React.FC = () => {
   }
 
   return (
-    <div 
+    <div
       className="journey-log"
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0a0e17 0%, #1a1a2e 30%, #16213e 70%, #0f1419 100%)',
+        background:
+          'linear-gradient(135deg, #0a0e17 0%, #1a1a2e 30%, #16213e 70%, #0f1419 100%)',
         backgroundAttachment: 'fixed',
         padding: '2rem',
         position: 'relative',
         overflowX: 'hidden',
-        color: 'white'
+        color: 'white',
       }}
     >
-      <div 
+      <div
         className="log-header"
         style={{
           position: 'relative',
           zIndex: 10,
           textAlign: 'center',
           marginBottom: '3rem',
-          color: 'white'
+          color: 'white',
         }}
       >
-        <h2 
+        <h2
           className="log-title"
           style={{
             fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
@@ -220,22 +249,32 @@ const JourneyLog: React.FC = () => {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            textShadow: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8)',
+            textShadow:
+              '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8)',
             letterSpacing: '0.02em',
-            filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.5))'
+            filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.5))',
           }}
         >
-          <span className="title-icon" style={{ display: 'block', fontSize: '0.8em', marginBottom: '0.5rem' }}>📜</span>
+          <span
+            className="title-icon"
+            style={{
+              display: 'block',
+              fontSize: '0.8em',
+              marginBottom: '0.5rem',
+            }}
+          >
+            📜
+          </span>
           Nhật Ký Hành Trình
         </h2>
-        <p 
+        <p
           className="log-subtitle"
           style={{
             fontSize: '1.2rem',
             color: 'rgba(255, 255, 255, 0.95)',
             marginBottom: '3rem',
             textShadow: '1px 1px 3px rgba(0, 0, 0, 0.7)',
-            fontWeight: '500'
+            fontWeight: '500',
           }}
         >
           Lịch sử rèn luyện và thành tựu của bạn trong Lò Rèn Titan
@@ -278,7 +317,7 @@ const JourneyLog: React.FC = () => {
               padding: '8px 16px',
               borderRadius: '20px',
               cursor: loading ? 'not-allowed' : 'pointer',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
             }}
           >
             {loading ? '🔄 Đang tải...' : '🔄 Làm mới Nhật ký'}
@@ -287,25 +326,25 @@ const JourneyLog: React.FC = () => {
 
         {/* Filter Tabs */}
         <div className="filter-tabs">
-          <button 
+          <button
             className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
             onClick={() => setFilter('all')}
           >
             Tất cả ({submissions.length})
           </button>
-          <button 
+          <button
             className={`filter-tab ${filter === 'approved' ? 'active' : ''}`}
             onClick={() => setFilter('approved')}
           >
             Đã duyệt ({totalApproved})
           </button>
-          <button 
+          <button
             className={`filter-tab ${filter === 'pending' ? 'active' : ''}`}
             onClick={() => setFilter('pending')}
           >
             Chờ duyệt ({totalPending})
           </button>
-          <button 
+          <button
             className={`filter-tab ${filter === 'rejected' ? 'active' : ''}`}
             onClick={() => setFilter('rejected')}
           >
@@ -319,16 +358,14 @@ const JourneyLog: React.FC = () => {
           <div className="empty-state">
             <div className="empty-icon">🗞️</div>
             <h3>
-              {filter === 'all' 
+              {filter === 'all'
                 ? 'Chưa có hành trình nào được ghi lại'
-                : `Chưa có báo cáo nào với trạng thái "${getStatusText(filter)}"`
-              }
+                : `Chưa có báo cáo nào với trạng thái "${getStatusText(filter)}"`}
             </h3>
             <p>
               {filter === 'all'
                 ? 'Hãy bắt đầu hoàn thành các nhiệm vụ để ghi lại hành trình rèn luyện của bạn!'
-                : 'Thay đổi bộ lọc để xem các báo cáo khác.'
-              }
+                : 'Thay đổi bộ lọc để xem các báo cáo khác.'}
             </p>
           </div>
         ) : (
@@ -336,14 +373,18 @@ const JourneyLog: React.FC = () => {
             {filteredSubmissions.map((submission, index) => (
               <div key={submission.submissionId} className="timeline-item">
                 <div className="timeline-marker">
-                  <div className={`marker-icon ${getStatusColor(submission.status)}`}>
+                  <div
+                    className={`marker-icon ${getStatusColor(submission.status)}`}
+                  >
                     {getStatusIcon(submission.status)}
                   </div>
-                  {index < filteredSubmissions.length - 1 && <div className="timeline-line"></div>}
+                  {index < filteredSubmissions.length - 1 && (
+                    <div className="timeline-line"></div>
+                  )}
                 </div>
-                
+
                 <div className="timeline-content">
-                  <div 
+                  <div
                     className="submission-card"
                     style={{
                       background: 'rgba(20, 25, 35, 0.95)',
@@ -352,12 +393,13 @@ const JourneyLog: React.FC = () => {
                       borderRadius: '15px',
                       padding: '2rem',
                       transition: 'all 0.3s ease',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                      color: 'white'
+                      boxShadow:
+                        '0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                      color: 'white',
                     }}
                   >
                     <div className="submission-header">
-                      <h3 
+                      <h3
                         className="quest-title"
                         style={{
                           fontSize: '1.4rem',
@@ -365,18 +407,22 @@ const JourneyLog: React.FC = () => {
                           color: '#00E5FF',
                           margin: '0',
                           lineHeight: '1.3',
-                          textShadow: '0 0 10px rgba(0, 229, 255, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.8)',
-                          filter: 'drop-shadow(0 0 8px rgba(0, 229, 255, 0.4))'
+                          textShadow:
+                            '0 0 10px rgba(0, 229, 255, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.8)',
+                          filter: 'drop-shadow(0 0 8px rgba(0, 229, 255, 0.4))',
                         }}
                       >
                         {submission.questTitle}
                       </h3>
-                      <div className={`status-badge ${getStatusColor(submission.status)}`}>
-                        {getStatusIcon(submission.status)} {getStatusText(submission.status)}
+                      <div
+                        className={`status-badge ${getStatusColor(submission.status)}`}
+                      >
+                        {getStatusIcon(submission.status)}{' '}
+                        {getStatusText(submission.status)}
                       </div>
                     </div>
-                    
-                    <p 
+
+                    <p
                       className="quest-description"
                       style={{
                         color: 'rgba(255, 255, 255, 0.85)',
@@ -388,30 +434,35 @@ const JourneyLog: React.FC = () => {
                         background: 'rgba(255, 255, 255, 0.03)',
                         padding: '0.8rem',
                         borderRadius: '8px',
-                        borderLeft: '3px solid rgba(0, 229, 255, 0.5)'
+                        borderLeft: '3px solid rgba(0, 229, 255, 0.5)',
                       }}
                     >
                       {submission.questDescription}
                     </p>
-                    
+
                     <div className="submission-details">
                       <div className="detail-item">
                         <span className="detail-label">📅 Thời gian:</span>
                         <span className="detail-value">
                           {submission.formattedDate}
-                          <span className="relative-time">({submission.relativeTime})</span>
+                          <span className="relative-time">
+                            ({submission.relativeTime})
+                          </span>
                         </span>
                       </div>
-                      
+
                       {submission.status === 'approved' && (
                         <div className="detail-item success">
-                          <span className="detail-label">🎉 AURA nhận được:</span>
+                          <span className="detail-label">
+                            🎉 AURA nhận được:
+                          </span>
                           <span className="detail-value aura-reward">
-                            +{submission.auraReward} AURA - Đã được cộng vào tài khoản ⚡
+                            +{submission.auraReward} AURA - Đã được cộng vào tài
+                            khoản ⚡
                           </span>
                         </div>
                       )}
-                      
+
                       {submission.status === 'pending' && (
                         <div className="detail-item warning">
                           <span className="detail-label">⏳ AURA sẽ nhận:</span>
@@ -425,27 +476,29 @@ const JourneyLog: React.FC = () => {
                     {/* Proof preview */}
                     {submission.proofData && (
                       <div className="proof-preview">
-                        <span className="proof-label">🔍 Bằng chứng rèn luyện:</span>
+                        <span className="proof-label">
+                          🔍 Bằng chứng rèn luyện:
+                        </span>
                         <div className="proof-content">
                           {submission.proofType === 'text' ? (
                             <div className="proof-text">
                               <pre>{submission.proofData as string}</pre>
                             </div>
                           ) : submission.proofType === 'image' ? (
-                            <img 
-                              src={submission.proofData as string} 
-                              alt="Proof" 
+                            <img
+                              src={submission.proofData as string}
+                              alt="Proof"
                               className="proof-image"
                             />
                           ) : submission.proofType === 'video' ? (
-                            <video 
-                              src={submission.proofData as string} 
+                            <video
+                              src={submission.proofData as string}
                               className="proof-video"
                               preload="metadata"
                               controls
                             />
                           ) : submission.proofType === 'audio' ? (
-                            <audio 
+                            <audio
                               src={submission.proofData as string}
                               className="proof-audio"
                               controls

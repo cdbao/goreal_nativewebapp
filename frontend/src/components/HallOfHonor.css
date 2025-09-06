@@ -12,7 +12,9 @@
   backdrop-filter: blur(15px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-radius: 20px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   color: white !important;
   padding: 2rem !important;
 }
@@ -50,7 +52,11 @@
   align-items: center !important;
   padding: var(--space-6) !important;
   border-bottom: 2px solid rgba(255, 215, 0, 0.3) !important;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(138, 43, 226, 0.1)) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.1),
+    rgba(138, 43, 226, 0.1)
+  ) !important;
   margin-bottom: var(--space-6) !important;
   backdrop-filter: blur(10px) !important;
   color: white !important;
@@ -74,11 +80,14 @@
 .title-content h1 {
   font-size: var(--font-size-4xl) !important;
   margin: 0 0 var(--space-1) !important;
-  background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B) !important;
+  background: linear-gradient(135deg, #ffd700, #ffa500, #ff6b6b) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
+  text-shadow:
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 0 40px rgba(255, 215, 0, 0.4),
+    2px 2px 8px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)) !important;
   font-weight: 800 !important;
 }
@@ -96,7 +105,11 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
-  background: linear-gradient(135deg, var(--primary-color)15, var(--secondary-color)15);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 15,
+    var(--secondary-color) 15
+  );
   border: 2px solid var(--primary-color);
   border-radius: var(--radius-xl);
   backdrop-filter: var(--blur-md);
@@ -186,7 +199,9 @@
   overflow: hidden !important;
   border: 2px solid rgba(255, 215, 0, 0.3) !important;
   backdrop-filter: blur(15px) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   color: white !important;
 }
 
@@ -194,7 +209,7 @@
 .table-header {
   display: grid !important;
   grid-template-columns: 80px 1fr 150px 120px 100px 100px !important;
-  background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+  background: linear-gradient(135deg, #ffd700, #ffa500) !important;
   padding: var(--space-4) var(--space-6) !important;
   font-weight: 800 !important;
   color: #0a0e17 !important;
@@ -252,7 +267,11 @@
 }
 
 .table-row.current-user {
-  background: linear-gradient(135deg, var(--primary-color)10, var(--secondary-color)10);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 10,
+    var(--secondary-color) 10
+  );
   border: 2px solid var(--primary-color);
   border-radius: var(--radius-md);
   margin: var(--space-2) 0;
@@ -260,12 +279,20 @@
 }
 
 .table-row.top-three {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.1),
+    rgba(255, 193, 7, 0.05)
+  );
   border-left: 4px solid #ffd700;
 }
 
 .table-row.top-ten {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(139, 92, 246, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.1),
+    rgba(139, 92, 246, 0.05)
+  );
   border-left: 4px solid var(--primary-color);
 }
 
@@ -299,9 +326,12 @@
 
 .table-row.top-three .rank-icon {
   font-size: var(--font-size-3xl) !important;
-  color: #FFD700 !important;
-  filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)) !important;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+  color: #ffd700 !important;
+  filter: drop-shadow(0 0 10px #ffd700)
+    drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)) !important;
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.8),
+    1px 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* ========================================
@@ -317,7 +347,11 @@
 .player-avatar {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
@@ -401,11 +435,13 @@
   font-weight: 700 !important;
   font-family: var(--font-fantasy) !important;
   font-size: var(--font-size-lg) !important;
-  color: #00E5FF !important;
-  text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+  color: #00e5ff !important;
+  text-shadow:
+    0 0 10px rgba(0, 229, 255, 0.6),
+    1px 1px 3px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)) !important;
   /* Enhanced visibility with solid color fallback */
-  background: linear-gradient(135deg, #00E5FF, #FFD700) !important;
+  background: linear-gradient(135deg, #00e5ff, #ffd700) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
@@ -433,9 +469,11 @@
 
 .table-row.top-three .level-number,
 .table-row.top-three .streak-number {
-  color: #FFD700 !important;
+  color: #ffd700 !important;
   font-weight: 700 !important;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.6),
+    1px 1px 2px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4)) !important;
 }
 
@@ -465,17 +503,17 @@
     grid-template-columns: 60px 1fr 120px 100px 80px 80px;
     padding: var(--space-3) var(--space-4);
   }
-  
+
   .player-avatar {
     width: 40px;
     height: 40px;
     font-size: var(--font-size-lg);
   }
-  
+
   .player-name {
     font-size: var(--font-size-base);
   }
-  
+
   .aura-amount {
     font-size: var(--font-size-base);
   }
@@ -487,41 +525,41 @@
     gap: var(--space-4);
     text-align: center;
   }
-  
+
   .title-content h1 {
     font-size: var(--font-size-3xl);
   }
-  
+
   .view-toggle {
     flex-direction: column;
     gap: var(--space-2);
   }
-  
+
   .toggle-button {
     width: 100%;
   }
-  
+
   .table-header,
   .table-row {
     grid-template-columns: 50px 1fr 80px 70px;
     font-size: var(--font-size-sm);
   }
-  
+
   .header-cell.level-col,
   .header-cell.streak-col,
   .table-cell.level-col,
   .table-cell.streak-col {
     display: none;
   }
-  
+
   .guild-name {
     display: none;
   }
-  
+
   .player-stats {
     display: none;
   }
-  
+
   .leaderboard-container {
     padding: 0 var(--space-4);
   }
@@ -531,32 +569,32 @@
   .hall-of-honor {
     margin: 0 var(--space-2);
   }
-  
+
   .title-content h1 {
     font-size: var(--font-size-2xl);
   }
-  
+
   .table-header,
   .table-row {
     grid-template-columns: 40px 1fr 60px;
     padding: var(--space-2) var(--space-3);
   }
-  
+
   .header-cell.guild-col,
   .table-cell.guild-col {
     display: none;
   }
-  
+
   .player-avatar {
     width: 32px;
     height: 32px;
     font-size: var(--font-size-base);
   }
-  
+
   .rank-icon {
     font-size: var(--font-size-lg);
   }
-  
+
   .table-row.top-three .rank-icon {
     font-size: var(--font-size-xl);
   }
@@ -567,11 +605,14 @@
    ======================================== */
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes goldGlow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 8px #ffd700);
   }
   50% {
@@ -584,7 +625,8 @@
 }
 
 @keyframes topThreeGlow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 rgba(255, 215, 0, 0.3);
   }
   50% {

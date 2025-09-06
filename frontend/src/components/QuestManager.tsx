@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc, updateDoc, doc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+  query,
+  orderBy,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { Quest, GuildId } from '../types';
 import { GUILDS, getGuildDisplayName } from '../constants/guilds';
@@ -26,7 +35,7 @@ const QuestManager: React.FC = () => {
     auraReward: 50,
     isActive: true,
     guild: 'titans',
-    reportType: 'image'
+    reportType: 'image',
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -37,17 +46,20 @@ const QuestManager: React.FC = () => {
   const fetchQuests = async () => {
     try {
       setLoading(true);
-      const questsQuery = query(collection(db, 'quests'), orderBy('title', 'asc'));
+      const questsQuery = query(
+        collection(db, 'quests'),
+        orderBy('title', 'asc')
+      );
       const questSnapshot = await getDocs(questsQuery);
-      
+
       const questList: Quest[] = [];
-      questSnapshot.forEach((doc) => {
+      questSnapshot.forEach(doc => {
         questList.push({
           questId: doc.id,
-          ...doc.data()
+          ...doc.data(),
         } as Quest);
       });
-      
+
       setQuests(questList);
     } catch (error) {
       console.error('Error fetching quests:', error);
@@ -64,7 +76,7 @@ const QuestManager: React.FC = () => {
       auraReward: 50,
       isActive: true,
       guild: 'titans',
-      reportType: 'image'
+      reportType: 'image',
     });
     setShowCreateModal(true);
   };
@@ -77,7 +89,7 @@ const QuestManager: React.FC = () => {
       auraReward: quest.auraReward,
       isActive: quest.isActive,
       guild: quest.guild,
-      reportType: quest.reportType
+      reportType: quest.reportType,
     });
     setShowEditModal(true);
   };
@@ -92,13 +104,17 @@ const QuestManager: React.FC = () => {
       auraReward: 50,
       isActive: true,
       guild: 'titans',
-      reportType: 'image'
+      reportType: 'image',
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -110,14 +126,18 @@ const QuestManager: React.FC = () => {
   };
 
   const handleCreateQuest = async () => {
-    if (!formData.title.trim() || !formData.description.trim() || formData.auraReward < 1) {
+    if (
+      !formData.title.trim() ||
+      !formData.description.trim() ||
+      formData.auraReward < 1
+    ) {
       alert('Vui lòng điền đầy đủ thông tin và đảm bảo phần thưởng AURA > 0');
       return;
     }
 
     try {
       setSubmitting(true);
-      
+
       const newQuestData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -126,23 +146,24 @@ const QuestManager: React.FC = () => {
         guild: formData.guild,
         reportType: formData.reportType,
         createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       };
 
       const docRef = await addDoc(collection(db, 'quests'), newQuestData);
-      
+
       // Add to local state
       const newQuest: Quest = {
         questId: docRef.id,
         ...newQuestData,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
-      
-      setQuests(prev => [...prev, newQuest].sort((a, b) => a.title.localeCompare(b.title)));
+
+      setQuests(prev =>
+        [...prev, newQuest].sort((a, b) => a.title.localeCompare(b.title))
+      );
       closeModals();
       alert('✅ Tạo quest mới thành công!');
-      
     } catch (error) {
       console.error('Error creating quest:', error);
       alert('❌ Lỗi khi tạo quest mới');
@@ -152,14 +173,19 @@ const QuestManager: React.FC = () => {
   };
 
   const handleEditQuest = async () => {
-    if (!editingQuest || !formData.title.trim() || !formData.description.trim() || formData.auraReward < 1) {
+    if (
+      !editingQuest ||
+      !formData.title.trim() ||
+      !formData.description.trim() ||
+      formData.auraReward < 1
+    ) {
       alert('Vui lòng điền đầy đủ thông tin và đảm bảo phần thưởng AURA > 0');
       return;
     }
 
     try {
       setSubmitting(true);
-      
+
       const questRef = doc(db, 'quests', editingQuest.questId);
       const updateData = {
         title: formData.title.trim(),
@@ -167,21 +193,24 @@ const QuestManager: React.FC = () => {
         auraReward: formData.auraReward,
         isActive: formData.isActive,
         guild: formData.guild,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       };
 
       await updateDoc(questRef, updateData);
-      
+
       // Update local state
-      setQuests(prev => prev.map(quest => 
-        quest.questId === editingQuest.questId 
-          ? { ...quest, ...updateData, updatedAt: new Date() }
-          : quest
-      ).sort((a, b) => a.title.localeCompare(b.title)));
-      
+      setQuests(prev =>
+        prev
+          .map(quest =>
+            quest.questId === editingQuest.questId
+              ? { ...quest, ...updateData, updatedAt: new Date() }
+              : quest
+          )
+          .sort((a, b) => a.title.localeCompare(b.title))
+      );
+
       closeModals();
       alert('✅ Cập nhật quest thành công!');
-      
     } catch (error) {
       console.error('Error updating quest:', error);
       alert('❌ Lỗi khi cập nhật quest');
@@ -194,21 +223,22 @@ const QuestManager: React.FC = () => {
     try {
       const questRef = doc(db, 'quests', quest.questId);
       const newStatus = !quest.isActive;
-      
-      await updateDoc(questRef, { 
+
+      await updateDoc(questRef, {
         isActive: newStatus,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
-      
+
       // Update local state
-      setQuests(prev => prev.map(q => 
-        q.questId === quest.questId 
-          ? { ...q, isActive: newStatus, updatedAt: new Date() }
-          : q
-      ));
-      
+      setQuests(prev =>
+        prev.map(q =>
+          q.questId === quest.questId
+            ? { ...q, isActive: newStatus, updatedAt: new Date() }
+            : q
+        )
+      );
+
       alert(`✅ Quest đã được ${newStatus ? 'kích hoạt' : 'tắt'}`);
-      
     } catch (error) {
       console.error('Error toggling quest status:', error);
       alert('❌ Lỗi khi thay đổi trạng thái quest');
@@ -268,10 +298,7 @@ const QuestManager: React.FC = () => {
 
         {/* Create Button */}
         <div className="action-bar">
-          <button 
-            className="create-button"
-            onClick={openCreateModal}
-          >
+          <button className="create-button" onClick={openCreateModal}>
             <span className="button-icon">➕</span>
             Tạo Quest Mới
           </button>
@@ -284,10 +311,7 @@ const QuestManager: React.FC = () => {
             <div className="empty-icon">📋</div>
             <h3>Chưa có quest nào</h3>
             <p>Hãy tạo quest đầu tiên để bắt đầu cuộc phiêu lưu!</p>
-            <button 
-              className="create-button primary"
-              onClick={openCreateModal}
-            >
+            <button className="create-button primary" onClick={openCreateModal}>
               ➕ Tạo Quest Đầu Tiên
             </button>
           </div>
@@ -306,33 +330,43 @@ const QuestManager: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {quests.map((quest) => (
-                    <tr key={quest.questId} className={quest.isActive ? 'active' : 'inactive'}>
+                  {quests.map(quest => (
+                    <tr
+                      key={quest.questId}
+                      className={quest.isActive ? 'active' : 'inactive'}
+                    >
                       <td className="quest-title-cell">
                         <div className="quest-title">{quest.title}</div>
                       </td>
                       <td className="quest-description-cell">
                         <div className="quest-description-preview">
-                          {quest.description.length > 100 
+                          {quest.description.length > 100
                             ? quest.description.substring(0, 100) + '...'
-                            : quest.description
-                          }
+                            : quest.description}
                         </div>
                       </td>
                       <td className="guild-cell">
                         <div className="guild-info">
-                          <span className="guild-icon">{GUILDS[quest.guild].icon}</span>
-                          <span className="guild-name">{getGuildDisplayName(quest.guild)}</span>
+                          <span className="guild-icon">
+                            {GUILDS[quest.guild].icon}
+                          </span>
+                          <span className="guild-name">
+                            {getGuildDisplayName(quest.guild)}
+                          </span>
                         </div>
                       </td>
                       <td className="aura-cell">
                         <div className="aura-reward">
                           <span className="aura-icon">🔥</span>
-                          <span className="aura-amount">{quest.auraReward}</span>
+                          <span className="aura-amount">
+                            {quest.auraReward}
+                          </span>
                         </div>
                       </td>
                       <td className="status-cell">
-                        <div className={`status-badge ${quest.isActive ? 'active' : 'inactive'}`}>
+                        <div
+                          className={`status-badge ${quest.isActive ? 'active' : 'inactive'}`}
+                        >
                           <span className="status-icon">
                             {quest.isActive ? '✅' : '❌'}
                           </span>
@@ -381,16 +415,18 @@ const QuestManager: React.FC = () => {
                 <span className="modal-icon">➕</span>
                 Tạo Quest Mới
               </h3>
-              <button 
-                className="close-button"
-                onClick={closeModals}
-              >
+              <button className="close-button" onClick={closeModals}>
                 ✕
               </button>
             </div>
-            
+
             <div className="modal-body">
-              <form onSubmit={(e) => { e.preventDefault(); handleCreateQuest(); }}>
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleCreateQuest();
+                }}
+              >
                 <div className="form-group">
                   <label htmlFor="title">
                     <span className="field-icon">📝</span>
@@ -435,7 +471,7 @@ const QuestManager: React.FC = () => {
                     onChange={handleInputChange}
                     required
                   >
-                    {Object.values(GUILDS).map((guild) => (
+                    {Object.values(GUILDS).map(guild => (
                       <option key={guild.id} value={guild.id}>
                         {guild.icon} {guild.displayName}
                       </option>
@@ -497,14 +533,14 @@ const QuestManager: React.FC = () => {
             </div>
 
             <div className="modal-footer">
-              <button 
+              <button
                 className="cancel-button"
                 onClick={closeModals}
                 disabled={submitting}
               >
                 Hủy
               </button>
-              <button 
+              <button
                 className="submit-button"
                 onClick={handleCreateQuest}
                 disabled={submitting}
@@ -535,16 +571,18 @@ const QuestManager: React.FC = () => {
                 <span className="modal-icon">✏️</span>
                 Chỉnh Sửa Quest
               </h3>
-              <button 
-                className="close-button"
-                onClick={closeModals}
-              >
+              <button className="close-button" onClick={closeModals}>
                 ✕
               </button>
             </div>
-            
+
             <div className="modal-body">
-              <form onSubmit={(e) => { e.preventDefault(); handleEditQuest(); }}>
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleEditQuest();
+                }}
+              >
                 <div className="form-group">
                   <label htmlFor="edit-title">
                     <span className="field-icon">📝</span>
@@ -589,7 +627,7 @@ const QuestManager: React.FC = () => {
                     onChange={handleInputChange}
                     required
                   >
-                    {Object.values(GUILDS).map((guild) => (
+                    {Object.values(GUILDS).map(guild => (
                       <option key={guild.id} value={guild.id}>
                         {guild.icon} {guild.displayName}
                       </option>
@@ -651,14 +689,14 @@ const QuestManager: React.FC = () => {
             </div>
 
             <div className="modal-footer">
-              <button 
+              <button
                 className="cancel-button"
                 onClick={closeModals}
                 disabled={submitting}
               >
                 Hủy
               </button>
-              <button 
+              <button
                 className="submit-button"
                 onClick={handleEditQuest}
                 disabled={submitting}

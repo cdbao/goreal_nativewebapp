@@ -3,7 +3,9 @@
 
 /* 💻 Code styling */
 code {
-  font-family: 'JetBrains Mono', 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family:
+    'JetBrains Mono', 'Fira Code', source-code-pro, Menlo, Monaco, Consolas,
+    'Courier New', monospace;
   background: rgba(0, 0, 0, 0.1);
   padding: 0.2em 0.4em;
   border-radius: var(--radius-sm);

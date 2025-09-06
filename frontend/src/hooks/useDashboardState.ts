@@ -25,6 +25,6 @@ export const useDashboardState = (): UseDashboardStateReturn => {
     loading,
     activeTab,
     setActiveTab: handleTabChange,
-    setLoading: handleLoadingChange
+    setLoading: handleLoadingChange,
   };
 };

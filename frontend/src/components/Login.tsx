@@ -34,9 +34,9 @@ const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
           <h2>Trở lại Lò Rèn Titan</h2>
           <p>Đăng nhập để tiếp tục hành trình rèn luyện</p>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -44,31 +44,35 @@ const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Mật khẩu</label>
             <input
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               required
             />
           </div>
-          
+
           <button disabled={loading} type="submit" className="auth-button">
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
-        
+
         <div className="auth-switch">
           <p>
             Chưa có tài khoản?{' '}
-            <button type="button" onClick={onSwitchToRegister} className="link-button">
+            <button
+              type="button"
+              onClick={onSwitchToRegister}
+              className="link-button"
+            >
               Gia nhập Guild
             </button>
           </p>

@@ -34,14 +34,17 @@
 }
 
 @keyframes bellRing {
-  0%, 90%, 100% { 
-    transform: rotate(0deg); 
+  0%,
+  90%,
+  100% {
+    transform: rotate(0deg);
   }
-  5%, 15% { 
-    transform: rotate(10deg); 
+  5%,
+  15% {
+    transform: rotate(10deg);
   }
-  10% { 
-    transform: rotate(-10deg); 
+  10% {
+    transform: rotate(-10deg);
   }
 }
 
@@ -62,15 +65,15 @@
 }
 
 @keyframes pulse {
-  0% { 
+  0% {
     transform: scale(1);
     box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
   }
-  50% { 
+  50% {
     transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(255, 68, 68, 0.6);
   }
-  100% { 
+  100% {
     transform: scale(1);
     box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
   }
@@ -118,7 +121,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.1) 0%,
+    rgba(255, 215, 0, 0.05) 100%
+  );
 }
 
 .dropdown-header h3 {
@@ -194,7 +201,11 @@
 
 .notification-item.legendary {
   border-left-color: #9c27b0;
-  background: linear-gradient(90deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(156, 39, 176, 0.1) 0%,
+    rgba(156, 39, 176, 0.05) 100%
+  );
 }
 
 .notification-item.info {
@@ -258,8 +269,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-state p {
@@ -296,7 +311,11 @@
 .dropdown-footer {
   padding: 1rem 1.5rem;
   border-top: 1px solid rgba(255, 215, 0, 0.2);
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.05) 0%,
+    transparent 100%
+  );
   text-align: center;
 }
 
@@ -332,19 +351,19 @@
     width: 320px;
     right: -10px;
   }
-  
+
   .notification-item {
     padding: 0.8rem 1rem;
   }
-  
+
   .notification-message {
     font-size: 0.85rem;
   }
-  
+
   .dropdown-header {
     padding: 0.8rem 1rem;
   }
-  
+
   .dropdown-footer {
     padding: 0.8rem 1rem;
   }
@@ -369,8 +388,13 @@
 }
 
 @keyframes sparkle {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .notification-item.info .notification-icon {

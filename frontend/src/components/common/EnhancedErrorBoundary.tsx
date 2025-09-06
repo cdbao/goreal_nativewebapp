@@ -27,7 +27,7 @@ class EnhancedErrorBoundary extends Component<Props, State> {
     return {
       hasError: true,
       error,
-      errorId: Date.now().toString(36) + Math.random().toString(36).substr(2)
+      errorId: Date.now().toString(36) + Math.random().toString(36).substr(2),
     };
   }
 
@@ -41,8 +41,8 @@ class EnhancedErrorBoundary extends Component<Props, State> {
         componentStack: errorInfo.componentStack,
         errorBoundary: this.constructor.name,
         errorId: this.state.errorId,
-        props: this.props
-      }
+        props: this.props,
+      },
     };
 
     // Log error
@@ -59,7 +59,7 @@ class EnhancedErrorBoundary extends Component<Props, State> {
 
   private scheduleRetry = (error: Error) => {
     // Only auto-retry for network errors or Firebase temporary errors
-    const shouldAutoRetry = 
+    const shouldAutoRetry =
       error.message.includes('network') ||
       error.message.includes('fetch') ||
       error.message.includes('unavailable');
@@ -91,7 +91,12 @@ class EnhancedErrorBoundary extends Component<Props, State> {
       // Use custom fallback component if provided
       if (this.props.fallback) {
         const FallbackComponent = this.props.fallback;
-        return <FallbackComponent error={this.state.error} retry={this.handleRetry} />;
+        return (
+          <FallbackComponent
+            error={this.state.error}
+            retry={this.handleRetry}
+          />
+        );
       }
 
       // Default error UI
@@ -101,17 +106,18 @@ class EnhancedErrorBoundary extends Component<Props, State> {
             <div className="error-icon">⚠️</div>
             <h2 className="error-title">Đã xảy ra lỗi</h2>
             <p className="error-message">
-              Có vấn đề với thành phần này. Chúng tôi đã ghi nhận lỗi và sẽ khắc phục sớm.
+              Có vấn đề với thành phần này. Chúng tôi đã ghi nhận lỗi và sẽ khắc
+              phục sớm.
             </p>
             <div className="error-actions">
-              <button 
+              <button
                 onClick={this.handleRetry}
                 className="btn btn-primary"
                 type="button"
               >
                 🔄 Thử lại
               </button>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
                 className="btn btn-ghost"
                 type="button"
@@ -152,12 +158,15 @@ export const withErrorBoundary = <P extends object>(
   );
 
   WithErrorBoundaryComponent.displayName = `WithErrorBoundary(${WrappedComponent.displayName || WrappedComponent.name})`;
-  
+
   return WithErrorBoundaryComponent;
 };
 
 // Specific error fallback components
-export const QuestErrorFallback: React.FC<{ error: Error; retry: () => void }> = ({ error, retry }) => (
+export const QuestErrorFallback: React.FC<{
+  error: Error;
+  retry: () => void;
+}> = ({ error, retry }) => (
   <div className="quest-error-fallback">
     <div className="error-content">
       <h3>⚔️ Lỗi tải nhiệm vụ</h3>
@@ -169,7 +178,10 @@ export const QuestErrorFallback: React.FC<{ error: Error; retry: () => void }> =
   </div>
 );
 
-export const DashboardErrorFallback: React.FC<{ error: Error; retry: () => void }> = ({ error, retry }) => (
+export const DashboardErrorFallback: React.FC<{
+  error: Error;
+  retry: () => void;
+}> = ({ error, retry }) => (
   <div className="dashboard-error-fallback">
     <div className="error-content">
       <h3>🏠 Lỗi tải bảng điều khiển</h3>
@@ -178,7 +190,10 @@ export const DashboardErrorFallback: React.FC<{ error: Error; retry: () => void 
         <button onClick={retry} className="btn btn-primary">
           🔄 Thử lại
         </button>
-        <button onClick={() => window.location.href = '/login'} className="btn btn-ghost">
+        <button
+          onClick={() => (window.location.href = '/login')}
+          className="btn btn-ghost"
+        >
           🔐 Đăng nhập lại
         </button>
       </div>

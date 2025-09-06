@@ -4,31 +4,37 @@ import { useAuth } from '../contexts/AuthContext';
 
 // Loading spinner component
 const LoadingSpinner: React.FC = () => (
-  <div style={{ 
-    display: 'flex', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    minHeight: '100vh', 
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-    color: 'white'
-  }}>
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+      color: 'white',
+    }}
+  >
     <div style={{ textAlign: 'center' }}>
       <h2>🏛️ Đang tải Học Viện...</h2>
-      <div style={{ 
-        width: '40px', 
-        height: '40px', 
-        border: '3px solid rgba(255,255,255,0.3)', 
-        borderTop: '3px solid #FFD700', 
-        borderRadius: '50%', 
-        animation: 'spin 1s linear infinite',
-        margin: '1rem auto'
-      }}></div>
+      <div
+        style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid rgba(255,255,255,0.3)',
+          borderTop: '3px solid #FFD700',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '1rem auto',
+        }}
+      ></div>
     </div>
   </div>
 );
 
 // Route guard for protected routes that require both authentication and guild selection
-export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { currentUser, userData, loading } = useAuth();
 
   if (loading) {
@@ -50,7 +56,9 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
 };
 
 // Route guard for guild selection page
-export const GuildSelectionRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const GuildSelectionRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { currentUser, userData, loading } = useAuth();
 
   if (loading) {
@@ -72,7 +80,9 @@ export const GuildSelectionRoute: React.FC<{ children: React.ReactNode }> = ({ c
 };
 
 // Route guard for authentication pages (login/register)
-export const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { currentUser, userData, loading } = useAuth();
 
   if (loading) {
@@ -93,7 +103,9 @@ export const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children })
 };
 
 // Route guard for landing page
-export const LandingRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LandingRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { currentUser, userData, loading } = useAuth();
 
   if (loading) {
@@ -114,7 +126,9 @@ export const LandingRoute: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 // Admin route guard - requires authentication, guild selection, and admin role
-export const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AdminRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { currentUser, userData, loading } = useAuth();
 
   if (loading) {

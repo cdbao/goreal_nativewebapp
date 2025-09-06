@@ -18,13 +18,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const applyGuildTheme = (guildId: string) => {
     const theme = getGuildTheme(guildId);
     const root = document.documentElement;
-    
+
     // Apply CSS variables
     root.style.setProperty('--guild-primary', theme.primary);
     root.style.setProperty('--guild-secondary', theme.secondary);
     root.style.setProperty('--guild-accent', theme.accent);
     root.style.setProperty('--guild-background', theme.background);
-    
+
     // Store current theme
     localStorage.setItem('currentGuild', guildId);
   };
@@ -38,7 +38,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--guild-primary', '#FF4500');
       root.style.setProperty('--guild-secondary', '#FF6347');
       root.style.setProperty('--guild-accent', '#FFD700');
-      root.style.setProperty('--guild-background', 'linear-gradient(135deg, #FF4500, #FF6347)');
+      root.style.setProperty(
+        '--guild-background',
+        'linear-gradient(135deg, #FF4500, #FF6347)'
+      );
     }
   }, [userData?.guild]);
 

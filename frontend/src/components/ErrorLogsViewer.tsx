@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, limit, where, Timestamp } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  where,
+  Timestamp,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { ErrorLog } from '../utils/errorLogger';
 import './ErrorLogsViewer.css';
@@ -14,7 +22,7 @@ const ErrorLogsViewer: React.FC = () => {
   }>({
     errorType: 'all',
     severity: 'all',
-    timeRange: '24h'
+    timeRange: '24h',
   });
   const [expandedLog, setExpandedLog] = useState<string | null>(null);
 
@@ -25,7 +33,7 @@ const ErrorLogsViewer: React.FC = () => {
   const fetchErrorLogs = async () => {
     try {
       setLoading(true);
-      
+
       let q = query(
         collection(db, 'errorLogs'),
         orderBy('timestamp', 'desc'),
@@ -36,7 +44,7 @@ const ErrorLogsViewer: React.FC = () => {
       if (filter.errorType !== 'all') {
         q = query(q, where('errorType', '==', filter.errorType));
       }
-      
+
       if (filter.severity !== 'all') {
         q = query(q, where('severity', '==', filter.severity));
       }
@@ -44,14 +52,14 @@ const ErrorLogsViewer: React.FC = () => {
       const snapshot = await getDocs(q);
       const logs = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       })) as (ErrorLog & { id: string })[];
 
       // Filter by time range
       const now = new Date();
       const filteredLogs = logs.filter(log => {
         if (filter.timeRange === 'all') return true;
-        
+
         let logTime: Date;
         if (log.timestamp instanceof Timestamp) {
           logTime = log.timestamp.toDate();
@@ -62,13 +70,18 @@ const ErrorLogsViewer: React.FC = () => {
         }
 
         const timeDiff = now.getTime() - logTime.getTime();
-        
+
         switch (filter.timeRange) {
-          case '1h': return timeDiff <= 60 * 60 * 1000;
-          case '24h': return timeDiff <= 24 * 60 * 60 * 1000;
-          case '7d': return timeDiff <= 7 * 24 * 60 * 60 * 1000;
-          case '30d': return timeDiff <= 30 * 24 * 60 * 60 * 1000;
-          default: return true;
+          case '1h':
+            return timeDiff <= 60 * 60 * 1000;
+          case '24h':
+            return timeDiff <= 24 * 60 * 60 * 1000;
+          case '7d':
+            return timeDiff <= 7 * 24 * 60 * 60 * 1000;
+          case '30d':
+            return timeDiff <= 30 * 24 * 60 * 60 * 1000;
+          default:
+            return true;
         }
       });
 
@@ -82,29 +95,41 @@ const ErrorLogsViewer: React.FC = () => {
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'critical': return '🚨';
-      case 'high': return '⚠️';
-      case 'medium': return '⚠️';
-      case 'low': return 'ℹ️';
-      default: return '❓';
+      case 'critical':
+        return '🚨';
+      case 'high':
+        return '⚠️';
+      case 'medium':
+        return '⚠️';
+      case 'low':
+        return 'ℹ️';
+      default:
+        return '❓';
     }
   };
 
   const getErrorTypeIcon = (errorType: string) => {
     switch (errorType) {
-      case 'javascript': return '🐛';
-      case 'api': return '🌐';
-      case 'upload': return '📤';
-      case 'auth': return '🔐';
-      case 'firestore': return '🗄️';
-      case 'general': return '❗';
-      default: return '❓';
+      case 'javascript':
+        return '🐛';
+      case 'api':
+        return '🌐';
+      case 'upload':
+        return '📤';
+      case 'auth':
+        return '🔐';
+      case 'firestore':
+        return '🗄️';
+      case 'general':
+        return '❗';
+      default:
+        return '❓';
     }
   };
 
   const formatTimestamp = (timestamp: any) => {
     if (!timestamp) return 'Unknown time';
-    
+
     try {
       let date: Date;
       if (timestamp instanceof Timestamp) {
@@ -114,7 +139,7 @@ const ErrorLogsViewer: React.FC = () => {
       } else {
         return 'Invalid timestamp';
       }
-      
+
       return new Intl.DateTimeFormat('vi-VN', {
         year: 'numeric',
         month: '2-digit',
@@ -162,9 +187,9 @@ const ErrorLogsViewer: React.FC = () => {
       </div>
 
       <div className="error-logs-filters">
-        <select 
-          value={filter.errorType} 
-          onChange={(e) => setFilter({...filter, errorType: e.target.value})}
+        <select
+          value={filter.errorType}
+          onChange={e => setFilter({ ...filter, errorType: e.target.value })}
           className="filter-select"
         >
           <option value="all">All Types</option>
@@ -176,9 +201,9 @@ const ErrorLogsViewer: React.FC = () => {
           <option value="general">General</option>
         </select>
 
-        <select 
-          value={filter.severity} 
-          onChange={(e) => setFilter({...filter, severity: e.target.value})}
+        <select
+          value={filter.severity}
+          onChange={e => setFilter({ ...filter, severity: e.target.value })}
           className="filter-select"
         >
           <option value="all">All Severities</option>
@@ -188,9 +213,9 @@ const ErrorLogsViewer: React.FC = () => {
           <option value="low">Low</option>
         </select>
 
-        <select 
-          value={filter.timeRange} 
-          onChange={(e) => setFilter({...filter, timeRange: e.target.value})}
+        <select
+          value={filter.timeRange}
+          onChange={e => setFilter({ ...filter, timeRange: e.target.value })}
           className="filter-select"
         >
           <option value="1h">Last Hour</option>
@@ -200,7 +225,10 @@ const ErrorLogsViewer: React.FC = () => {
           <option value="all">All Time</option>
         </select>
 
-        <button onClick={fetchErrorLogs} className="btn btn-primary refresh-btn">
+        <button
+          onClick={fetchErrorLogs}
+          className="btn btn-primary refresh-btn"
+        >
           🔄 Refresh
         </button>
       </div>
@@ -210,29 +238,36 @@ const ErrorLogsViewer: React.FC = () => {
           <div className="no-errors">
             <div className="no-errors-icon">✅</div>
             <h3>No errors found</h3>
-            <p>No errors match the current filter criteria. The system is running smoothly!</p>
+            <p>
+              No errors match the current filter criteria. The system is running
+              smoothly!
+            </p>
           </div>
         ) : (
-          errorLogs.map((log) => (
-            <div 
-              key={log.id} 
+          errorLogs.map(log => (
+            <div
+              key={log.id}
               className={`error-log-item ${log.severity} ${expandedLog === log.id ? 'expanded' : ''}`}
             >
-              <div 
-                className="error-log-header" 
-                onClick={() => setExpandedLog(expandedLog === log.id ? null : log.id)}
+              <div
+                className="error-log-header"
+                onClick={() =>
+                  setExpandedLog(expandedLog === log.id ? null : log.id)
+                }
               >
                 <div className="error-log-icons">
                   {getSeverityIcon(log.severity)}
                   {getErrorTypeIcon(log.errorType)}
                 </div>
-                
+
                 <div className="error-log-info">
                   <div className="error-message">{log.message}</div>
                   <div className="error-meta">
                     <span className="error-type">{log.errorType}</span>
                     <span className="error-component">{log.component}</span>
-                    <span className="error-time">{formatTimestamp(log.timestamp)}</span>
+                    <span className="error-time">
+                      {formatTimestamp(log.timestamp)}
+                    </span>
                   </div>
                 </div>
 
@@ -245,15 +280,23 @@ const ErrorLogsViewer: React.FC = () => {
                 <div className="error-log-details">
                   <div className="detail-section">
                     <h4>Stack Trace:</h4>
-                    <pre className="stack-trace">{log.stack || 'No stack trace available'}</pre>
+                    <pre className="stack-trace">
+                      {log.stack || 'No stack trace available'}
+                    </pre>
                   </div>
-                  
+
                   <div className="detail-section">
                     <h4>Technical Details:</h4>
                     <div className="technical-details">
-                      <div><strong>URL:</strong> {log.url}</div>
-                      <div><strong>User Agent:</strong> {log.userAgent}</div>
-                      <div><strong>User ID:</strong> {log.userId || 'Anonymous'}</div>
+                      <div>
+                        <strong>URL:</strong> {log.url}
+                      </div>
+                      <div>
+                        <strong>User Agent:</strong> {log.userAgent}
+                      </div>
+                      <div>
+                        <strong>User ID:</strong> {log.userId || 'Anonymous'}
+                      </div>
                     </div>
                   </div>
 

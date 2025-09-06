@@ -361,25 +361,25 @@
     gap: 15px;
     text-align: center;
   }
-  
+
   .admin-content {
     padding: 15px;
   }
-  
+
   .submission-header {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .submission-actions {
     flex-direction: column;
   }
-  
+
   .approve-button,
   .reject-button {
     width: 100%;
   }
-  
+
   .submission-meta {
     flex-direction: column;
     gap: 10px;

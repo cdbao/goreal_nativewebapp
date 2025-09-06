@@ -4,7 +4,11 @@ import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { getGuildInfo } from '../constants/guilds';
 import { Quest, ActiveQuest } from '../types';
-import { retryFirestoreOperation, handleFirestoreError, validateUserAuth } from '../utils/firestoreUtils';
+import {
+  retryFirestoreOperation,
+  handleFirestoreError,
+  validateUserAuth,
+} from '../utils/firestoreUtils';
 import './EnhancedQuestCard.css';
 
 interface EnhancedQuestCardProps {
@@ -20,7 +24,7 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
   isAccepted,
   onAccepted,
   onTransitionComplete,
-  delay = 0
+  delay = 0,
 }) => {
   const { currentUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +40,7 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
       image: '📸',
       text: '📝',
       audio: '🎤',
-      video: '🎥'
+      video: '🎥',
     };
     return icons[reportType as keyof typeof icons] || '📋';
   };
@@ -46,7 +50,7 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
       image: 'Hình ảnh',
       text: 'Văn bản',
       audio: 'Ghi âm',
-      video: 'Video'
+      video: 'Video',
     };
     return names[reportType as keyof typeof names] || 'Báo cáo';
   };
@@ -55,20 +59,25 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
     if (!currentUser || isLoading || isAcceptedState) return;
 
     setIsLoading(true);
-    
+
     try {
       // Validate user authentication first
       validateUserAuth(currentUser);
 
-      console.log(`Accepting quest ${quest.questId} for user ${currentUser.uid}`);
+      console.log(
+        `Accepting quest ${quest.questId} for user ${currentUser.uid}`
+      );
 
       // Create active quest document in user's subcollection
-      const activeQuestRef = doc(db, `users/${currentUser.uid}/activeQuests/${quest.questId}`);
+      const activeQuestRef = doc(
+        db,
+        `users/${currentUser.uid}/activeQuests/${quest.questId}`
+      );
       const activeQuestData: Omit<ActiveQuest, 'quest'> = {
         questId: quest.questId,
         userId: currentUser.uid,
         acceptedAt: serverTimestamp() as any,
-        status: 'accepted'
+        status: 'accepted',
       };
 
       // Use enhanced retry logic for Firestore operations
@@ -82,12 +91,12 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
 
       // Trigger acceptance animation
       setShowAcceptedEffect(true);
-      
+
       // Update local state after a brief delay for animation
       setTimeout(() => {
         setIsAcceptedState(true);
         onAccepted(quest);
-        
+
         // Call transition complete callback after animation
         setTimeout(() => {
           if (onTransitionComplete) {
@@ -95,7 +104,6 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
           }
         }, 800); // Wait for acceptance animation to complete
       }, 100);
-
     } catch (error: any) {
       console.error('Error accepting quest:', error);
       handleFirestoreError(error, 'chấp nhận nhiệm vụ');
@@ -106,17 +114,21 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
   const guildInfo = getGuildInfo(quest.guild);
 
   return (
-    <div 
+    <div
       className={`enhanced-quest-card frosted-glass ${isAcceptedState ? 'accepted' : ''} ${isLoading ? 'loading' : ''} animate-fadeInUp`}
-      style={{ 
-        animationDelay: `${delay}ms`,
-        '--guild-primary': guildInfo.theme.primary,
-        '--guild-accent': guildInfo.theme.accent
-      } as React.CSSProperties}
+      style={
+        {
+          animationDelay: `${delay}ms`,
+          '--guild-primary': guildInfo.theme.primary,
+          '--guild-accent': guildInfo.theme.accent,
+        } as React.CSSProperties
+      }
       data-guild={quest.guild}
     >
       {/* Guild Seal */}
-      <div className={`quest-guild-seal ${showAcceptedEffect ? 'accepted' : ''}`}>
+      <div
+        className={`quest-guild-seal ${showAcceptedEffect ? 'accepted' : ''}`}
+      >
         {guildInfo.icon}
       </div>
 
@@ -124,8 +136,7 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
       <div className="quest-header">
         <h3 className="quest-title text-fantasy text-primary">{quest.title}</h3>
         <div className="aura-reward animate-glow">
-          <span>⚡</span>
-          +{quest.auraReward} AURA
+          <span>⚡</span>+{quest.auraReward} AURA
         </div>
       </div>
 
@@ -135,7 +146,9 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
       {/* Report Type Indicator */}
       <div className="report-type-indicator frosted-glass">
         <span className="icon">{getReportTypeIcon(quest.reportType)}</span>
-        <span className="text-muted">{getReportTypeName(quest.reportType)}</span>
+        <span className="text-muted">
+          {getReportTypeName(quest.reportType)}
+        </span>
       </div>
 
       {/* Accept Challenge Button - Only show if not accepted */}
@@ -162,9 +175,7 @@ const EnhancedQuestCard: React.FC<EnhancedQuestCardProps> = ({
       {/* Accepted Status Message */}
       {isAcceptedState && (
         <div className="quest-accepted-status">
-          <div className="status-message">
-            ✅ Đã chấp nhận thử thách!
-          </div>
+          <div className="status-message">✅ Đã chấp nhận thử thách!</div>
           <div className="next-step-hint">
             Scroll xuống để hoàn thành nhiệm vụ 👇
           </div>

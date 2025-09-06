@@ -10,10 +10,22 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(255, 69, 0, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(65, 105, 225, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(50, 205, 50, 0.1) 0%, transparent 50%),
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 69, 0, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(65, 105, 225, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(50, 205, 50, 0.1) 0%,
+      transparent 50%
+    ),
     rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
@@ -29,21 +41,22 @@
   max-height: 95vh;
   overflow-y: auto;
   background: linear-gradient(
-    135deg, 
+    135deg,
     rgba(15, 23, 42, 0.98) 0%,
-    rgba(30, 41, 59, 0.95) 50%, 
+    rgba(30, 41, 59, 0.95) 50%,
     rgba(15, 23, 42, 0.98) 100%
   );
   border-radius: 25px;
   padding: 3rem;
   border: 3px solid;
   border-image: linear-gradient(
-    135deg, 
-    var(--guild-accent, #FFD700), 
-    var(--guild-primary, #FF4500), 
-    var(--guild-secondary, #FF6347)
-  ) 1;
-  box-shadow: 
+      135deg,
+      var(--guild-accent, #ffd700),
+      var(--guild-primary, #ff4500),
+      var(--guild-secondary, #ff6347)
+    )
+    1;
+  box-shadow:
     0 25px 80px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   color: white;
@@ -59,8 +72,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,215,0,0.1)"/><circle cx="80" cy="30" r="1" fill="rgba(255,69,0,0.1)"/><circle cx="60" cy="70" r="1.5" fill="rgba(65,105,225,0.1)"/><circle cx="30" cy="80" r="1" fill="rgba(50,205,50,0.1)"/></svg>') repeat;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,215,0,0.1)"/><circle cx="80" cy="30" r="1" fill="rgba(255,69,0,0.1)"/><circle cx="60" cy="70" r="1.5" fill="rgba(65,105,225,0.1)"/><circle cx="30" cy="80" r="1" fill="rgba(50,205,50,0.1)"/></svg>')
+    repeat;
   animation: starfield 20s linear infinite;
   pointer-events: none;
   z-index: -1;
@@ -79,11 +92,11 @@
   font-weight: 700;
   background: linear-gradient(
     135deg,
-    #FFD700 0%,
-    #FFA500 25%,
-    #FF6B6B 50%,
-    #FF8E53 75%,
-    #FFD700 100%
+    #ffd700 0%,
+    #ffa500 25%,
+    #ff6b6b 50%,
+    #ff8e53 75%,
+    #ffd700 100%
   );
   background-size: 400% 400%;
   -webkit-background-clip: text;
@@ -99,7 +112,7 @@
 .selection-subtitle-primary {
   font-size: 2rem;
   font-family: var(--font-fantasy);
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   margin-bottom: 1.5rem;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
   font-weight: 600;
@@ -156,7 +169,11 @@
 }
 
 .connection-status {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.9),
+    rgba(37, 99, 235, 0.9)
+  );
   border: 2px solid rgba(147, 197, 253, 0.5);
   border-radius: 15px;
   padding: 1rem 1.5rem;
@@ -212,7 +229,7 @@
 /* Individual Guild Cards */
 .guild-card {
   background: linear-gradient(
-    135deg, 
+    135deg,
     rgba(255, 255, 255, 0.08) 0%,
     rgba(255, 255, 255, 0.12) 50%,
     rgba(255, 255, 255, 0.08) 100%
@@ -229,21 +246,27 @@
   animation: cardFloat 3s ease-in-out infinite;
 }
 
-.guild-card:nth-child(1) { animation-delay: 0s; }
-.guild-card:nth-child(2) { animation-delay: 0.5s; }
-.guild-card:nth-child(3) { animation-delay: 1s; }
+.guild-card:nth-child(1) {
+  animation-delay: 0s;
+}
+.guild-card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.guild-card:nth-child(3) {
+  animation-delay: 1s;
+}
 
 /* Guild Card Hover Effects */
 .guild-card:hover,
 .guild-card.hovered {
   transform: translateY(-15px) scale(1.05);
-  border-color: var(--guild-accent, #FFD700);
-  box-shadow: 
+  border-color: var(--guild-accent, #ffd700);
+  box-shadow:
     0 25px 50px rgba(0, 0, 0, 0.4),
-    0 0 40px var(--guild-primary, #FF4500),
+    0 0 40px var(--guild-primary, #ff4500),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   background: linear-gradient(
-    135deg, 
+    135deg,
     rgba(255, 255, 255, 0.12) 0%,
     rgba(255, 255, 255, 0.18) 50%,
     rgba(255, 255, 255, 0.12) 100%
@@ -252,10 +275,10 @@
 }
 
 .guild-card.selected {
-  border-color: var(--guild-accent, #FFD700);
-  box-shadow: 
+  border-color: var(--guild-accent, #ffd700);
+  box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.3),
-    0 0 30px var(--guild-primary, #FF4500),
+    0 0 30px var(--guild-primary, #ff4500),
     inset 0 0 50px rgba(var(--guild-primary, 255, 69, 0), 0.1);
   transform: translateY(-8px) scale(1.02);
   animation: selectedPulse 2s ease-in-out infinite;
@@ -284,7 +307,7 @@
 
 .guild-name {
   font-size: 2rem;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   margin-bottom: 1rem;
   font-weight: 700;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
@@ -294,7 +317,7 @@
 .guild-motto {
   font-size: 1.1rem;
   font-style: italic;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   margin-bottom: 0.5rem;
   font-weight: 500;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
@@ -303,7 +326,7 @@
 
 .guild-focus {
   font-size: 0.95rem;
-  color: var(--guild-secondary, #FF6347);
+  color: var(--guild-secondary, #ff6347);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -330,13 +353,17 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border: 2px solid var(--guild-accent, #FFD700);
-  background: linear-gradient(135deg, var(--guild-primary, #FF4500), var(--guild-secondary, #FF6347));
+  border: 2px solid var(--guild-accent, #ffd700);
+  background: linear-gradient(
+    135deg,
+    var(--guild-primary, #ff4500),
+    var(--guild-secondary, #ff6347)
+  );
   color: white;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 
+  box-shadow:
     0 8px 20px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
@@ -350,7 +377,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -360,9 +392,9 @@
 
 .choose-path-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 
+  box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.4),
-    0 0 20px var(--guild-primary, #FF4500),
+    0 0 20px var(--guild-primary, #ff4500),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
   border-color: white;
 }
@@ -372,7 +404,7 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  background: var(--guild-accent, #FFD700);
+  background: var(--guild-accent, #ffd700);
   color: #000;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -392,7 +424,7 @@
 /* Selection Actions */
 .selection-actions {
   background: linear-gradient(
-    135deg, 
+    135deg,
     rgba(0, 0, 0, 0.4) 0%,
     rgba(0, 0, 0, 0.6) 100%
   );
@@ -401,7 +433,7 @@
   margin-bottom: 2rem;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
-  box-shadow: 
+  box-shadow:
     0 15px 40px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -418,7 +450,11 @@
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: linear-gradient(135deg, var(--guild-primary, #FF4500), var(--guild-secondary, #FF6347));
+  background: linear-gradient(
+    135deg,
+    var(--guild-primary, #ff4500),
+    var(--guild-secondary, #ff6347)
+  );
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
@@ -438,7 +474,7 @@
 .selection-motto {
   font-size: 1.1rem;
   font-style: italic;
-  color: var(--guild-accent, #FFD700);
+  color: var(--guild-accent, #ffd700);
   margin-bottom: 1rem;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
@@ -456,7 +492,8 @@
   justify-content: center;
 }
 
-.cancel-button, .confirm-button {
+.cancel-button,
+.confirm-button {
   padding: 1rem 2rem;
   border-radius: 12px;
   font-weight: 700;
@@ -474,33 +511,49 @@
 }
 
 .cancel-button {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
 }
 
 .cancel-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1)
+  );
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .confirm-button {
-  background: linear-gradient(135deg, var(--guild-primary, #4CAF50), var(--guild-secondary, #45a049));
+  background: linear-gradient(
+    135deg,
+    var(--guild-primary, #4caf50),
+    var(--guild-secondary, #45a049)
+  );
   color: white;
-  border: 2px solid var(--guild-accent, #FFD700);
+  border: 2px solid var(--guild-accent, #ffd700);
   animation: confirmButtonPulse 3s ease-in-out infinite;
 }
 
 .confirm-button:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 
+  box-shadow:
     0 12px 35px rgba(0, 0, 0, 0.4),
-    0 0 25px var(--guild-primary, #4CAF50);
+    0 0 25px var(--guild-primary, #4caf50);
   animation: none;
-  background: linear-gradient(135deg, var(--guild-secondary, #45a049), var(--guild-primary, #4CAF50));
+  background: linear-gradient(
+    135deg,
+    var(--guild-secondary, #45a049),
+    var(--guild-primary, #4caf50)
+  );
 }
 
 .confirm-button:disabled {
@@ -555,16 +608,16 @@
     width: 90%;
     padding: 2rem;
   }
-  
+
   .guilds-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
-  
+
   .selection-title {
     font-size: 2.8rem;
   }
-  
+
   .selection-subtitle-primary {
     font-size: 1.6rem;
   }
@@ -574,7 +627,7 @@
   .guild-selection-container {
     padding: 1rem;
   }
-  
+
   .guild-selection-modal {
     width: 95%;
     padding: 1.5rem;
@@ -634,7 +687,8 @@
     gap: 1rem;
   }
 
-  .cancel-button, .confirm-button {
+  .cancel-button,
+  .confirm-button {
     width: 100%;
     justify-content: center;
     padding: 1rem;
@@ -705,18 +759,29 @@
 }
 
 @keyframes starfield {
-  from { transform: translateY(0); }
-  to { transform: translateY(-100px); }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100px);
+  }
 }
 
 @keyframes epicShimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes titleGlow {
-  0%, 100% {
+  0%,
+  100% {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
     filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
   }
@@ -727,33 +792,46 @@
 }
 
 @keyframes cardFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 @keyframes selectedPulse {
-  0%, 100% {
-    box-shadow: 
+  0%,
+  100% {
+    box-shadow:
       0 20px 40px rgba(0, 0, 0, 0.3),
-      0 0 30px var(--guild-primary, #FF4500),
+      0 0 30px var(--guild-primary, #ff4500),
       inset 0 0 50px rgba(255, 69, 0, 0.1);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 25px 50px rgba(0, 0, 0, 0.4),
-      0 0 50px var(--guild-primary, #FF4500),
+      0 0 50px var(--guild-primary, #ff4500),
       inset 0 0 80px rgba(255, 69, 0, 0.2);
   }
 }
 
 @keyframes clickFeedback {
-  0% { transform: translateY(-10px) scale(1.08); }
-  50% { transform: translateY(-15px) scale(1.12); }
-  100% { transform: translateY(-10px) scale(1.08); }
+  0% {
+    transform: translateY(-10px) scale(1.08);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.12);
+  }
+  100% {
+    transform: translateY(-10px) scale(1.08);
+  }
 }
 
 @keyframes iconPulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
     transform: scale(1);
   }
@@ -764,7 +842,8 @@
 }
 
 @keyframes indicatorPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
@@ -775,14 +854,15 @@
 }
 
 @keyframes confirmButtonPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    border-color: var(--guild-accent, #FFD700);
+    border-color: var(--guild-accent, #ffd700);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 8px 30px rgba(0, 0, 0, 0.4),
-      0 0 20px var(--guild-accent, #FFD700);
+      0 0 20px var(--guild-accent, #ffd700);
     border-color: white;
   }
 }
@@ -810,7 +890,11 @@
 }
 
 @keyframes successBounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -822,7 +906,8 @@
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
     border-color: rgba(147, 197, 253, 0.5);
   }
@@ -833,9 +918,16 @@
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
 }
 
 @keyframes successExit {
@@ -854,8 +946,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Animation utility classes */
@@ -868,8 +964,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 @keyframes fadeInUp {
@@ -889,11 +990,15 @@
     border-width: 3px;
     background: rgba(0, 0, 0, 0.9);
   }
-  
+
   .selection-title,
   .guild-name,
   .guild-motto {
-    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+    text-shadow:
+      2px 2px 0 #000,
+      -2px -2px 0 #000,
+      2px -2px 0 #000,
+      -2px 2px 0 #000;
   }
 }
 
@@ -904,11 +1009,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .guild-card {
     animation: none;
   }
-  
+
   .selection-title {
     animation: none;
   }

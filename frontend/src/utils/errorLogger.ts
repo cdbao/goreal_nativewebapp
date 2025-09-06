@@ -29,7 +29,10 @@ class ErrorLogger {
 
     // Global error handler
     window.addEventListener('error', this.handleGlobalError.bind(this));
-    window.addEventListener('unhandledrejection', this.handleUnhandledRejection.bind(this));
+    window.addEventListener(
+      'unhandledrejection',
+      this.handleUnhandledRejection.bind(this)
+    );
   }
 
   public static getInstance(): ErrorLogger {
@@ -45,7 +48,7 @@ class ErrorLogger {
       message: event.message,
       stack: event.error?.stack,
       component: 'Global',
-      severity: 'high'
+      severity: 'high',
     });
   }
 
@@ -55,11 +58,14 @@ class ErrorLogger {
       message: `Unhandled Promise Rejection: ${event.reason}`,
       stack: event.reason?.stack,
       component: 'Global',
-      severity: 'high'
+      severity: 'high',
     });
   }
 
-  public async logError(error: Partial<ErrorLog>, userId?: string): Promise<void> {
+  public async logError(
+    error: Partial<ErrorLog>,
+    userId?: string
+  ): Promise<void> {
     try {
       const errorLog: ErrorLog = {
         timestamp: serverTimestamp(),
@@ -71,7 +77,7 @@ class ErrorLogger {
         userId: userId || 'anonymous',
         component: error.component || 'Unknown',
         severity: error.severity || 'medium',
-        additionalData: error.additionalData || null
+        additionalData: error.additionalData || null,
       };
 
       if (this.isOnline) {
@@ -101,7 +107,7 @@ class ErrorLogger {
 
   private async flushErrorQueue(): Promise<void> {
     this.isOnline = true;
-    
+
     while (this.errorQueue.length > 0) {
       const errorLog = this.errorQueue.shift();
       if (errorLog) {
@@ -117,44 +123,74 @@ class ErrorLogger {
   }
 
   // Convenience methods for different error types
-  public logUploadError(message: string, additionalData?: Record<string, any>, userId?: string): void {
-    this.logError({
-      errorType: 'upload',
-      message,
-      severity: 'high',
-      component: 'Upload',
-      additionalData
-    }, userId);
+  public logUploadError(
+    message: string,
+    additionalData?: Record<string, any>,
+    userId?: string
+  ): void {
+    this.logError(
+      {
+        errorType: 'upload',
+        message,
+        severity: 'high',
+        component: 'Upload',
+        additionalData,
+      },
+      userId
+    );
   }
 
-  public logApiError(message: string, endpoint: string, additionalData?: Record<string, any>, userId?: string): void {
-    this.logError({
-      errorType: 'api',
-      message,
-      severity: 'medium',
-      component: 'API',
-      additionalData: { endpoint, ...additionalData }
-    }, userId);
+  public logApiError(
+    message: string,
+    endpoint: string,
+    additionalData?: Record<string, any>,
+    userId?: string
+  ): void {
+    this.logError(
+      {
+        errorType: 'api',
+        message,
+        severity: 'medium',
+        component: 'API',
+        additionalData: { endpoint, ...additionalData },
+      },
+      userId
+    );
   }
 
-  public logFirestoreError(message: string, operation: string, additionalData?: Record<string, any>, userId?: string): void {
-    this.logError({
-      errorType: 'firestore',
-      message,
-      severity: 'high',
-      component: 'Firestore',
-      additionalData: { operation, ...additionalData }
-    }, userId);
+  public logFirestoreError(
+    message: string,
+    operation: string,
+    additionalData?: Record<string, any>,
+    userId?: string
+  ): void {
+    this.logError(
+      {
+        errorType: 'firestore',
+        message,
+        severity: 'high',
+        component: 'Firestore',
+        additionalData: { operation, ...additionalData },
+      },
+      userId
+    );
   }
 
-  public logAuthError(message: string, additionalData?: Record<string, any>, userId?: string): void {
-    this.logError({
-      errorType: 'auth',
-      message,
-      severity: 'critical',
-      component: 'Authentication',
-      additionalData
-    }, userId);
+  public logAuthError(
+    message: string,
+    additionalData?: Record<string, any>,
+    userId?: string
+  ): void {
+    this.logError(
+      {
+        errorType: 'auth',
+        message,
+        severity: 'critical',
+        component: 'Authentication',
+        additionalData,
+      },
+      userId
+    );
   }
 }
 
@@ -162,14 +198,17 @@ export const errorLogger = ErrorLogger.getInstance();
 
 // Helper hook for React components
 export const useErrorLogger = (component: string) => {
-  const logComponentError = (error: Error, additionalData?: Record<string, any>) => {
+  const logComponentError = (
+    error: Error,
+    additionalData?: Record<string, any>
+  ) => {
     errorLogger.logError({
       errorType: 'javascript',
       message: error.message,
       stack: error.stack,
       severity: 'high',
       component,
-      additionalData
+      additionalData,
     });
   };
 

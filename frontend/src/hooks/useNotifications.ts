@@ -1,5 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
-import { doc, updateDoc, getDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { Quest } from '../types';
 
@@ -14,7 +23,9 @@ interface UseNotificationsReturn {
   closeCeremony: () => void;
 }
 
-export const useNotifications = (userId: string | undefined): UseNotificationsReturn => {
+export const useNotifications = (
+  userId: string | undefined
+): UseNotificationsReturn => {
   const [showCeremony, setShowCeremony] = useState(false);
   const [ceremonyQuest, setCeremonyQuest] = useState<Quest | null>(null);
   const [ceremonySubmission, setCeremonySubmission] = useState<any>(null);
@@ -25,40 +36,52 @@ export const useNotifications = (userId: string | undefined): UseNotificationsRe
     setCeremonySubmission(null);
   }, []);
 
-  const handleQuestApprovalNotification = useCallback(async (notification: any) => {
-    console.log('🎉 Quest approved notification received, triggering ceremony:', notification);
+  const handleQuestApprovalNotification = useCallback(
+    async (notification: any) => {
+      console.log(
+        '🎉 Quest approved notification received, triggering ceremony:',
+        notification
+      );
 
-    try {
-      const questDoc = await getDoc(doc(db, 'quests', notification.questId));
-      if (questDoc.exists()) {
-        const questData = { questId: questDoc.id, ...questDoc.data() } as Quest;
-        
-        // Create a mock approved submission for ceremony
-        const approvedSubmission = {
-          submissionId: `approved_${notification.questId}`,
-          questId: notification.questId,
-          userId: userId,
-          status: 'approved',
-          submittedAt: notification.timestamp,
-          proofData: '',
-          proofType: 'text'
-        };
+      try {
+        const questDoc = await getDoc(doc(db, 'quests', notification.questId));
+        if (questDoc.exists()) {
+          const questData = {
+            questId: questDoc.id,
+            ...questDoc.data(),
+          } as Quest;
 
-        setCeremonyQuest(questData);
-        setCeremonySubmission(approvedSubmission);
-        setShowCeremony(true);
+          // Create a mock approved submission for ceremony
+          const approvedSubmission = {
+            submissionId: `approved_${notification.questId}`,
+            questId: notification.questId,
+            userId: userId,
+            status: 'approved',
+            submittedAt: notification.timestamp,
+            proofData: '',
+            proofType: 'text',
+          };
 
-        // Mark notification as read
-        if (userId) {
-          await updateDoc(doc(db, 'users', userId, 'notifications', notification.id), {
-            isRead: true
-          });
+          setCeremonyQuest(questData);
+          setCeremonySubmission(approvedSubmission);
+          setShowCeremony(true);
+
+          // Mark notification as read
+          if (userId) {
+            await updateDoc(
+              doc(db, 'users', userId, 'notifications', notification.id),
+              {
+                isRead: true,
+              }
+            );
+          }
         }
+      } catch (error) {
+        console.error('Error fetching quest for ceremony:', error);
       }
-    } catch (error) {
-      console.error('Error fetching quest for ceremony:', error);
-    }
-  }, [userId]);
+    },
+    [userId]
+  );
 
   // Listen for quest approval notifications
   useEffect(() => {
@@ -71,7 +94,7 @@ export const useNotifications = (userId: string | undefined): UseNotificationsRe
       orderBy('timestamp', 'desc')
     );
 
-    const unsubscribe = onSnapshot(notificationsQuery, async (snapshot) => {
+    const unsubscribe = onSnapshot(notificationsQuery, async snapshot => {
       const newNotifications = snapshot.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
         .filter((notification: any) => notification.triggerCeremony);
@@ -89,8 +112,8 @@ export const useNotifications = (userId: string | undefined): UseNotificationsRe
     showCeremony,
     ceremonyData: {
       quest: ceremonyQuest,
-      submission: ceremonySubmission
+      submission: ceremonySubmission,
     },
-    closeCeremony
+    closeCeremony,
   };
 };

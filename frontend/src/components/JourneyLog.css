@@ -1,7 +1,13 @@
 /* Journey Log Styles - Fantasy Theme - FORCE OVERRIDE */
 .journey-log {
   min-height: 100vh !important;
-  background: linear-gradient(135deg, #0a0e17 0%, #1a1a2e 30%, #16213e 70%, #0f1419 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #0a0e17 0%,
+    #1a1a2e 30%,
+    #16213e 70%,
+    #0f1419 100%
+  ) !important;
   background-attachment: fixed !important;
   padding: 2rem !important;
   position: relative !important;
@@ -29,9 +35,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.05) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 215, 0, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(78, 205, 196, 0.05) 0%,
+      transparent 50%
+    );
   pointer-events: none;
   z-index: 1;
 }
@@ -52,8 +66,13 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .loading-state h3 {
@@ -73,8 +92,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Header Section - Enhanced for better readability */
@@ -90,15 +113,17 @@
   font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
   font-weight: 800 !important;
   margin-bottom: 1rem !important;
-  background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B) !important;
+  background: linear-gradient(135deg, #ffd700, #ffa500, #ff6b6b) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  text-shadow: 
+  text-shadow:
     0 0 20px rgba(255, 215, 0, 0.6),
     0 0 40px rgba(255, 215, 0, 0.4),
     2px 2px 8px rgba(0, 0, 0, 0.8) !important;
-  animation: fadeInUp 1s ease both, titleGlow 3s ease-in-out infinite alternate !important;
+  animation:
+    fadeInUp 1s ease both,
+    titleGlow 3s ease-in-out infinite alternate !important;
   letter-spacing: 0.02em !important;
   filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)) !important;
 }
@@ -237,11 +262,17 @@
 }
 
 .filter-tab.active {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 165, 0, 0.2));
-  color: #FFD700;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.25),
+    rgba(255, 165, 0, 0.2)
+  );
+  color: #ffd700;
   border-color: rgba(255, 215, 0, 0.6);
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 1px 1px 3px rgba(0, 0, 0, 0.8);
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.8),
+    1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 /* Log Content */
@@ -289,11 +320,11 @@
   animation: slideInUp 0.6s ease both;
 }
 
-.timeline-item:nth-child(n+2) {
+.timeline-item:nth-child(n + 2) {
   animation-delay: 0.1s;
 }
 
-.timeline-item:nth-child(n+3) {
+.timeline-item:nth-child(n + 3) {
   animation-delay: 0.2s;
 }
 
@@ -348,7 +379,11 @@
 .timeline-line {
   width: 3px;
   height: 100px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
   margin-top: 1rem;
   border-radius: 2px;
 }
@@ -366,7 +401,7 @@
   border-radius: 15px !important;
   padding: 2rem !important;
   transition: all 0.3s ease !important;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   color: white !important;
@@ -374,7 +409,7 @@
 
 .submission-card:hover {
   transform: translateY(-3px);
-  box-shadow: 
+  box-shadow:
     0 15px 40px rgba(0, 0, 0, 0.5),
     0 0 30px rgba(255, 215, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -394,10 +429,10 @@
 .journey-log .quest-title {
   font-size: 1.4rem !important;
   font-weight: 800 !important;
-  color: #00E5FF !important;
+  color: #00e5ff !important;
   margin: 0 !important;
   line-height: 1.3 !important;
-  text-shadow: 
+  text-shadow:
     0 0 10px rgba(0, 229, 255, 0.6),
     1px 1px 3px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)) !important;
@@ -418,25 +453,31 @@
 
 .status-badge.success {
   background: rgba(46, 204, 113, 0.25);
-  color: #2ECC71;
+  color: #2ecc71;
   border: 1px solid rgba(46, 204, 113, 0.6);
-  text-shadow: 0 0 8px rgba(46, 204, 113, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 0 8px rgba(46, 204, 113, 0.8),
+    1px 1px 2px rgba(0, 0, 0, 0.7);
   box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
 }
 
 .status-badge.warning {
   background: rgba(241, 196, 15, 0.25);
-  color: #F1C40F;
+  color: #f1c40f;
   border: 1px solid rgba(241, 196, 15, 0.6);
-  text-shadow: 0 0 8px rgba(241, 196, 15, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 0 8px rgba(241, 196, 15, 0.8),
+    1px 1px 2px rgba(0, 0, 0, 0.7);
   box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
 }
 
 .status-badge.error {
   background: rgba(231, 76, 60, 0.25);
-  color: #E74C3C;
+  color: #e74c3c;
   border: 1px solid rgba(231, 76, 60, 0.6);
-  text-shadow: 0 0 8px rgba(231, 76, 60, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 0 8px rgba(231, 76, 60, 0.8),
+    1px 1px 2px rgba(0, 0, 0, 0.7);
   box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
 }
 
@@ -477,7 +518,7 @@
   background: rgba(46, 204, 113, 0.15);
   border-radius: 8px;
   padding: 0.8rem;
-  border-left: 4px solid #2ECC71;
+  border-left: 4px solid #2ecc71;
   box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
 }
 
@@ -485,15 +526,17 @@
   background: rgba(241, 196, 15, 0.15);
   border-radius: 8px;
   padding: 0.8rem;
-  border-left: 4px solid #F1C40F;
+  border-left: 4px solid #f1c40f;
   box-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
 }
 
 .detail-label {
   font-weight: 700;
-  color: #FFD700;
+  color: #ffd700;
   min-width: 100px;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 1px 1px 2px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.7),
+    1px 1px 2px rgba(0, 0, 0, 0.7);
   filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
 
@@ -512,19 +555,19 @@
 }
 
 .aura-reward {
-  color: #2ECC71;
+  color: #2ecc71;
   font-weight: bold;
-  text-shadow: 
-    0 0 10px rgba(46, 204, 113, 0.8), 
+  text-shadow:
+    0 0 10px rgba(46, 204, 113, 0.8),
     1px 1px 3px rgba(0, 0, 0, 0.7);
   filter: drop-shadow(0 0 8px rgba(46, 204, 113, 0.5));
 }
 
 .aura-pending {
-  color: #F1C40F;
+  color: #f1c40f;
   font-weight: bold;
-  text-shadow: 
-    0 0 10px rgba(241, 196, 15, 0.8), 
+  text-shadow:
+    0 0 10px rgba(241, 196, 15, 0.8),
     1px 1px 3px rgba(0, 0, 0, 0.7);
   filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.5));
 }
@@ -538,9 +581,11 @@
 .proof-label {
   display: block;
   font-weight: 700;
-  color: #FFD700;
+  color: #ffd700;
   margin-bottom: 0.8rem;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 1px 1px 2px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.7),
+    1px 1px 2px rgba(0, 0, 0, 0.7);
   filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
 
@@ -594,7 +639,8 @@
     filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
   }
   50% {
-    filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 35px rgba(255, 165, 0, 0.4));
+    filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8))
+      drop-shadow(0 0 35px rgba(255, 165, 0, 0.4));
   }
   100% {
     filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
@@ -606,54 +652,54 @@
   .journey-log {
     padding: 1rem;
   }
-  
+
   .log-title {
     font-size: 2.5rem;
   }
-  
+
   .journey-stats {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .filter-tabs {
     justify-content: stretch;
   }
-  
+
   .filter-tab {
     flex: 1;
     text-align: center;
     font-size: 0.8rem;
     padding: 0.6rem 1rem;
   }
-  
+
   .timeline-item {
     gap: 1rem;
   }
-  
+
   .marker-icon {
     width: 50px;
     height: 50px;
     font-size: 1.2rem;
   }
-  
+
   .timeline-line {
     height: 80px;
   }
-  
+
   .submission-card {
     padding: 1.5rem;
   }
-  
+
   .submission-header {
     flex-direction: column;
     gap: 0.8rem;
   }
-  
+
   .quest-title {
     font-size: 1.2rem;
   }
-  
+
   .status-badge {
     align-self: flex-start;
   }
@@ -663,27 +709,27 @@
   .timeline-marker {
     min-width: 50px;
   }
-  
+
   .marker-icon {
     width: 40px;
     height: 40px;
     font-size: 1rem;
   }
-  
+
   .submission-card {
     padding: 1rem;
   }
-  
+
   .detail-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.3rem;
   }
-  
+
   .detail-label {
     min-width: auto;
   }
-  
+
   .proof-thumbnail {
     max-width: 150px;
   }

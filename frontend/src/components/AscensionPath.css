@@ -1,7 +1,13 @@
 /* Ascension Path - Dark Gaming Theme */
 .ascension-path {
   min-height: 100vh !important;
-  background: linear-gradient(135deg, #0a0e17 0%, #1a1a2e 30%, #16213e 70%, #0f1419 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #0a0e17 0%,
+    #1a1a2e 30%,
+    #16213e 70%,
+    #0f1419 100%
+  ) !important;
   background-attachment: fixed !important;
   padding: var(--space-8) !important;
   position: relative !important;
@@ -16,10 +22,22 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.03) 0%, transparent 70%);
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 215, 0, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(78, 205, 196, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(139, 69, 19, 0.03) 0%,
+      transparent 70%
+    );
   pointer-events: none;
   z-index: 1;
 }
@@ -37,11 +55,14 @@
   font-size: clamp(2.5rem, 5vw, 4rem) !important;
   font-weight: 800 !important;
   margin-bottom: 1rem !important;
-  background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B) !important;
+  background: linear-gradient(135deg, #ffd700, #ffa500, #ff6b6b) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
+  text-shadow:
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 0 40px rgba(255, 215, 0, 0.4),
+    2px 2px 8px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)) !important;
   animation: fadeInUp 1s ease both !important;
 }
@@ -54,8 +75,13 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .path-subtitle {
@@ -75,7 +101,9 @@
   max-width: 600px !important;
   margin: 0 auto 3rem !important;
   animation: fadeInUp 1s ease 0.4s both !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   color: white !important;
 }
 
@@ -154,13 +182,22 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   animation: progressShine 2s ease-in-out infinite;
 }
 
 @keyframes progressShine {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .progress-text {
@@ -233,14 +270,14 @@
 }
 
 @keyframes flowDown {
-  0% { 
+  0% {
     top: -20px;
     opacity: 0;
   }
   50% {
     opacity: 1;
   }
-  100% { 
+  100% {
     top: 100px;
     opacity: 0;
   }
@@ -257,13 +294,17 @@
   backdrop-filter: blur(15px) !important;
   overflow: hidden !important;
   color: white !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 .level-card.unlocked {
   background: rgba(20, 25, 35, 0.95) !important;
   border-color: rgba(255, 215, 0, 0.4) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 .level-card.locked {
@@ -275,7 +316,7 @@
 
 .level-card.current {
   border-color: #ffd700;
-  box-shadow: 
+  box-shadow:
     0 15px 40px rgba(255, 215, 0, 0.3),
     inset 0 1px 0 rgba(255, 215, 0, 0.2);
   transform: scale(1.02);
@@ -283,13 +324,14 @@
 }
 
 @keyframes currentPulse {
-  0%, 100% {
-    box-shadow: 
+  0%,
+  100% {
+    box-shadow:
       0 15px 40px rgba(255, 215, 0, 0.3),
       inset 0 1px 0 rgba(255, 215, 0, 0.2);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 20px 50px rgba(255, 215, 0, 0.5),
       inset 0 1px 0 rgba(255, 215, 0, 0.4);
   }
@@ -328,18 +370,23 @@
   transform: translate(-50%, -50%);
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 0, 0.3) 0%,
+    transparent 70%
+  );
   border-radius: 50%;
   animation: glow 2s ease-in-out infinite;
   z-index: 1;
 }
 
 @keyframes glow {
-  0%, 100% { 
+  0%,
+  100% {
     transform: translate(-50%, -50%) scale(1);
     opacity: 0.5;
   }
-  50% { 
+  50% {
     transform: translate(-50%, -50%) scale(1.2);
     opacity: 1;
   }
@@ -358,9 +405,11 @@
 .level-name {
   font-size: 1.8rem !important;
   font-weight: 800 !important;
-  color: #00E5FF !important;
+  color: #00e5ff !important;
   margin-bottom: 0.5rem !important;
-  text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+  text-shadow:
+    0 0 10px rgba(0, 229, 255, 0.6),
+    1px 1px 3px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)) !important;
 }
 
@@ -530,15 +579,25 @@
   left: -5px;
   right: -5px;
   bottom: -5px;
-  background: linear-gradient(45deg, transparent, rgba(78, 205, 196, 0.3), transparent);
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(78, 205, 196, 0.3),
+    transparent
+  );
   border-radius: 25px;
   z-index: -1;
   animation: hoverGlow 2s ease-in-out infinite;
 }
 
 @keyframes hoverGlow {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Unlock Particles */
@@ -581,7 +640,8 @@
 }
 
 @keyframes particleFloat {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: translateY(0px) scale(1);
   }
@@ -606,18 +666,23 @@
 .end-glow {
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 0, 0.2) 0%,
+    transparent 70%
+  );
   border-radius: 50%;
   margin: 0 auto 2rem;
   animation: endGlow 4s ease-in-out infinite;
 }
 
 @keyframes endGlow {
-  0%, 100% { 
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.5;
   }
-  50% { 
+  50% {
     transform: scale(1.2);
     opacity: 1;
   }
@@ -644,8 +709,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* Responsive Design */
@@ -653,43 +723,43 @@
   .ascension-path {
     padding: 1rem;
   }
-  
+
   .path-title {
     font-size: 2.5rem;
   }
-  
+
   .current-status {
     padding: 1.5rem;
     margin-bottom: 2rem;
   }
-  
+
   .current-level {
     flex-direction: column;
     text-align: center;
     gap: 1rem;
   }
-  
+
   .level-card {
     padding: 1.5rem;
   }
-  
+
   .level-icon {
     font-size: 3rem;
   }
-  
+
   .level-name {
     font-size: 1.5rem;
   }
-  
+
   .rewards-list {
     grid-template-columns: 1fr;
   }
-  
+
   .progress-bar-container {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .progress-text {
     align-self: center;
   }
@@ -699,22 +769,22 @@
   .current-status {
     padding: 1rem;
   }
-  
+
   .level-card {
     padding: 1rem;
   }
-  
+
   .level-icon {
     font-size: 2.5rem;
   }
-  
+
   .reward-item {
     padding: 0.8rem;
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
   }
-  
+
   .tooltip-content {
     max-width: 200px;
     font-size: 0.8rem;

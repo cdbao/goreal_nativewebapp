@@ -300,7 +300,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -314,11 +315,11 @@
     margin: 10px;
     max-height: calc(100vh - 40px);
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .cancel-button,
   .submit-button {
     width: 100%;

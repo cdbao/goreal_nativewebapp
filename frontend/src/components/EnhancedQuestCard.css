@@ -10,11 +10,11 @@
   cursor: pointer !important;
   transition: all var(--transition-smooth) !important;
   backdrop-filter: blur(15px) !important;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   color: white !important;
-  
+
   /* Use guild-specific theming */
   border-color: rgba(var(--primary-color-rgb, 255, 215, 0), 0.4) !important;
 }
@@ -34,9 +34,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(var(--primary-color-rgb, 255, 215, 0), 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(var(--secondary-color-rgb, 138, 43, 226), 0.1) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(var(--primary-color-rgb, 255, 215, 0), 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(var(--secondary-color-rgb, 138, 43, 226), 0.1) 0%,
+      transparent 50%
+    );
   opacity: 0;
   transition: opacity var(--transition-base);
 }
@@ -53,7 +61,11 @@
   width: 60px;
   height: 60px;
   border-radius: var(--radius-full);
-  background: linear-gradient(45deg, rgba(var(--primary-color-rgb, 255, 215, 0), 0.2), rgba(var(--primary-color-rgb, 255, 215, 0), 0.4));
+  background: linear-gradient(
+    45deg,
+    rgba(var(--primary-color-rgb, 255, 215, 0), 0.2),
+    rgba(var(--primary-color-rgb, 255, 215, 0), 0.4)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,8 +94,8 @@
 .quest-title {
   font-size: var(--font-size-2xl) !important;
   font-weight: 800 !important;
-  color: #00E5FF !important;
-  text-shadow: 
+  color: #00e5ff !important;
+  text-shadow:
     0 0 10px rgba(0, 229, 255, 0.6),
     1px 1px 3px rgba(0, 0, 0, 0.8) !important;
   filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)) !important;
@@ -93,7 +105,7 @@
 }
 
 .aura-reward {
-  background: linear-gradient(45deg, var(--secondary-color), #FFA500);
+  background: linear-gradient(45deg, var(--secondary-color), #ffa500);
   color: var(--color-black);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
@@ -104,8 +116,12 @@
 }
 
 @keyframes auraGlow {
-  0% { box-shadow: var(--shadow-md); }
-  100% { box-shadow: var(--shadow-lg); }
+  0% {
+    box-shadow: var(--shadow-md);
+  }
+  100% {
+    box-shadow: var(--shadow-lg);
+  }
 }
 
 /* Quest description */
@@ -125,17 +141,18 @@
   min-width: 200px;
   justify-content: center;
   gap: var(--space-2);
-  
+
   /* Pulse glow effect for quest buttons */
   animation: challengePulse 2s ease-in-out infinite;
 }
 
 @keyframes challengePulse {
-  0%, 100% { 
+  0%,
+  100% {
     box-shadow: var(--shadow-lg);
     transform: scale(1);
   }
-  50% { 
+  50% {
     box-shadow: var(--shadow-2xl);
     transform: scale(1.02);
   }
@@ -148,7 +165,11 @@
 /* Accepted state styles */
 .enhanced-quest-card.accepted {
   border-color: var(--success-color);
-  background: linear-gradient(135deg, rgba(var(--success-color-rgb, 76, 175, 80), 0.1) 0%, rgba(var(--success-color-rgb, 76, 175, 80), 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--success-color-rgb, 76, 175, 80), 0.1) 0%,
+    rgba(var(--success-color-rgb, 76, 175, 80), 0.05) 100%
+  );
   animation: questAccepted 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -171,7 +192,11 @@
 
 /* Guild seal acceptance animation */
 .quest-guild-seal.accepted {
-  background: linear-gradient(45deg, rgba(var(--success-color-rgb, 76, 175, 80), 0.3), rgba(var(--success-color-rgb, 76, 175, 80), 0.6));
+  background: linear-gradient(
+    45deg,
+    rgba(var(--success-color-rgb, 76, 175, 80), 0.3),
+    rgba(var(--success-color-rgb, 76, 175, 80), 0.6)
+  );
   border-color: var(--success-color);
   animation: sealAccepted 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
@@ -227,12 +252,12 @@
     margin: var(--space-3) var(--space-2);
     padding: var(--space-5);
   }
-  
+
   .quest-title {
     font-size: var(--font-size-xl);
     max-width: 60%;
   }
-  
+
   .quest-guild-seal {
     width: 50px;
     height: 50px;
@@ -240,7 +265,7 @@
     top: var(--space-3);
     right: var(--space-3);
   }
-  
+
   .accept-challenge-btn {
     width: 100%;
     padding: var(--space-3) var(--space-6);
