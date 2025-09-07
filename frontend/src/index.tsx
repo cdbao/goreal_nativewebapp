@@ -56,9 +56,14 @@ if ('serviceWorker' in navigator) {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   // New content is available, show update notification
-                  if (window.confirm('Đã có phiên bản mới của GoREAL! Bạn có muốn cập nhật không?')) {
+                  const updateAccepted = window.confirm('Đã có phiên bản mới của GoREAL! Bạn có muốn cập nhật không?');
+                  if (updateAccepted) {
+                    console.log('🔄 User accepted update, activating new service worker');
                     // Send skip waiting message to the new service worker
                     newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  } else {
+                    console.log('⏭️ User declined update, continuing with current version');
+                    // User can continue with the old version for this session
                   }
                 }
               });
@@ -66,8 +71,11 @@ if ('serviceWorker' in navigator) {
           });
 
           // Listen for controller change (when new SW takes control)
+          let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
             console.log('🔄 New service worker is now controlling the page');
+            refreshing = true;
             // Reload the page to use the new service worker
             window.location.reload();
           });

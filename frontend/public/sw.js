@@ -1,8 +1,8 @@
 // GoREAL PWA Service Worker
 // Advanced caching strategy for optimal offline experience
 
-const CACHE_NAME = 'goreal-pwa-v1.0.1';
-const RUNTIME_CACHE = 'goreal-runtime-v1.0.1';
+const CACHE_NAME = 'goreal-pwa-v1.0.2';
+const RUNTIME_CACHE = 'goreal-runtime-v1.0.2';
 
 // Static assets to cache on install (cache-first strategy)
 const STATIC_ASSETS = [
@@ -392,7 +392,7 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('message', (event) => {
   console.log('[SW] Message received:', event.data);
   
-  if (event.data.type === 'SKIP_WAITING') {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
     console.log('[SW] Received SKIP_WAITING message, skipping waiting state');
     self.skipWaiting();
   }
