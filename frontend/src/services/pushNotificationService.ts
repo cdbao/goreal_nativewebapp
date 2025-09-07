@@ -2,12 +2,20 @@
 // Handles all push notification subscription and management logic
 
 import { getToken, onMessage } from 'firebase/messaging';
-import { collection, addDoc, query, where, getDocs, deleteDoc } from 'firebase/firestore';
-import { messaging, db } from '../firebase';
+import { httpsCallable, getFunctions } from 'firebase/functions';
+import { messaging } from '../firebase';
+import app from '../firebase';
 import { User } from '../types';
 
 // VAPID key - In production, this should be stored securely
 const VAPID_KEY = 'BNxKjdQvKL7iOmV6qQe1HzO8xYwNrPm2CvBnFgHjKlAsZxWqE3DfGhJkMnBvCxRtYuIoPsLqWe4RtYuNmKjHgFd';
+
+// Get Firebase Functions instance
+const functions = getFunctions(app);
+
+// Cloud Function references
+const savePushSubscription = httpsCallable(functions, 'savePushSubscription');
+const removePushSubscription = httpsCallable(functions, 'removePushSubscription');
 
 export interface PushSubscriptionData {
   endpoint: string;
@@ -19,6 +27,13 @@ export interface PushSubscriptionData {
   userAgent: string;
   createdAt: Date;
   lastUsed: Date;
+}
+
+// Cloud Function response types
+interface CloudFunctionResponse {
+  success: boolean;
+  message: string;
+  subscriptionId?: string;
 }
 
 export class PushNotificationService {
@@ -111,26 +126,30 @@ export class PushNotificationService {
         return false;
       }
 
-      // Create subscription data
-      const subscriptionData: PushSubscriptionData = {
+      // Create subscription data for Cloud Function
+      const subscriptionData = {
         endpoint: `https://fcm.googleapis.com/fcm/send/${token}`,
         expirationTime: null,
         keys: {
           p256dh: token, // In FCM, we use the token as the key
           auth: token.substring(0, 16) // Simple auth key derivation
-        },
-        userAgent: navigator.userAgent,
-        createdAt: new Date(),
-        lastUsed: new Date()
+        }
       };
 
-      // Save subscription to Firestore
-      const saved = await this.saveSubscription(subscriptionData);
-      if (saved) {
-        console.log('Successfully subscribed to push notifications');
+      // Save subscription using Cloud Function
+      const result = await savePushSubscription({
+        subscription: subscriptionData,
+        fcmToken: token, // Pass the actual FCM token separately
+        userAgent: navigator.userAgent
+      });
+
+      const response = result.data as CloudFunctionResponse;
+      if (response.success) {
+        console.log('Successfully subscribed to push notifications:', response.message);
         return true;
       }
 
+      console.error('Failed to save subscription:', response.message);
       return false;
     } catch (error) {
       console.error('Error subscribing to push notifications:', error);
@@ -148,14 +167,18 @@ export class PushNotificationService {
         return false;
       }
 
-      // Remove all subscriptions for this user from Firestore
-      const removed = await this.removeAllSubscriptions();
+      // Remove all subscriptions using Cloud Function
+      const result = await removePushSubscription({
+        removeAll: true
+      });
       
-      if (removed) {
-        console.log('Successfully unsubscribed from push notifications');
+      const response = result.data as CloudFunctionResponse;
+      if (response.success) {
+        console.log('Successfully unsubscribed from push notifications:', response.message);
         return true;
       }
 
+      console.error('Failed to unsubscribe:', response.message);
       return false;
     } catch (error) {
       console.error('Error unsubscribing from push notifications:', error);
@@ -168,95 +191,19 @@ export class PushNotificationService {
    */
   public async isSubscribed(): Promise<boolean> {
     try {
-      if (!this.currentUser) {
+      if (!this.currentUser || !messaging) {
         return false;
       }
 
-      const subscriptions = await this.getUserSubscriptions();
-      return subscriptions.length > 0;
+      // Check if we have a valid FCM token
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+      return !!token;
     } catch (error) {
       console.error('Error checking subscription status:', error);
       return false;
     }
   }
 
-  /**
-   * Save push subscription to Firestore
-   */
-  private async saveSubscription(subscriptionData: PushSubscriptionData): Promise<boolean> {
-    try {
-      if (!this.currentUser) {
-        return false;
-      }
-
-      // Check if this subscription already exists
-      const existing = await this.getUserSubscriptions();
-      const isDuplicate = existing.some(sub => 
-        sub.endpoint === subscriptionData.endpoint
-      );
-
-      if (isDuplicate) {
-        console.log('Subscription already exists');
-        return true;
-      }
-
-      // Save to users/{userId}/pushSubscriptions subcollection
-      const subscriptionsRef = collection(db, 'users', this.currentUser.userId, 'pushSubscriptions');
-      await addDoc(subscriptionsRef, {
-        ...subscriptionData,
-        fcmToken: subscriptionData.keys.p256dh, // Store FCM token separately for easier access
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Error saving subscription:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Get all push subscriptions for current user
-   */
-  private async getUserSubscriptions(): Promise<PushSubscriptionData[]> {
-    try {
-      if (!this.currentUser) {
-        return [];
-      }
-
-      const subscriptionsRef = collection(db, 'users', this.currentUser.userId, 'pushSubscriptions');
-      const querySnapshot = await getDocs(subscriptionsRef);
-      
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as (PushSubscriptionData & { id: string })[];
-    } catch (error) {
-      console.error('Error fetching user subscriptions:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Remove all subscriptions for current user
-   */
-  private async removeAllSubscriptions(): Promise<boolean> {
-    try {
-      if (!this.currentUser) {
-        return false;
-      }
-
-      const subscriptionsRef = collection(db, 'users', this.currentUser.userId, 'pushSubscriptions');
-      const querySnapshot = await getDocs(subscriptionsRef);
-      
-      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
-      await Promise.all(deletePromises);
-      
-      return true;
-    } catch (error) {
-      console.error('Error removing subscriptions:', error);
-      return false;
-    }
-  }
 
   /**
    * Handle foreground messages (when app is open)

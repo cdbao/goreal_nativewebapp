@@ -1,8 +1,8 @@
 // GoREAL PWA Service Worker
 // Advanced caching strategy for optimal offline experience
 
-const CACHE_NAME = 'goreal-pwa-v1.0.0';
-const RUNTIME_CACHE = 'goreal-runtime-v1.0.0';
+const CACHE_NAME = 'goreal-pwa-v1.0.1';
+const RUNTIME_CACHE = 'goreal-runtime-v1.0.1';
 
 // Static assets to cache on install (cache-first strategy)
 const STATIC_ASSETS = [
@@ -58,7 +58,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate event - cleanup old caches
+// Activate event - cleanup old caches and notify clients
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating GoREAL Service Worker');
   
@@ -75,8 +75,20 @@ self.addEventListener('activate', (event) => {
         );
       })
       .then(() => {
-        console.log('[SW] Service Worker activated');
-        return self.clients.claim(); // Take control immediately
+        console.log('[SW] Service Worker activated, claiming clients');
+        return self.clients.claim();
+      })
+      .then(() => {
+        // Notify all clients that the new SW is now controlling
+        return self.clients.matchAll();
+      })
+      .then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({
+            type: 'SW_ACTIVATED',
+            message: 'New service worker is now active'
+          });
+        });
       })
   );
 });
@@ -375,5 +387,16 @@ self.addEventListener('notificationclick', (event) => {
     );
   }
 });
+
+// Handle messages from the main thread
+self.addEventListener('message', (event) => {
+  console.log('[SW] Message received:', event.data);
+  
+  if (event.data.type === 'SKIP_WAITING') {
+    console.log('[SW] Received SKIP_WAITING message, skipping waiting state');
+    self.skipWaiting();
+  }
+});
+
 
 console.log('[SW] GoREAL Service Worker loaded successfully');

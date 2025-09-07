@@ -57,11 +57,19 @@ if ('serviceWorker' in navigator) {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   // New content is available, show update notification
                   if (window.confirm('Đã có phiên bản mới của GoREAL! Bạn có muốn cập nhật không?')) {
-                    window.location.reload();
+                    // Send skip waiting message to the new service worker
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
                   }
                 }
               });
             }
+          });
+
+          // Listen for controller change (when new SW takes control)
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            console.log('🔄 New service worker is now controlling the page');
+            // Reload the page to use the new service worker
+            window.location.reload();
           });
         })
         .catch((error) => {
@@ -80,6 +88,8 @@ if ('serviceWorker' in navigator) {
         if (event.data.url && event.data.url !== window.location.pathname) {
           window.location.href = event.data.url;
         }
+      } else if (event.data.type === 'SW_ACTIVATED') {
+        console.log('✅ Service worker activation confirmed:', event.data.message);
       }
     });
   });
