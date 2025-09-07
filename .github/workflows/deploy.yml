@@ -140,6 +140,11 @@ jobs:
           cd backend-functions
           npm ci
 
+      - name: Install AURA Stream Function Dependencies
+        run: |
+          cd frontend/functions
+          npm ci
+
       - name: Deploy Backend to Cloud Functions
         run: |
           cd backend-functions
@@ -173,6 +178,55 @@ jobs:
           
           # Deploy health check function
           gcloud functions deploy health \
+            --runtime nodejs18 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --region ${{ env.GCP_REGION }} \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --quiet
+
+      - name: Deploy AURA Stream Functions
+        run: |
+          cd frontend/functions
+          
+          # Deploy getStravaAuthUrl function
+          gcloud functions deploy getStravaAuthUrl \
+            --runtime nodejs18 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --region ${{ env.GCP_REGION }} \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --quiet
+          
+          # Deploy handleStravaCallback function
+          gcloud functions deploy handleStravaCallback \
+            --runtime nodejs18 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --region ${{ env.GCP_REGION }} \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --quiet
+          
+          # Deploy disconnectStrava function
+          gcloud functions deploy disconnectStrava \
+            --runtime nodejs18 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --region ${{ env.GCP_REGION }} \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --quiet
+          
+          # Deploy syncStravaActivities function
+          gcloud functions deploy syncStravaActivities \
+            --runtime nodejs18 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --region ${{ env.GCP_REGION }} \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --quiet
+          
+          # Deploy refreshStravaToken function
+          gcloud functions deploy refreshStravaToken \
             --runtime nodejs18 \
             --trigger-http \
             --allow-unauthenticated \
