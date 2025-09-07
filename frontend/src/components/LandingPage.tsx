@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import CommunityStats from './CommunityStats';
 import './LandingPage.css';
 
 const LandingPage: React.FC = () => {
@@ -219,6 +220,13 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Community Stats Section */}
+      <section className="community-stats-section">
+        <div className="section-content">
+          <CommunityStats />
+        </div>
+      </section>
+
       {/* Call to Action Section */}
       <section className="section section-3 cta-section">
         <div className="cta-background">
@@ -232,19 +240,39 @@ const LandingPage: React.FC = () => {
         <div className="section-content">
           <div className="cta-content">
             <h2 className="cta-title">
-              <span className="title-line-1">🔥 Lò Rèn Titan 🔥</span>
-              <span className="title-line-2">Đang Chờ Đón Bạn</span>
+              <span className="title-line-1">🏛️ KHÁM PHÁ THẾ GIỚI GO REAL 🏛️</span>
+              <span className="title-line-2">Ba Con Đường Chờ Đón</span>
             </h2>
 
             <p className="cta-description">
-              Hành trình trở thành Vệ Thần bắt đầu từ đây. Hãy gia nhập Titans'
-              Guild và cùng chúng tôi cứu rỗi Aethelgard khỏi Sự Trì Hoãn!
+              Học viện Ascension Citadel chào đón những Môn Sinh dũng cảm. 
+              Hãy chọn con đường của riêng bạn để trở thành Anh hùng của Aethelgard!
             </p>
+
+            <div className="guild-paths">
+              <div className="path-preview">
+                <div className="path-item">
+                  <span className="path-icon">⚡</span>
+                  <span className="path-name">Titans</span>
+                  <span className="path-focus">Kỷ Luật & Sức Mạnh</span>
+                </div>
+                <div className="path-item">
+                  <span className="path-icon">🔮</span>
+                  <span className="path-name">Illumination</span>
+                  <span className="path-focus">Trí Tuệ & Kiến Thức</span>
+                </div>
+                <div className="path-item">
+                  <span className="path-icon">🌿</span>
+                  <span className="path-name">Envoys</span>
+                  <span className="path-focus">Giao Tiếp & Kết Nối</span>
+                </div>
+              </div>
+            </div>
 
             <div className="cta-buttons">
               <Link to="/register" className="primary-cta">
-                <span className="cta-icon">⚔️</span>
-                <span className="cta-text">Trở Thành Vệ Thần</span>
+                <span className="cta-icon">🛡️</span>
+                <span className="cta-text">BẮT ĐẦU HÀNH TRÌNH CỦA BẠN</span>
                 <div className="button-glow"></div>
               </Link>
 
@@ -257,8 +285,8 @@ const LandingPage: React.FC = () => {
             <div className="guild-preview">
               <div className="guild-stats">
                 <div className="stat-item">
-                  <span className="stat-number">1,247</span>
-                  <span className="stat-label">Vệ Thần</span>
+                  <span className="stat-number">3</span>
+                  <span className="stat-label">Guild Paths</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-number">∞</span>

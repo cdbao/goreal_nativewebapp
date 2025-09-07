@@ -1,0 +1,105 @@
+{
+  "character": {
+    "name": "Kael",
+    "title": "The Iron Titan",
+    "description": "Universal guardian of the AURA Stream, mentor to all Academy students regardless of Guild, forger of destiny through physical trials",
+    "avatar": "⚔️🛡️"
+  },
+  "introduction": {
+    "title": "Kael, the Iron Titan Calls Upon You",
+    "dialogue": [
+      "Greetings, young Academy student. I am Kael, the Iron Titan, guardian of the ancient AURA Stream.",
+      "For eons, I have watched students from all Guilds forge their souls through physical trials in the mortal realm.",
+      "The AURA Stream connects your earthly struggles to your spiritual evolution. Every step you take, every breath you draw in exertion, feeds the cosmic flow of power.",
+      "Your Strava Compass awaits connection - it shall be the bridge between your physical deeds and your avatar's ascension.",
+      "Will you accept this challenge and let your real-world strength illuminate your digital spirit?"
+    ],
+    "callToAction": "Connect Your Strava Compass",
+    "subtext": "Begin your journey of physical and spiritual unity"
+  },
+  "milestones": {
+    "tier_1": {
+      "threshold": 100,
+      "title": "First Steps on the Iron Path",
+      "message": "⚔️ Remarkable, young warrior! You have taken your first steps on the Iron Path. 100 points of Stamina now flow through your being - I can sense your avatar's aura beginning to strengthen. The journey of a thousand miles begins with a single stride, and yours resonates with promise.",
+      "tier_name": "Tập Sự"
+    },
+    "tier_2": {
+      "threshold": 500,
+      "title": "The Warrior's Resolve",
+      "message": "🛡️ Exceptional dedication! Your spirit burns brighter as 500 Stamina points course through your essence. You have proven you possess the warrior's resolve - consistency in the face of challenge. Your avatar now radiates with the power of a true Chiến Binh. Continue this path, for greater trials await.",
+      "tier_name": "Chiến Binh"
+    },
+    "tier_3": {
+      "threshold": 1500,
+      "title": "Guardian's Recognition",
+      "message": "⚡ Outstanding! 1,500 points of pure Stamina energy - you have earned my recognition as a Guardian. Your physical trials in the mortal realm have forged an unbreakable link to the AURA Stream. The Vệ Binh within you awakens, and your avatar's power transcends ordinary limits.",
+      "tier_name": "Vệ Binh"
+    },
+    "tier_4": {
+      "threshold": 3000,
+      "title": "Divine Soldier's Ascension",
+      "message": "🔥 Magnificent! 3,000 Stamina points - a feat that echoes through the halls of eternity! You have ascended to become a Thần Binh, a divine soldier whose dedication bridges worlds. Your avatar now channels the strength of legends. The AURA Stream flows like a mighty river through your being.",
+      "tier_name": "Thần Binh"
+    },
+    "tier_5": {
+      "threshold": 5000,
+      "title": "Hero's Awakening",
+      "message": "🌟 Legendary! 5,000 points of Stamina - you have awakened the hero within! As an Anh Hùng, your physical achievements inspire others and your avatar radiates with heroic power. The ancient prophecies spoke of warriors like you, who transform their earthly struggles into cosmic strength.",
+      "tier_name": "Anh Hùng"
+    },
+    "tier_6": {
+      "threshold": 8000,
+      "title": "Legend Incarnate",
+      "message": "⚡🌟 Extraordinary! 8,000 Stamina points courses through your legendary spirit! You have become Huyền Thoại - a living legend whose physical prowess transcends mortal understanding. Your avatar now embodies mythical power, and the AURA Stream itself bends to your indomitable will.",
+      "tier_name": "Huyền Thoại"
+    },
+    "tier_7": {
+      "threshold": 12000,
+      "title": "Mythical Transcendence",
+      "message": "🔮✨ Phenomenal! 12,000 points of pure Stamina energy! You have achieved Siêu Huyền Thoại status - transcending even legend itself. Your physical dedication has reached mythical proportions, and your avatar now wields power that reshapes reality. The very cosmos acknowledges your strength!",
+      "tier_name": "Siêu Huyền Thoại"
+    },
+    "tier_8": {
+      "threshold": 17000,
+      "title": "Demigod's Realm",
+      "message": "⚔️👑 Incredible! 17,000 Stamina points - you walk among demigods! As Bán Thần, you have bridged the gap between mortal determination and divine power. Your avatar radiates with celestial energy, and your physical achievements echo through both earthly and heavenly realms.",
+      "tier_name": "Bán Thần"
+    },
+    "tier_9": {
+      "threshold": 25000,
+      "title": "Divine Sanctification",
+      "message": "👑🌟 Magnificent beyond words! 25,000 Stamina points - you have achieved Thần Thánh, true divinity through dedication! Your physical trials have sanctified your very essence. Your avatar now commands divine authority, and the AURA Stream flows with unprecedented power through your being.",
+      "tier_name": "Thần Thánh"
+    },
+    "tier_10": {
+      "threshold": 50000,
+      "title": "Infinite Transcendence",
+      "message": "🌌⚡👑 BEYOND LEGENDARY! 50,000 Stamina points - you have achieved Vô Cực, the infinite realm beyond all mortal comprehension! Your dedication has transcended every boundary, every limit. You stand as the ultimate fusion of physical mastery and spiritual evolution. The AURA Stream itself bows to your infinite will. You have become eternal!",
+      "tier_name": "Vô Cực"
+    }
+  },
+  "syncMessages": [
+    "🔥 Well done, warrior! The AURA Stream flows stronger with your latest triumph!",
+    "⚔️ Your physical dedication fuels the cosmic fire within! The stream acknowledges your effort!",
+    "🛡️ Excellent! Each step you take in the mortal realm strengthens your avatar's power!",
+    "⚡ The AURA Stream surges with your determination! Your spirit grows ever stronger!",
+    "🌟 Magnificent work! Your earthly trials continue to forge your digital destiny!",
+    "🔥 Outstanding! The connection between your physical and spiritual self grows stronger!",
+    "⚔️ Your persistence is worthy of legend! The AURA Stream responds to your call!",
+    "🛡️ Impressive dedication! Each activity adds another spark to your inner flame!",
+    "⚡ The Iron Path approves of your consistency! Your avatar's aura brightens!",
+    "🌟 Superb! Your commitment to the physical realm empowers your digital evolution!"
+  ],
+  "connectionSuccess": {
+    "title": "The Strava Compass is Connected!",
+    "message": "⚔️ Excellent! Your Strava Compass now bridges the gap between your physical trials and spiritual growth. The AURA Stream awaits your first steps on the Iron Path. Go forth and let your real-world strength illuminate your avatar's destiny!",
+    "callToAction": "Begin Your First Sync"
+  },
+  "encouragement": {
+    "noActivities": "🛡️ The AURA Stream awaits your physical trials, warrior. Step into the world and let your movements feed the cosmic flow!",
+    "lowActivity": "⚔️ Every great journey requires patience and persistence. Continue your training, and the AURA Stream will reward your dedication!",
+    "streakBroken": "⚡ Even the mightiest warriors face setbacks. Rise again, and let your renewed determination burn brighter than before!",
+    "comeback": "🔥 Welcome back, dedicated one! The AURA Stream has missed your presence. Your return strengthens the cosmic flow!"
+  }
+}

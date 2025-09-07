@@ -170,6 +170,8 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  height: 100%; /* ✅ SCROLLING FIX: Allow full height */
+  overflow: auto; /* ✅ SCROLLING FIX: Enable scrolling */
 }
 
 body {
@@ -182,6 +184,14 @@ body {
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%; /* ✅ SCROLLING FIX: Allow full height */
+  overflow: auto; /* ✅ SCROLLING FIX: Enable scrolling when content is larger */
+}
+
+/* ✅ CRITICAL SCROLLING FIX: React root container */
+#root {
+  height: 100%; /* ✅ Allow full height */
+  overflow: auto; /* ✅ Enable scrolling when content exceeds viewport */
 }
 
 /* 🔤 Typography Classes */

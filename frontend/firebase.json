@@ -4,10 +4,56 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/api/getStravaAuthUrl",
+        "function": {
+          "functionId": "getStravaAuthUrl",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/handleStravaCallback",
+        "function": {
+          "functionId": "handleStravaCallback",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/disconnectStrava",
+        "function": {
+          "functionId": "disconnectStrava",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/syncStravaActivities",
+        "function": {
+          "functionId": "syncStravaActivities",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/approveSubmission",
+        "function": {
+          "functionId": "approveSubmission",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/rejectSubmission",
+        "function": {
+          "functionId": "rejectSubmission",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
   },
   "firestore": {
     "rules": "firestore.rules",

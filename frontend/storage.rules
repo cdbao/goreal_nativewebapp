@@ -62,6 +62,17 @@ service firebase.storage {
                     get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
     
+    // Guild images - Allow admins to write, all users to read
+    match /guild_images/{fileName} {
+      // Allow read for all users (authenticated and unauthenticated)
+      allow read: if true;
+      
+      // Allow write/delete only for admin users
+      allow write, delete: if request.auth != null && 
+                           exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+                           get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
     // Deny all other paths by default
     match /{allPaths=**} {
       allow read, write: if false;

@@ -31,8 +31,8 @@ const ENHANCED_GUILDS: Record<GuildId, GuildData> = {
     icon: '⚡',
     motto: 'Mồ hôi hôm nay là sức mạnh ngày mai',
     description:
-      'Masters of discipline and raw power. The Titans forge themselves through trials of strength and unwavering determination.',
-    focus: 'Discipline & Strength',
+      'Những bậc thầy về kỷ luật và sức mạnh tuyệt đối. Guild Titans tôi luyện bản thân qua những thử thách về sức mạnh và ý chí kiên định không lay chuyển.',
+    focus: 'KỶ LUẬT & SỨC MẠNH',
     theme: GUILDS.titans.theme,
   },
   illumination: {
@@ -41,18 +41,18 @@ const ENHANCED_GUILDS: Record<GuildId, GuildData> = {
     icon: '🔮',
     motto: 'Tri thức là ánh sáng dẫn lối',
     description:
-      'Seekers of wisdom and truth. The Illumination guild unravels mysteries through knowledge and enlightenment.',
-    focus: 'Wisdom & Knowledge',
+      'Những người tìm kiếm trí tuệ và chân lý. Guild Illumination khám phá những bí ẩn thông qua kiến thức và sự giác ngộ.',
+    focus: 'TRÍ TUỆ & KIẾN THỨC',
     theme: GUILDS.illumination.theme,
   },
   envoys: {
     id: 'envoys',
     name: 'Envoys',
     icon: '🌿',
-    motto: 'Hài hòa trong đa dạng, sức mạnh trong đoàn kết',
+    motto: 'Mỗi ngôn ngữ là một thế giới mới',
     description:
-      'Guardians of balance and unity. The Envoys bridge differences with diplomacy and natural harmony.',
-    focus: 'Balance & Nature',
+      'Những người bảo vệ sự cân bằng và đoàn kết. Guild Envoys kết nối những khác biệt bằng ngoại giao và sự hài hòa tự nhiên.',
+    focus: 'GIAO TIẾP & KẾT NỐI',
     theme: GUILDS.envoys.theme,
   },
 };
@@ -222,14 +222,12 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
     <div className="guild-selection-container">
       <div className="guild-selection-modal">
         <div className="selection-header">
-          <h1 className="selection-title text-gaming">
-            Welcome to the Ascension Citadel!
+          <h1 className="selection-title text-gaming vietnamese-title">
+            CHÀO MỪNG ĐẾN ĐẠI SẢNH VÔ CỰC!
           </h1>
-          <h2 className="selection-subtitle-primary">Choose Your Path</h2>
-          <p className="selection-subtitle">
-            Three ancient guilds await your decision. Each path offers unique
-            wisdom, challenges, and power. Choose wisely, for your journey of
-            ascension begins here.
+          <h2 className="selection-subtitle-primary vietnamese-title">CHỌN CON ĐƯỜNG CỦA BẠN</h2>
+          <p className="selection-subtitle vietnamese-text">
+            Ba Guild cổ xưa đang chờ đợi quyết định của bạn. Mỗi con đường mang đến trí tuệ, thử thách và sức mạnh riêng. Hãy lựa chọn một cách khôn ngoan, vì hành trình thăng cấp của bạn bắt đầu từ đây.
           </p>
         </div>
 
@@ -274,8 +272,8 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
                 <div className="guild-focus">{guild.focus}</div>
                 <p className="guild-description">{guild.description}</p>
                 <div className="guild-path-button">
-                  <button className="choose-path-btn btn-primary">
-                    Choose This Path
+                  <button className="choose-path-btn btn-primary vietnamese-text">
+                    CHỌN CON ĐƯỜNG NÀY
                   </button>
                 </div>
               </div>
@@ -283,7 +281,7 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
               {selectedGuild === guild.id && (
                 <div className="selection-indicator animate-pulse">
                   <span className="indicator-icon">⚡</span>
-                  <span>Selected</span>
+                  <span className="vietnamese-text">Đã Chọn</span>
                 </div>
               )}
             </div>
@@ -297,59 +295,59 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
                 <span className="badge-icon">
                   {ENHANCED_GUILDS[selectedGuild].icon}
                 </span>
-                <span className="badge-text">
-                  You have chosen the path of{' '}
+                <span className="badge-text vietnamese-text">
+                  Bạn đã chọn con đường của{' '}
                   <strong>{ENHANCED_GUILDS[selectedGuild].name}</strong>
                 </span>
               </div>
               <p className="selection-motto">
                 "{ENHANCED_GUILDS[selectedGuild].motto}"
               </p>
-              <p className="selection-note">
-                You can change your guild later in account settings if needed.
+              <p className="selection-note vietnamese-text">
+                Bạn có thể thay đổi Guild trong cài đặt tài khoản nếu cần.
               </p>
             </div>
 
             <div className="action-buttons">
               <button
-                className="cancel-button btn-ghost"
+                className="cancel-button btn-ghost vietnamese-text"
                 onClick={() => {
                   setSelectedGuild(null);
                   setHasError(null);
                 }}
                 disabled={isSubmitting}
               >
-                Reconsider
+                Suy Nghĩ Lại
               </button>
               <button
-                className="confirm-button btn-primary"
+                className="confirm-button btn-primary vietnamese-text"
                 onClick={handleConfirmSelection}
                 disabled={isSubmitting || isLoading || isConnecting}
               >
                 {isConnecting ? (
                   <>
                     <div className="loading-spinner"></div>
-                    <span>Connecting...</span>
+                    <span>Đang Kết Nối...</span>
                   </>
                 ) : isLoading ? (
                   <>
                     <div className="loading-spinner"></div>
-                    <span>Updating Profile...</span>
+                    <span>Đang Cập Nhật...</span>
                   </>
                 ) : isSubmitting ? (
                   <>
                     <div className="loading-spinner"></div>
-                    <span>Joining Guild...</span>
+                    <span>Đang Gia Nhập Guild...</span>
                   </>
                 ) : successMessage ? (
                   <>
                     <span className="confirm-icon">✅</span>
-                    <span>Guild Joined!</span>
+                    <span>Đã Gia Nhập Guild!</span>
                   </>
                 ) : (
                   <>
                     <span className="confirm-icon">🛡️</span>
-                    <span>Begin Your Ascension</span>
+                    <span>Bắt Đầu Hành Trình</span>
                   </>
                 )}
               </button>
@@ -358,9 +356,8 @@ const GuildSelection: React.FC<GuildSelectionProps> = ({ onSelection }) => {
         )}
 
         <div className="selection-footer">
-          <p className="footer-text">
-            Each guild offers a unique journey of growth and mastery. Choose the
-            path that resonates with your spirit.
+          <p className="footer-text vietnamese-text">
+            Mỗi Guild mang đến một hành trình tăng trưởng và thành thạo độc đáo. Hãy chọn con đường phù hợp với tinh thần của bạn.
           </p>
         </div>
       </div>

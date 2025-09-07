@@ -1,0 +1,133 @@
+{
+  "AVATAR_EVOLUTION_THRESHOLDS": {
+    "TIER_0": 0,
+    "TIER_1": 100,
+    "TIER_2": 500,
+    "TIER_3": 1500,
+    "TIER_4": 3000,
+    "TIER_5": 5000,
+    "TIER_6": 8000,
+    "TIER_7": 12000,
+    "TIER_8": 17000,
+    "TIER_9": 25000,
+    "TIER_10": 50000
+  },
+  "STAMINA_CALCULATION": {
+    "RUNNING_POINTS_PER_KM": 1,
+    "SWIMMING_POINTS_PER_KM": 50,
+    "CYCLING_POINTS_PER_KM": 0.3,
+    "WALKING_POINTS_PER_KM": 0.5
+  },
+  "AVATAR_TIERS": {
+    "0": {
+      "name": "Người Mới",
+      "description": "Chào mừng đến với hành trình AURA Stream",
+      "visual_effects": [],
+      "title_color": "#FFFFFF",
+      "border_style": "none"
+    },
+    "1": {
+      "name": "Tập Sự",
+      "description": "Những bước đầu tiên trên con đường rèn luyện",
+      "visual_effects": ["subtle_glow"],
+      "title_color": "#90EE90",
+      "border_style": "1px solid #90EE90"
+    },
+    "2": {
+      "name": "Chiến Binh",
+      "description": "Sức mạnh bắt đầu thức tỉnh",
+      "visual_effects": ["green_aura", "floating_particles"],
+      "title_color": "#32CD32",
+      "border_style": "2px solid #32CD32"
+    },
+    "3": {
+      "name": "Vệ Binh",
+      "description": "Kỷ luật và sức bền được tôi luyện",
+      "visual_effects": ["blue_aura", "energy_waves"],
+      "title_color": "#4A90E2",
+      "border_style": "2px solid #4A90E2"
+    },
+    "4": {
+      "name": "Thần Binh",
+      "description": "Vượt qua giới hạn của bản thân",
+      "visual_effects": ["purple_aura", "lightning_effects"],
+      "title_color": "#9370DB",
+      "border_style": "3px solid #9370DB"
+    },
+    "5": {
+      "name": "Anh Hùng",
+      "description": "Sự kiên trì đã hóa thành sức mạnh thực sự",
+      "visual_effects": ["gold_aura", "star_particles", "pulse_effect"],
+      "title_color": "#FFD700",
+      "border_style": "3px solid #FFD700"
+    },
+    "6": {
+      "name": "Huyền Thoại",
+      "description": "Một tấm gương cho mọi người",
+      "visual_effects": ["rainbow_aura", "cosmic_particles", "rotation_effect"],
+      "title_color": "#FF6B35",
+      "border_style": "4px solid #FF6B35"
+    },
+    "7": {
+      "name": "Siêu Huyền Thoại",
+      "description": "Sức mạnh vượt ngoài tưởng tượng",
+      "visual_effects": ["fire_aura", "phoenix_wings", "intense_glow"],
+      "title_color": "#FF4500",
+      "border_style": "4px double #FF4500"
+    },
+    "8": {
+      "name": "Bán Thần",
+      "description": "Tiệm cận với sức mạnh của các vị thần",
+      "visual_effects": ["divine_aura", "heavenly_light", "floating_runes"],
+      "title_color": "#FAFAD2",
+      "border_style": "5px double #FAFAD2"
+    },
+    "9": {
+      "name": "Thần Thánh",
+      "description": "Đã đạt đến đỉnh cao của sức mạnh",
+      "visual_effects": ["celestial_aura", "galaxy_background", "time_distortion"],
+      "title_color": "#E6E6FA",
+      "border_style": "5px solid #E6E6FA, 0 0 20px #E6E6FA"
+    },
+    "10": {
+      "name": "Vô Cực",
+      "description": "Vượt qua mọi giới hạn, trở thành truyền thuyết",
+      "visual_effects": ["infinity_aura", "reality_warp", "omnipotent_glow"],
+      "title_color": "#FFFFFF",
+      "border_style": "6px solid transparent, linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3) 1"
+    }
+  },
+  "AURA_STREAM_CONFIG": {
+    "SYNC_COOLDOWN_MINUTES": 15,
+    "MAX_ACTIVITIES_PER_SYNC": 50,
+    "ACTIVITY_EXPIRY_DAYS": 30,
+    "LEADERBOARD_UPDATE_HOURS": 6
+  },
+  "STRAVA_CONFIG": {
+    "SCOPES": ["read", "activity:read"],
+    "WEBHOOK_VERIFY_TOKEN": "GOREAL_STRAVA_WEBHOOK_2024",
+    "SUPPORTED_ACTIVITY_TYPES": [
+      "Run",
+      "Swim", 
+      "Ride",
+      "Walk",
+      "Hike",
+      "VirtualRun",
+      "VirtualRide"
+    ]
+  },
+  "NOTIFICATION_TEMPLATES": {
+    "TIER_UP": {
+      "vi": "🎉 Chúc mừng! Bạn đã thăng cấp lên {tier_name}! (+{stamina_gained} Stamina)",
+      "en": "🎉 Congratulations! You've ascended to {tier_name}! (+{stamina_gained} Stamina)"
+    },
+    "ACTIVITY_SYNCED": {
+      "vi": "✅ Đã đồng bộ {activity_type}: {distance}km (+{stamina_gained} Stamina)",
+      "en": "✅ Synced {activity_type}: {distance}km (+{stamina_gained} Stamina)"
+    },
+    "STRAVA_CONNECTED": {
+      "vi": "🔗 Đã kết nối Strava thành công! Hành trình AURA Stream bắt đầu!",
+      "en": "🔗 Strava connected successfully! Your AURA Stream journey begins!"
+    }
+  }
+}

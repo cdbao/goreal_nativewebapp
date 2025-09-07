@@ -1,0 +1,28 @@
+{
+  "name": "goreal-cloud-functions",
+  "version": "1.0.0",
+  "description": "Cloud Functions for GoREAL AURA Stream",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "build": "echo 'No build step required'",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "private": true
+}

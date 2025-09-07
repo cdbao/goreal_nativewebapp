@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export type TabType = 'quests' | 'ascension' | 'journey' | 'chat' | 'honor';
+export type TabType = 'quests' | 'ascension' | 'journey' | 'chat' | 'honor' | 'aura-stream' | 'celestial';
 
 interface UseDashboardStateReturn {
   loading: boolean;
@@ -11,7 +11,7 @@ interface UseDashboardStateReturn {
 
 export const useDashboardState = (): UseDashboardStateReturn => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>('quests');
+  const [activeTab, setActiveTab] = useState<TabType>('celestial');
 
   const handleTabChange = useCallback((tab: TabType) => {
     setActiveTab(tab);

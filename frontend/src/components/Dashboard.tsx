@@ -12,8 +12,10 @@ import NotificationBell from './NotificationBell';
 import EnhancedQuestManager from './EnhancedQuestManager';
 import GuildChat from './GuildChat';
 import HallOfHonor from './HallOfHonor';
+import CelestialRecord from './CelestialRecord';
 import QuestDebugger from './QuestDebugger';
 import AuraOfferingCeremony from './AuraOfferingCeremony';
+import AuraStreamSection from './AuraStreamSection';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -133,6 +135,20 @@ const Dashboard: React.FC = () => {
             <span>🏆</span>
             Đài Vinh Danh
           </button>
+          <button
+            className={`btn ${activeTab === 'aura-stream' ? 'btn-primary' : 'btn-ghost'} tab-button`}
+            onClick={() => setActiveTab('aura-stream')}
+          >
+            <span>⚡</span>
+            AURA Stream
+          </button>
+          <button
+            className={`btn ${activeTab === 'celestial' ? 'btn-primary' : 'btn-ghost'} tab-button`}
+            onClick={() => setActiveTab('celestial')}
+          >
+            <span>🌌</span>
+            Thiên Định Chí
+          </button>
         </div>
 
         <div className="dashboard-content">
@@ -224,6 +240,18 @@ const Dashboard: React.FC = () => {
           {activeTab === 'honor' && (
             <div className="animate-fadeInUp">
               <HallOfHonor />
+            </div>
+          )}
+
+          {activeTab === 'aura-stream' && (
+            <div className="animate-fadeInUp">
+              <AuraStreamSection />
+            </div>
+          )}
+
+          {activeTab === 'celestial' && (
+            <div className="animate-fadeInUp">
+              <CelestialRecord />
             </div>
           )}
         </div>

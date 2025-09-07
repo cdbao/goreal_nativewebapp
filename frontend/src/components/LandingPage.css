@@ -776,8 +776,60 @@
   font-size: 1.5rem;
 }
 
+/* Guild Paths Preview */
+.guild-paths {
+  margin: 2rem 0 3rem 0;
+  padding: 2rem 0;
+}
+
+.path-preview {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.path-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.path-item:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 215, 0, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2);
+}
+
+.path-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.path-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 0.5rem;
+}
+
+.path-focus {
+  font-size: 0.9rem;
+  color: #ccc;
+  text-align: center;
+}
+
 .guild-preview {
-  margin-top: 3rem;
+  margin-top: 2rem;
   animation: fadeInUp 0.8s ease 0.4s both;
 }
 

@@ -13,8 +13,10 @@ import { Submission, User, Quest } from '../types';
 import { formatDate } from '../utils/dateUtils';
 import ImprovedBackgroundManager from './ImprovedBackgroundManager';
 import QuestManager from './QuestManager';
+import GuildImageManager from './GuildImageManager';
 import ErrorBoundary from './ErrorBoundary';
 import ErrorLogsViewer from './ErrorLogsViewer';
+import NotificationPanel from './NotificationPanel';
 import { errorLogger } from '../utils/errorLogger';
 import './AdminPanel.css';
 
@@ -31,7 +33,7 @@ const AdminPanel: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<
-    'submissions' | 'backgrounds' | 'quests' | 'errors'
+    'submissions' | 'backgrounds' | 'quests' | 'guilds' | 'errors' | 'notifications'
   >('submissions');
 
   useEffect(() => {
@@ -338,10 +340,22 @@ const AdminPanel: React.FC = () => {
           ⚔️ Quản Lý Quest
         </button>
         <button
+          className={`tab-button ${activeTab === 'guilds' ? 'active' : ''}`}
+          onClick={() => setActiveTab('guilds')}
+        >
+          🏛️ QUẢN LÝ HÌNH ẢNH GUILD
+        </button>
+        <button
           className={`tab-button ${activeTab === 'errors' ? 'active' : ''}`}
           onClick={() => setActiveTab('errors')}
         >
           🐛 Error Logs
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'notifications' ? 'active' : ''}`}
+          onClick={() => setActiveTab('notifications')}
+        >
+          📢 Thông Báo
         </button>
       </div>
 
@@ -511,9 +525,21 @@ const AdminPanel: React.FC = () => {
 
         {activeTab === 'quests' && <QuestManager />}
 
+        {activeTab === 'guilds' && (
+          <ErrorBoundary>
+            <GuildImageManager />
+          </ErrorBoundary>
+        )}
+
         {activeTab === 'errors' && (
           <ErrorBoundary>
             <ErrorLogsViewer />
+          </ErrorBoundary>
+        )}
+
+        {activeTab === 'notifications' && (
+          <ErrorBoundary>
+            <NotificationPanel />
           </ErrorBoundary>
         )}
       </div>

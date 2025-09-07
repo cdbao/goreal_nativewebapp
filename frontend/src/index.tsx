@@ -31,6 +31,70 @@ root.render(
   </React.StrictMode>
 );
 
+// Service Worker Registration for GoREAL
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Register Firebase Cloud Messaging Service Worker
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then((registration) => {
+        console.log('✅ Firebase Messaging Service Worker registered successfully:', registration);
+      })
+      .catch((error) => {
+        console.error('❌ Firebase Messaging Service Worker registration failed:', error);
+      });
+
+    // Register main PWA Service Worker in production
+    if (process.env.NODE_ENV === 'production') {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('✅ GoREAL PWA Service Worker registered successfully:', registration);
+          
+          // Listen for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New content is available, show update notification
+                  if (window.confirm('Đã có phiên bản mới của GoREAL! Bạn có muốn cập nhật không?')) {
+                    window.location.reload();
+                  }
+                }
+              });
+            }
+          });
+        })
+        .catch((error) => {
+          console.error('❌ GoREAL PWA Service Worker registration failed:', error);
+        });
+    }
+    
+    // Listen for messages from service workers
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data.type === 'STRAVA_SYNC_SUCCESS') {
+        console.log('🎉 Background Strava sync completed:', event.data.data);
+        // You could show a toast notification here
+      } else if (event.data.type === 'NOTIFICATION_CLICKED') {
+        console.log('📢 Push notification clicked:', event.data);
+        // Handle notification click navigation
+        if (event.data.url && event.data.url !== window.location.pathname) {
+          window.location.href = event.data.url;
+        }
+      }
+    });
+  });
+}
+
+// Register for background sync when online
+if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+  navigator.serviceWorker.ready.then((registration) => {
+    // Register for background sync when the app comes back online
+    return (registration as any).sync.register('sync-strava-activities');
+  }).catch((error) => {
+    console.log('Background sync registration failed:', error);
+  });
+}
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

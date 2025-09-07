@@ -13,6 +13,33 @@ export interface User {
   createdAt?: FirebaseTimestamp;
   updatedAt?: FirebaseTimestamp;
   lastLoginAt?: FirebaseTimestamp;
+  
+  // NEW AURA Stream fields
+  stamina_points?: number; // Total stamina accumulated from activities
+  avatar_tier?: number; // Current avatar evolution tier (0-10)
+  strava_connected?: boolean; // Quick check for Strava connection status
+  strava_token?: {
+    access_token: string;
+    refresh_token: string;
+    expires_at: number;
+    scope: string;
+    athlete_id: number;
+  };
+  strava_athlete_info?: {
+    id: number;
+    firstname: string;
+    lastname: string;
+    profile: string;
+    city: string;
+    country: string;
+    sex: string;
+  };
+  last_activity_sync?: FirebaseTimestamp; // Timestamp of last Strava sync
+  total_distance_run?: number; // Lifetime running distance in km
+  total_distance_swim?: number; // Lifetime swimming distance in km
+  total_distance_cycle?: number; // Lifetime cycling distance in km
+  streak_days?: number; // Current activity streak
+  longest_streak?: number; // Best activity streak achieved
 }
 
 // Firebase Timestamp type for better type safety

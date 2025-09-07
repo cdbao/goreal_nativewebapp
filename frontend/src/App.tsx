@@ -13,8 +13,9 @@ import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import AdminPanel from './components/AdminPanel';
 import GuildSelection from './components/GuildSelection';
- import {
-   ProtectedRoute,
+import StravaCallback from './components/StravaCallback';
+import {
+  ProtectedRoute,
   GuildSelectionRoute,
   AuthRoute,
   LandingRoute,
@@ -83,6 +84,9 @@ const AppContent: React.FC = () => {
           </AdminRoute>
         }
       />
+
+      {/* Strava OAuth callback route */}
+      <Route path="/strava/callback" element={<StravaCallback />} />
 
       {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" replace />} />
