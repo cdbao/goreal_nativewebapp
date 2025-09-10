@@ -12,10 +12,28 @@
     #0f1419 100%
   ) !important;
   background-attachment: fixed !important;
-  position: relative !important;
-  padding: var(--space-6) !important;
-  overflow-x: hidden !important;
   color: white !important;
+  /* Use CSS Grid for proper layout structure */
+  display: grid !important;
+  grid-template-areas:
+    "header"
+    "tabs"
+    "content" !important;
+  grid-template-rows: auto auto 1fr !important;
+  gap: var(--space-4) !important;
+  padding: var(--space-4) !important;
+  overflow-x: hidden !important;
+}
+
+/* Mobile Layout Adjustments */
+@media (max-width: 767px) {
+  .dashboard-container {
+    grid-template-areas:
+      "content" !important;
+    grid-template-rows: 1fr !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
 }
 
 /* Additional overlay for better contrast */
@@ -31,16 +49,24 @@
   z-index: 1;
 }
 
-.dashboard-header {
+/* Desktop Header */
+.dashboard-header.desktop-header {
+  grid-area: header;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-8);
-  padding: var(--space-6);
+  padding: var(--space-4) var(--space-6);
   position: relative;
-  z-index: 3;
+  z-index: 10;
   min-height: 80px;
   overflow: visible;
+}
+
+/* Hide desktop header on mobile */
+@media (max-width: 767px) {
+  .desktop-header {
+    display: none !important;
+  }
 }
 
 .guild-banner {
@@ -88,13 +114,23 @@
    📱 DASHBOARD TABS - NEW DESIGN
    ======================================== */
 
-.dashboard-tabs {
+/* Desktop Tabs */
+.dashboard-tabs.desktop-tabs {
+  grid-area: tabs;
   display: flex;
   justify-content: center;
   gap: var(--space-3);
   padding: var(--space-4);
-  margin-bottom: var(--space-6);
   flex-wrap: wrap;
+  position: relative;
+  z-index: 9;
+}
+
+/* Hide desktop tabs on mobile */
+@media (max-width: 767px) {
+  .desktop-tabs {
+    display: none !important;
+  }
 }
 
 .tab-button {
@@ -290,18 +326,166 @@
 }
 
 /* ========================================
+   🔔 NOTIFICATION BANNER - CALL TO ACTION
+   ======================================== */
+
+.notification-banner {
+  margin-bottom: var(--space-8);
+}
+
+.banner-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid var(--secondary-color);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 53, 0.1),
+    rgba(255, 215, 0, 0.1)
+  );
+  transition: all 0.3s ease;
+}
+
+.banner-dismiss {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-color-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.banner-dismiss:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+  transform: scale(1.1);
+}
+
+.banner-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(255, 107, 53, 0.2);
+  border-left-color: var(--primary-color);
+}
+
+.banner-icon {
+  font-size: var(--font-size-5xl);
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    #ffd700
+  );
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+  position: relative;
+}
+
+.banner-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.3),
+    transparent 60%
+  );
+  border-radius: var(--radius-full);
+}
+
+.banner-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-content h4 {
+  font-size: var(--font-size-2xl);
+  margin: 0 0 var(--space-2);
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.banner-content p {
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+  margin: 0;
+  color: var(--text-color-muted);
+}
+
+.notification-cta {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    #ffd700
+  );
+  border: none;
+  color: #0f1419;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+  transition: all 0.3s ease;
+}
+
+.notification-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+  background: linear-gradient(
+    135deg,
+    #ffd700,
+    var(--secondary-color)
+  );
+}
+
+.notification-cta span {
+  margin-right: var(--space-2);
+  font-size: var(--font-size-xl);
+}
+
+/* ========================================
    📱 RESPONSIVE DESIGN
    ======================================== */
 
 @media (max-width: 768px) {
   .dashboard-container {
-    padding: var(--space-4);
+    padding: var(--space-3);
+    gap: var(--space-3);
+    grid-template-rows: auto auto 1fr;
   }
 
   .dashboard-header {
     flex-direction: column;
     gap: var(--space-4);
     text-align: center;
+    padding: var(--space-3);
   }
 
   .header-actions {
@@ -312,11 +496,19 @@
   .dashboard-tabs {
     flex-direction: column;
     gap: var(--space-2);
+    padding: var(--space-3);
   }
 
   .tab-button {
     width: 100%;
     min-width: auto;
+  }
+
+  .dashboard-content {
+    padding: var(--space-1);
+    /* Ensure content doesn't get cut off on mobile */
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .player-card {
@@ -357,6 +549,24 @@
     height: 60px;
     font-size: var(--font-size-4xl);
     align-self: center;
+  }
+
+  .banner-card {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-4);
+  }
+
+  .banner-icon {
+    width: 60px;
+    height: 60px;
+    font-size: var(--font-size-4xl);
+    align-self: center;
+  }
+
+  .notification-cta {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -451,5 +661,46 @@
     filter: drop-shadow(0 0 25px var(--glow-color))
       drop-shadow(0 0 35px var(--glow-color));
     transform: scale(1.02);
+  }
+}
+
+/* Main Content Area - Grid Layout */
+.dashboard-content {
+  grid-area: content;
+  position: relative;
+  z-index: 5;
+  overflow-y: auto;
+  min-height: 0; /* Important for grid scrolling */
+  padding: var(--space-2);
+}
+
+/* Notifications Tab Layout */
+.notifications-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+  /* Ensure proper positioning in normal document flow */
+  position: relative;
+  z-index: 1;
+}
+
+.notification-settings-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  border: 1px solid rgba(100, 200, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .notifications-tab-content {
+    gap: 20px;
+  }
+  
+  .notification-settings-section {
+    padding: 15px;
+    margin-top: 15px;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useBackground } from '../hooks/useBackground';
 import { useNotifications } from '../hooks/useNotifications';
@@ -16,6 +16,11 @@ import CelestialRecord from './CelestialRecord';
 import QuestDebugger from './QuestDebugger';
 import AuraOfferingCeremony from './AuraOfferingCeremony';
 import AuraStreamSection from './AuraStreamSection';
+import NotificationInbox from './NotificationInbox';
+import NotificationSettings from './NotificationSettings';
+import MobileHeader from './MobileHeader';
+import MobileNavigation from './MobileNavigation';
+import { logger } from '../services/logger';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -29,12 +34,28 @@ const Dashboard: React.FC = () => {
   const { showCeremony, ceremonyData, closeCeremony } = useNotifications(
     currentUser?.uid
   );
+  
+  // Mobile navigation state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const handleToggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+  
+  const handleCloseMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     if (userData) {
       setLoading(false);
+      logger.info('Dashboard loaded successfully', {
+        userId: currentUser?.uid,
+        guild: userData.guild,
+        level: userData.level
+      });
     }
-  }, [userData, setLoading]);
+  }, [userData, setLoading, currentUser?.uid]);
 
   if (loading) {
     return (
@@ -68,11 +89,23 @@ const Dashboard: React.FC = () => {
       }}
       data-guild={userData?.guild}
     >
-      {/* Background overlay for text readability */}
-      <div className="overlay"></div>
-
-      <div className="content-with-overlay">
-        <header className="dashboard-header frosted-glass">
+        {/* Mobile Header */}
+        <MobileHeader 
+          onToggleMenu={handleToggleMobileMenu}
+          isMenuOpen={isMobileMenuOpen}
+          onViewAllNotifications={() => setActiveTab('notifications')}
+        />
+        
+        {/* Mobile Navigation */}
+        <MobileNavigation 
+          isOpen={isMobileMenuOpen}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onClose={handleCloseMobileMenu}
+        />
+        
+        {/* Desktop Header */}
+        <header className="dashboard-header desktop-header frosted-glass">
           <div className="guild-banner">
             {userData?.guild &&
               (() => {
@@ -91,7 +124,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="header-actions">
-            <NotificationBell />
+            <NotificationBell 
+              onViewAllNotifications={() => setActiveTab('notifications')}
+            />
             <button onClick={logout} className="btn btn-ghost">
               <span>🚪</span>
               Rời khỏi Lò Rèn
@@ -99,7 +134,15 @@ const Dashboard: React.FC = () => {
           </div>
         </header>
 
-        <div className="dashboard-tabs frosted-glass">
+        {/* Desktop Tabs */}
+        <div className="dashboard-tabs desktop-tabs frosted-glass">
+          <button
+            className={`btn ${activeTab === 'celestial' ? 'btn-primary' : 'btn-ghost'} tab-button`}
+            onClick={() => setActiveTab('celestial')}
+          >
+            <span>🌌</span>
+            Thiên Định Chí
+          </button>
           <button
             className={`btn ${activeTab === 'quests' ? 'btn-primary' : 'btn-ghost'} tab-button`}
             onClick={() => setActiveTab('quests')}
@@ -143,15 +186,28 @@ const Dashboard: React.FC = () => {
             AURA Stream
           </button>
           <button
-            className={`btn ${activeTab === 'celestial' ? 'btn-primary' : 'btn-ghost'} tab-button`}
-            onClick={() => setActiveTab('celestial')}
+            className={`btn ${activeTab === 'notifications' ? 'btn-primary' : 'btn-ghost'} tab-button`}
+            onClick={() => setActiveTab('notifications')}
           >
-            <span>🌌</span>
-            Thiên Định Chí
+            <span>📬</span>
+            Thông Báo
+          </button>
+          <button
+            className={`btn ${activeTab === 'settings' ? 'btn-primary' : 'btn-ghost'} tab-button`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <span>⚙️</span>
+            Cài Đặt
           </button>
         </div>
 
-        <div className="dashboard-content">
+        <div className="dashboard-content mobile-content-wrapper">
+          {activeTab === 'celestial' && (
+            <div className="animate-fadeInUp">
+              <CelestialRecord />
+            </div>
+          )}
+          
           {activeTab === 'quests' && (
             <>
               <div className="player-info animate-fadeInUp">
@@ -249,13 +305,18 @@ const Dashboard: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'celestial' && (
+          {activeTab === 'notifications' && (
             <div className="animate-fadeInUp">
-              <CelestialRecord />
+              <NotificationInbox />
+            </div>
+          )}
+
+          {activeTab === 'settings' && (
+            <div className="animate-fadeInUp">
+              <NotificationSettings />
             </div>
           )}
         </div>
-      </div>
 
       {/* AURA Offering Ceremony for Approved Quests */}
       {showCeremony && ceremonyData.quest && ceremonyData.submission && (

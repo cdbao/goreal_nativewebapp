@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export type TabType = 'quests' | 'ascension' | 'journey' | 'chat' | 'honor' | 'aura-stream' | 'celestial';
+export type TabType = 'quests' | 'ascension' | 'journey' | 'chat' | 'honor' | 'aura-stream' | 'celestial' | 'notifications' | 'settings' | 'admin';
 
 interface UseDashboardStateReturn {
   loading: boolean;
