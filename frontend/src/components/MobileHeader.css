@@ -114,6 +114,8 @@
 .header-notifications {
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 1100; /* Ensure notification bell is clickable */
 }
 
 /* Mobile User Info Bar */

@@ -13,17 +13,32 @@ import './NotificationBell.css';
 
 interface Notification {
   id: string;
-  message: string;
-  timestamp: any;
-  isRead: boolean;
-  type: 'quest_approved' | 'level_up' | 'daily_quest' | 'general';
+  message?: string; // For legacy notifications
+  title?: string; // For admin notifications  
+  body?: string; // For admin notifications
+  timestamp?: any; // Legacy field
+  sentAt?: any; // New admin notification field
+  createdAt?: any; // New admin notification field
+  isRead?: boolean; // Legacy field
+  read?: boolean; // New admin notification field
+  type: 'quest_approved' | 'level_up' | 'daily_quest' | 'general' | 'admin_notification';
   questId?: string;
   auraReward?: number;
   oldLevel?: number;
   newLevel?: number;
+  // New admin notification fields
+  icon?: string;
+  clickAction?: string;
+  data?: any;
+  sentBy?: string;
+  priority?: 'high' | 'normal';
 }
 
-const NotificationBell: React.FC = () => {
+interface NotificationBellProps {
+  onViewAllNotifications?: () => void;
+}
+
+const NotificationBell: React.FC<NotificationBellProps> = ({ onViewAllNotifications }) => {
   const { userData } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -41,7 +56,8 @@ const NotificationBell: React.FC = () => {
       userData.userId,
       'notifications'
     );
-    const q = query(notificationsRef, orderBy('timestamp', 'desc'));
+    // Query for notifications ordered by createdAt (new) or timestamp (legacy), both descending  
+    const q = query(notificationsRef, orderBy('createdAt', 'desc'));
 
     const unsubscribe = onSnapshot(q, snapshot => {
       const notificationsList: Notification[] = [];
@@ -51,9 +67,22 @@ const NotificationBell: React.FC = () => {
         const data = doc.data();
         const notification: Notification = {
           id: doc.id,
+          // Legacy notification fields
           message: data.message,
           timestamp: data.timestamp,
           isRead: data.isRead,
+          // New admin notification fields
+          title: data.title,
+          body: data.body,
+          sentAt: data.sentAt,
+          createdAt: data.createdAt,
+          read: data.read,
+          icon: data.icon,
+          clickAction: data.clickAction,
+          data: data.data,
+          sentBy: data.sentBy,
+          priority: data.priority,
+          // Common fields
           type: data.type,
           questId: data.questId,
           auraReward: data.auraReward,
@@ -62,7 +91,9 @@ const NotificationBell: React.FC = () => {
         };
 
         notificationsList.push(notification);
-        if (!notification.isRead) {
+        // Check unread status for both legacy and new notification formats
+        const isUnread = notification.isRead === false || notification.read === false;
+        if (isUnread) {
           unreadTotal++;
         }
       });
@@ -104,7 +135,9 @@ const NotificationBell: React.FC = () => {
 
     try {
       const batch = writeBatch(db);
-      const unreadNotifications = notifications.filter(n => !n.isRead);
+      const unreadNotifications = notifications.filter(n => 
+        n.isRead === false || n.read === false
+      );
 
       for (const notification of unreadNotifications) {
         const notificationRef = doc(
@@ -114,7 +147,12 @@ const NotificationBell: React.FC = () => {
           'notifications',
           notification.id
         );
-        batch.update(notificationRef, { isRead: true });
+        // Update both legacy and new notification read fields
+        const updateData: any = {};
+        if (notification.isRead !== undefined) updateData.isRead = true;
+        if (notification.read !== undefined) updateData.read = true;
+        
+        batch.update(notificationRef, updateData);
       }
 
       await batch.commit();
@@ -123,20 +161,31 @@ const NotificationBell: React.FC = () => {
     }
   };
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
+  const getNotificationIcon = (notification: Notification) => {
+    // Use custom icon for admin notifications if available
+    if (notification.type === 'admin_notification' && notification.icon) {
+      return notification.icon;
+    }
+    
+    // Fallback to type-based icons
+    switch (notification.type) {
       case 'quest_approved':
         return '🎉';
       case 'level_up':
         return '🌟';
       case 'daily_quest':
         return '🎯';
+      case 'admin_notification':
+        return '📢';
       default:
         return '📢';
     }
   };
 
-  const formatTimestamp = (timestamp: any) => {
+  const formatTimestamp = (notification: Notification) => {
+    // Use the most recent timestamp available (prioritize new format)
+    const timestamp = notification.createdAt || notification.sentAt || notification.timestamp;
+    
     if (!timestamp) return 'Vừa xong';
 
     const date =
@@ -193,7 +242,10 @@ const NotificationBell: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="notification-dropdown">
+        <>
+          {/* Mobile backdrop */}
+          <div className="notification-mobile-backdrop" onClick={() => setIsOpen(false)} />
+          <div className="notification-dropdown">
           <div className="dropdown-header">
             <h3>🔔 Thông Báo</h3>
             {unreadCount > 0 && (
@@ -214,33 +266,48 @@ const NotificationBell: React.FC = () => {
                 <p>Bạn sẽ nhận được thông báo khi có cập nhật mới!</p>
               </div>
             ) : (
-              notifications.slice(0, 10).map(notification => (
-                <div
-                  key={notification.id}
-                  className={`notification-item ${notification.isRead ? 'read' : 'unread'} ${getNotificationColor(notification.type)}`}
-                >
-                  <div className="notification-icon">
-                    {getNotificationIcon(notification.type)}
-                  </div>
+              notifications.slice(0, 10).map(notification => {
+                // Determine if notification is read (support both formats)
+                const isRead = notification.isRead === true || notification.read === true;
+                // Get display message (prioritize title+body for admin notifications, fallback to message)
+                const displayMessage = notification.title 
+                  ? `${notification.title}${notification.body ? `: ${notification.body}` : ''}`
+                  : notification.message;
+                
+                return (
+                  <div
+                    key={notification.id}
+                    className={`notification-item ${isRead ? 'read' : 'unread'} ${getNotificationColor(notification.type)}`}
+                  >
+                    <div className="notification-icon">
+                      {getNotificationIcon(notification)}
+                    </div>
 
-                  <div className="notification-content">
-                    <p className="notification-message">
-                      {notification.message}
-                    </p>
-                    <span className="notification-time">
-                      {formatTimestamp(notification.timestamp)}
-                    </span>
-                  </div>
+                    <div className="notification-content">
+                      <p className="notification-message">
+                        {displayMessage}
+                      </p>
+                      <span className="notification-time">
+                        {formatTimestamp(notification)}
+                      </span>
+                    </div>
 
-                  {!notification.isRead && <div className="unread-dot"></div>}
-                </div>
-              ))
+                    {!isRead && <div className="unread-dot"></div>}
+                  </div>
+                );
+              })
             )}
           </div>
 
           {notifications.length > 10 && (
             <div className="dropdown-footer">
-              <button className="view-all-button">
+              <button 
+                className="view-all-button"
+                onClick={() => {
+                  setIsOpen(false);
+                  onViewAllNotifications?.();
+                }}
+              >
                 Xem tất cả ({notifications.length})
               </button>
             </div>
@@ -253,7 +320,8 @@ const NotificationBell: React.FC = () => {
               </p>
             </div>
           )}
-        </div>
+          </div>
+        </>
       )}
     </div>
   );
